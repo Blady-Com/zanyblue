@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -36,7 +37,7 @@ with Ada.Strings.Wide_Fixed;
 
 separate (ZBTest.Commands)
 procedure Append_Command (State   : in out State_Type;
-                          Args    : in List_Type) is
+                          Args    : List_Type) is
 
    use Ada.Strings.Wide_Fixed;
 

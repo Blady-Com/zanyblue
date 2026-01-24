@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -45,7 +46,7 @@ package ZanyBlue.Text.Printer is
    type Printer_Type is abstract tagged private;
    type Printer_Access is not null access all Printer_Type'Class;
 
-   procedure Print (Printer     : Printer_Type;
+   procedure Print (Printer     : in out Printer_Type;
                     Destination : Ada.Text_IO.File_Type;
                     Facility    : Wide_String;
                     Key         : Wide_String;
@@ -55,7 +56,7 @@ package ZanyBlue.Text.Printer is
                     With_NL     : Boolean) is
       abstract;
 
-   procedure Print (Printer     : Printer_Type;
+   procedure Print (Printer     : in out Printer_Type;
                     Destination : Ada.Wide_Text_IO.File_Type;
                     Facility    : Wide_String;
                     Key         : Wide_String;
@@ -67,7 +68,8 @@ package ZanyBlue.Text.Printer is
 
    type Standard_Printer_Type is new Printer_Type with private;
 
-   procedure Print (Printer     : Standard_Printer_Type;
+   overriding
+   procedure Print (Printer     : in out Standard_Printer_Type;
                     Destination : Ada.Text_IO.File_Type;
                     Facility    : Wide_String;
                     Key         : Wide_String;
@@ -76,7 +78,8 @@ package ZanyBlue.Text.Printer is
                     Message     : Wide_String;
                     With_NL     : Boolean);
 
-   procedure Print (Printer     : Standard_Printer_Type;
+   overriding
+   procedure Print (Printer     : in out Standard_Printer_Type;
                     Destination : Ada.Wide_Text_IO.File_Type;
                     Facility    : Wide_String;
                     Key         : Wide_String;
@@ -90,6 +93,7 @@ package ZanyBlue.Text.Printer is
 private
 
    type Printer_Type is abstract tagged null record;
+
    type Standard_Printer_Type is new Printer_Type with null record;
 
 end ZanyBlue.Text.Printer;

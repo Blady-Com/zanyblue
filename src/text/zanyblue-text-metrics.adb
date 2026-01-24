@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -44,35 +45,35 @@ package body ZanyBlue.Text.Metrics is
    -- Write_Usage --
    -----------------
 
-   procedure Write_Usage (Destination : in Ada.Wide_Text_IO.File_Type;
-                          Catalog     : in Catalog_Type := Standard_Catalog) is
+   procedure Write_Usage (Destination : Ada.Wide_Text_IO.File_Type;
+                          Catalog     : Catalog_Type := Standard_Catalog) is
 
-      procedure Iterator (Facility      : in Facility_Index_Type;
-                          Key           : in Key_Index_Type;
-                          Locale        : in Locale_Index_Type;
-                          Source_Locale : in Locale_Index_Type;
-                          First         : in Positive;
-                          Last          : in Natural;
-                          Count         : in Natural);
+      procedure Iterator (Facility      : Facility_Index_Type;
+                          Key           : Key_Index_Type;
+                          Locale        : Locale_Index_Type;
+                          Source_Locale : Locale_Index_Type;
+                          First         : Positive;
+                          Last          : Natural;
+                          Count         : Natural);
 
-      procedure Iterator (Facility      : in Facility_Index_Type;
-                          Key           : in Key_Index_Type;
-                          Locale        : in Locale_Index_Type;
-                          Source_Locale : in Locale_Index_Type;
-                          First         : in Positive;
-                          Last          : in Natural;
-                          Count         : in Natural) is
+      procedure Iterator (Facility      : Facility_Index_Type;
+                          Key           : Key_Index_Type;
+                          Locale        : Locale_Index_Type;
+                          Source_Locale : Locale_Index_Type;
+                          First         : Positive;
+                          Last          : Natural;
+                          Count         : Natural) is
          pragma Unreferenced (Source_Locale);
          pragma Unreferenced (First);
          pragma Unreferenced (Last);
       begin
-         Put_Line (Destination, "<message facility=" &
+         Put (Destination, "  <message facility=" &
                    """" & Get_Facility (Catalog, Facility) & """");
-         Put_Line (Destination, "         key=" &
-                   """" & Get_Key (Catalog, Key) & """");
-         Put_Line (Destination, "         locale=" &
+         Put (Destination, " locale=" &
                    """" & Get_Locale_Name (Catalog, Locale) & """");
-         Put (Destination, "         count=""");
+         Put (Destination, " key=" &
+                   """" & Get_Key (Catalog, Key) & """");
+         Put (Destination, " count=""");
          Put (Destination, Count, Width => 0);
          Put_Line (Destination, """ />");
       end Iterator;
@@ -88,8 +89,8 @@ package body ZanyBlue.Text.Metrics is
    -- Write_Usage --
    -----------------
 
-   procedure Write_Usage (File_Name   : in Wide_String;
-                          Catalog     : in Catalog_Type := Standard_Catalog) is
+   procedure Write_Usage (File_Name   : Wide_String;
+                          Catalog     : Catalog_Type := Standard_Catalog) is
       Destination : Ada.Wide_Text_IO.File_Type;
    begin
       Wide_Create (Destination, File_Name);
@@ -101,8 +102,8 @@ package body ZanyBlue.Text.Metrics is
    -- Write_Usage --
    -----------------
 
-   procedure Write_Usage (File_Name : in String;
-                          Catalog   : in Catalog_Type := Standard_Catalog) is
+   procedure Write_Usage (File_Name : String;
+                          Catalog   : Catalog_Type := Standard_Catalog) is
    begin
       Write_Usage (From_UTF8 (File_Name), Catalog);
    end Write_Usage;

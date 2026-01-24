@@ -1,7 +1,8 @@
+#  -*- coding: utf-8 -*-
 #
 #  ZanyBlue, an Ada library and framework for finite element analysis.
 #
-#  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+#  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -35,15 +36,12 @@
 TOP=../..
 CLEAN_FILES+=$(wildcard system.log)
 CLEAN_FILES+=$(wildcard system.xml)
-CLEAN_FILES+=$(wildcard unittest.xml)
+CLEAN_FILES+=$(wildcard TEST*.xml)
 
 include $(TOP)/src/mkfile/conf.mk
 
 all clean sall check xcheck::
 	$(MAKE) -C unittest $@
 	$(MAKE) -C system $@
-
-mkr:
-	env
 
 include $(TOP)/src/mkfile/rules.mk

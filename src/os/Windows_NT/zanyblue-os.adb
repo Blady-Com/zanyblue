@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,24 +34,30 @@
 --
 
 with GNAT.OS_Lib;
-with GNAT.Decode_UTF8_String;
-with GNAT.Encode_UTF8_String;
 with Ada.Directories;
+with Ada.Characters.Conversions;
 with Interfaces.C;
+with ZanyBlue.Text;
 with ZanyBlue.Wide_Directories;
 
 package body ZanyBlue.OS is
 
    use Ada.Directories;
+   use ZanyBlue.Text;
    use ZanyBlue.Wide_Directories;
 
    use type Interfaces.C.unsigned_long;
 
    subtype LCID is Interfaces.C.unsigned_long;
+   subtype CPID is Interfaces.C.unsigned_long;
 
    function GetUserDefaultLCID return LCID;
    pragma Import (Stdcall, GetUserDefaultLCID, "GetUserDefaultLCID");
    --  Return the Windows LCID value for the current user.
+
+   function GetACP return CPID;
+   pragma Import (Stdcall, GetACP, "GetACP");
+   -- Return current code page id
 
    type String_Access is access constant Wide_String;
    type LCID_Map_Type is
@@ -673,15 +680,18 @@ package body ZanyBlue.OS is
    --  LCID value (simple binary search).  If not found, return the empty
    --  string.
 
+   function Code_Page (CP : CPID) return Wide_String;
+   -- Convert a code page id to a string code page name, e.g. 1252 => "CP1252"
+
    ---------------
-   -- From_UTF8 --
+   -- Code_Page --
    ---------------
 
-   function From_UTF8 (Value : in String) return Wide_String is
-      use GNAT.Decode_UTF8_String;
+   function Code_Page (CP : CPID) return Wide_String is
+      CP_W : constant Wide_String := CPID'Wide_Image (CP);
    begin
-      return Decode_Wide_String (Value);
-   end From_UTF8;
+      return "CP" & CP_W (CP_W'First + 1 .. CP_W'Last);
+   end Code_Page;
 
    ---------------------
    -- Integrity_Check --
@@ -740,7 +750,7 @@ package body ZanyBlue.OS is
 
    function OS_Locale_Name return Wide_String is
    begin
-      return LCID_To_Locale (GetUserDefaultLCID);
+      return LCID_To_Locale (GetUserDefaultLCID) & "." & Code_Page (GetACP);
    end OS_Locale_Name;
 
    -------------
@@ -752,15 +762,16 @@ package body ZanyBlue.OS is
       return Windows;
    end OS_Name;
 
-   -------------
-   -- To_UTF8 --
-   -------------
+   -----------------
+   -- OS_New_Line --
+   -----------------
 
-   function To_UTF8 (Value : in Wide_String) return String is
-      use GNAT.Encode_UTF8_String;
+   function OS_New_Line return Wide_String is
    begin
-      return Encode_Wide_String (Value);
-   end To_UTF8;
+      return ""
+         & Ada.Characters.Conversions.To_Wide_Character (ASCII.CR)
+         & Ada.Characters.Conversions.To_Wide_Character (ASCII.LF);
+   end OS_New_Line;
 
    --------------------
    -- UTF8_File_Form --
@@ -775,17 +786,17 @@ package body ZanyBlue.OS is
    -- Wide_Copy_Tree --
    --------------------
 
-   procedure Wide_Copy_Tree (Source_Name : in Wide_String;
-                             Target_Name : in Wide_String) is
+   procedure Wide_Copy_Tree (Source_Name : Wide_String;
+                             Target_Name : Wide_String) is
 
-      procedure Process_Entry (Path : in String;
-                               Elem : in String;
-                               Kind : in File_Kind);
+      procedure Process_Entry (Path : String;
+                               Elem : String;
+                               Kind : File_Kind);
 
+      procedure Process_Entry (Path : String;
+                               Elem : String;
+                               Kind : File_Kind) is
 
-      procedure Process_Entry (Path : in String;
-                               Elem : in String;
-                               Kind : in File_Kind) is
          Dest_Path : constant Wide_String := Wide_Compose (Target_Name,
                                                            From_UTF8 (Elem));
       begin
@@ -819,8 +830,22 @@ package body ZanyBlue.OS is
    -- Wide_Create --
    -----------------
 
+   procedure Wide_Create (File : in out Ada.Text_IO.File_Type;
+                          Name : Wide_String) is
+      use Ada.Text_IO;
+   begin
+      Create (File,
+              Mode => Out_File,
+              Name => To_UTF8 (Name),
+              Form => UTF8_File_Form);
+   end Wide_Create;
+
+   -----------------
+   -- Wide_Create --
+   -----------------
+
    procedure Wide_Create (File : in out Ada.Wide_Text_IO.File_Type;
-                          Name : in Wide_String) is
+                          Name : Wide_String) is
       use Ada.Wide_Text_IO;
    begin
       Create (File,
@@ -861,9 +886,24 @@ package body ZanyBlue.OS is
    -- Wide_Open --
    ---------------
 
+   procedure Wide_Open (File : in out Ada.Text_IO.File_Type;
+                        Mode : Ada.Text_IO.File_Mode;
+                        Name : Wide_String) is
+      use Ada.Text_IO;
+   begin
+      Open (File,
+            Mode => Mode,
+            Name => To_UTF8 (Name),
+            Form => UTF8_File_Form);
+   end Wide_Open;
+
+   ---------------
+   -- Wide_Open --
+   ---------------
+
    procedure Wide_Open (File : in out Ada.Wide_Text_IO.File_Type;
-                        Mode : in Ada.Wide_Text_IO.File_Mode;
-                        Name : in Wide_String) is
+                        Mode : Ada.Wide_Text_IO.File_Mode;
+                        Name : Wide_String) is
       use Ada.Wide_Text_IO;
    begin
       Open (File,

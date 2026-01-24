@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -41,7 +42,7 @@ package ZBTest.Input_Parser is
    Unterminated_String : exception;
    --  Exception raised if an input line contains an unterminated string.
 
-   function Parse_Words (Line : in Wide_String) return List_Type;
+   function Parse_Words (Line : Wide_String) return List_Type;
    --  Parse a line (simple string) into a list of words.
 
 end ZBTest.Input_Parser;

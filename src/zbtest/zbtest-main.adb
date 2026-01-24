@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,30 +34,47 @@
 --
 
 with Ada.Calendar;
-with Ada.Wide_Text_IO;
+with Ada.Text_IO;
 with Ada.Command_Line;
 with Ada.Strings.Wide_Fixed;
-with ZanyBlue.Utils;
 with ZanyBlue.Text.Formatting;
 with ZanyBlue.Wide_Command_Line;
 with ZBTest.States;
 with ZBTest_Messages.ZBTest_Exceptions;
-with ZBTest_Messages.ZBTest_Wide_Prints;
+with ZBTest_Messages.ZBTest_Prints;
+with ZanyBlue.Text.Version_Status_Arguments;
 
 procedure ZBTest.Main is
 
-   use Ada.Wide_Text_IO;
+   use Ada.Calendar;
+   use Ada.Text_IO;
    use ZanyBlue.Text;
-   use ZanyBlue.Utils;
    use ZanyBlue.Text.Formatting;
    use ZanyBlue.Wide_Command_Line;
    use ZBTest.States;
    use ZBTest_Messages.ZBTest_Exceptions;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
+   use ZBTest_Messages.ZBTest_Prints;
+   use ZanyBlue.Text.Version_Status_Arguments;
 
    Usage_Error : exception;
 
+   function Banner return Time;
    procedure Process_Command_Line (State : in out State_Type);
+   procedure Trailer (Start_Time : Time; Failure : Boolean := False);
+
+   ------------
+   -- Banner --
+   ------------
+
+   function Banner return Time is
+      Start_Time : constant Time := Clock;
+   begin
+      Print_00001 (+ZanyBlue.Version_Major, +ZanyBlue.Version_Minor,
+                   +ZanyBlue.Version_Patch, +ZanyBlue.Version_Status,
+                   +ZanyBlue.Revision, +Start_Time);
+      Print_00002 (+ZanyBlue.Copyright_Year);
+      return Start_Time;
+   end Banner;
 
    --------------------------
    -- Process_Command_Line --
@@ -64,15 +82,19 @@ procedure ZBTest.Main is
 
    procedure Process_Command_Line (State : in out State_Type) is
 
-      procedure Handle_Argument (Value : in Wide_String;
+      procedure Handle_Argument (Value : Wide_String;
                                  Index : in out Positive);
 
-      procedure Set_Option_Value (Parameter : in Wide_String;
+      procedure Set_Option_Value (Parameter : Wide_String;
                                   Index     : in out Positive);
 
       procedure Set_Parameter_Value (Index     : in out Positive);
 
-      procedure Handle_Argument (Value : in Wide_String;
+      ---------------------
+      -- Handle_Argument --
+      ---------------------
+
+      procedure Handle_Argument (Value : Wide_String;
                                  Index : in out Positive) is
          use Ada.Strings.Wide_Fixed;
       begin
@@ -101,7 +123,7 @@ procedure ZBTest.Main is
       -- Set_Option_Value --
       ----------------------
 
-      procedure Set_Option_Value (Parameter : in Wide_String;
+      procedure Set_Option_Value (Parameter : Wide_String;
                                   Index     : in out Positive) is
       begin
          if Index < Wide_Argument_Count then
@@ -111,6 +133,10 @@ procedure ZBTest.Main is
             Raise_10015 (Usage_Error'Identity, +Wide_Argument (Index));
          end if;
       end Set_Option_Value;
+
+      -------------------------
+      -- Set_Parameter_Value --
+      -------------------------
 
       procedure Set_Parameter_Value (Index : in out Positive) is
       begin
@@ -134,12 +160,24 @@ procedure ZBTest.Main is
       State.Set_Boolean ("_xml_p", State.Is_Defined ("_xml_file"));
    end Process_Command_Line;
 
-   Start_Time : Ada.Calendar.Time;
+   -------------
+   -- Trailer --
+   -------------
+
+   procedure Trailer (Start_Time : Time; Failure : Boolean := False) is
+      Now : constant Time := Clock;
+      Elapsed : constant Duration := Now - Start_Time;
+   begin
+      Print_00003 (+Now, +Elapsed);
+      if Failure then
+         Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
+      end if;
+   end Trailer;
+
+   Start_Time : constant Time := Banner;
    State : State_Type;
 
 begin
-   ZBTest_Messages.Initialize;
-   Start_Time := Banner ("ZBTest");
    State.Define_Initial_Parameters;
    Process_Command_Line (State);
    Define_XML_Initial_Parameters (State);
@@ -152,17 +190,14 @@ begin
       end if;
    end if;
    State.Write_XML_Report;
-   Trailer ("ZBTest", Start_Time);
+   Trailer (Start_Time);
 exception
 when E : Usage_Error =>
    Print_10017 (+E);
-   Trailer ("ZBTest", Start_Time);
-   Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
+   Trailer (Start_Time, True);
 when Invalid_Environment =>
-   Trailer ("ZBTest", Start_Time);
-   Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
+   Trailer (Start_Time, True);
 when E : others =>
    Print_10033 (+E);
-   Trailer ("ZBTest", Start_Time);
-   Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Failure);
+   Trailer (Start_Time, True);
 end ZBTest.Main;

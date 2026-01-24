@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -36,22 +37,22 @@ with Ada.Strings.Wide_Fixed;
 
 separate (ZBTest.Commands)
 procedure Which_Command (State : in out State_Type;
-                         Args  : in List_Type) is
+                         Args  : List_Type) is
 
    use Ada.Strings.Wide_Fixed;
 
-   procedure Display_Path (State      : in State_Type;
+   procedure Display_Path (State      : State_Type;
                            Name       : Wide_String;
-                           Executable : in Boolean);
+                           Executable : Boolean);
    --  Search for a path name and display the result.
 
    ------------------
    -- Display_Path --
    ------------------
 
-   procedure Display_Path (State      : in State_Type;
+   procedure Display_Path (State      : State_Type;
                            Name       : Wide_String;
-                           Executable : in Boolean) is
+                           Executable : Boolean) is
    begin
       if Executable then
          Print_00033 (+State.Locate_Executable (Name));

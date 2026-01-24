@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -35,60 +36,28 @@
 with Ada.Strings.Wide_Maps;
 with Ada.Strings.Wide_Fixed;
 with ZanyBlue.Text.Arguments;
-with ZanyBlue.Text.Version_Status_Arguments;
 
 package body ZanyBlue.Utils is
 
    use Ada.Strings.Wide_Maps;
    use Ada.Strings.Wide_Fixed;
    use ZanyBlue.Text.Arguments;
-   use ZanyBlue.Text.Version_Status_Arguments;
 
    Mapping : constant Wide_Character_Mapping := To_Mapping (
                                            "ABCDEFGHIJKLMNOPQRSTUVWXYZ.",
                                            "abcdefghijklmnopqrstuvwxyz-");
    --  Lower case alpha characters, map '.' to '-' for GNAT style naming
 
-   function Gnat_Source_Name (Package_Name : in Wide_String)
+   function Gnat_Source_Name (Package_Name : Wide_String)
       return Wide_String;
    --  Return the GNAT externally formatted (file name) for a package.
-
-   ------------
-   -- Banner --
-   ------------
-
-   function Banner (Facility_Name      : in Wide_String;
-                    Banner_Message     : in Wide_String := "00001";
-                    Copyright_Message  : in Wide_String := "00002";
-                    Catalog            : in Catalog_Type := Standard_Catalog)
-      return Time
-   is
-
-      Arguments  : ZanyBlue.Text.Arguments.Argument_List;
-      Start_Time : Time;
-
-   begin
-      Start_Time := Clock;
-      Append (Arguments, +ZanyBlue.Version_Major);
-      Append (Arguments, +ZanyBlue.Version_Minor);
-      Append (Arguments, +ZanyBlue.Version_Patch);
-      Append (Arguments, +ZanyBlue.Version_Status);
-      Append (Arguments, +ZanyBlue.Revision);
-      Append (Arguments, +Start_Time);
-      Print_Line (Facility_Name, Banner_Message, Arguments,
-                  Catalog => Catalog);
-      Print_Line (Facility_Name, Copyright_Message,
-                  Argument0 => +ZanyBlue.Copyright_Year,
-                  Catalog   => Catalog);
-      return Start_Time;
-   end Banner;
 
    --------------------
    -- Body_File_Name --
    --------------------
 
-   function Body_File_Name (Package_Name : in Wide_String;
-                            Style        : in Source_Naming_Style_Type)
+   function Body_File_Name (Package_Name : Wide_String;
+                            Style        : Source_Naming_Style_Type)
       return Wide_String
    is
    begin
@@ -102,7 +71,7 @@ package body ZanyBlue.Utils is
    -- Gnat_Source_Name --
    ----------------------
 
-   function Gnat_Source_Name (Package_Name : in Wide_String) return Wide_String
+   function Gnat_Source_Name (Package_Name : Wide_String) return Wide_String
    is
    begin
       --  Lowercase the package name and replace periods with dashes.
@@ -113,8 +82,8 @@ package body ZanyBlue.Utils is
    -- Spec_File_Name --
    --------------------
 
-   function Spec_File_Name (Package_Name : in Wide_String;
-                            Style        : in Source_Naming_Style_Type)
+   function Spec_File_Name (Package_Name : Wide_String;
+                            Style        : Source_Naming_Style_Type)
       return Wide_String
    is
    begin
@@ -123,25 +92,5 @@ package body ZanyBlue.Utils is
          return Gnat_Source_Name (Package_Name) & ".ads";
       end case;
    end Spec_File_Name;
-
-   -------------
-   -- Trailer --
-   -------------
-
-   procedure Trailer (Facility_Name     : in Wide_String;
-                      Start_Time        : in Ada.Calendar.Time;
-                      Trailer_Message   : in Wide_String := "00003";
-                      Catalog           : in Catalog_Type := Standard_Catalog)
-   is
-
-      Now     : constant Time := Clock;
-      Elapsed : constant Duration := Now - Start_Time;
-
-   begin
-      Print_Line (Facility_Name, Trailer_Message,
-                  Argument0 => +Now,
-                  Argument1 => +Elapsed,
-                  Catalog   => Catalog);
-   end Trailer;
 
 end ZanyBlue.Utils;

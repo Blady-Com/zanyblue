@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -42,7 +43,7 @@ package body ZanyBlue.Text.Generic_Fixed is
    -- Create --
    ------------
 
-   function Create (Fixed_Value : in Fixed_Type) return Fixed_Argument_Type is
+   function Create (Fixed_Value : Fixed_Type) return Fixed_Argument_Type is
    begin
       return Fixed_Argument_Type'(Data => Fixed_Value);
    end Create;
@@ -51,10 +52,11 @@ package body ZanyBlue.Text.Generic_Fixed is
    -- Format --
    ------------
 
-   function Format (Value     : in Fixed_Argument_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   overriding
+   function Format (Value     : Fixed_Argument_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       pragma Unreferenced (Type_Name);
       Formatting : constant Format_Type := Parse (Template, Locale);
    begin

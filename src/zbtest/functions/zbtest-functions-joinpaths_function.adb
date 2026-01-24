@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -37,7 +38,7 @@ with ZanyBlue.Wide_Directories;
 
 separate (ZBTest.Functions)
 function Joinpaths_Function (State : access State_Type;
-                             Args  : in List_Type) return Wide_String is
+                             Args  : List_Type) return Wide_String is
    pragma Unreferenced (State);
 
    use Ada.Strings.Wide_Unbounded;

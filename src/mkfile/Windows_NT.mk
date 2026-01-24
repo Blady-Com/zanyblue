@@ -1,7 +1,8 @@
+#  -*- coding: utf-8 -*-
 #
 #  ZanyBlue, an Ada library and framework for finite element analysis.
 #
-#  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+#  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -41,6 +42,9 @@ E=.exe
 
 # Explicitly use "python script.py" on Windows
 PYTHON=python
+
+# TODO: Issues with line endings on Windows, use Production builds
+BUILD=Production
 
 # This is a real hack to get the year and probably doesn't work on non-English
 # systems!

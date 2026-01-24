@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -74,8 +75,8 @@ package body ZanyBlue.Text is
    -- Files_Differ --
    ------------------
 
-   function Files_Differ (Left_File_Name  : in Wide_String;
-                          Right_File_Name : in Wide_String) return Boolean is
+   function Files_Differ (Left_File_Name  : Wide_String;
+                          Right_File_Name : Wide_String) return Boolean is
       use Ada.Text_IO;
       use Ada.Text_IO.Text_Streams;
 
@@ -122,7 +123,7 @@ package body ZanyBlue.Text is
    ----------------------------
 
    procedure Wide_Create_For_Update (File : in out Ada.Wide_Text_IO.File_Type;
-                                     Name : in Wide_String) is
+                                     Name : Wide_String) is
       use Ada.Wide_Text_IO;
    begin
       Wide_Create (File, Name & Update_Extension);
@@ -132,7 +133,7 @@ package body ZanyBlue.Text is
    -- Wide_Hash --
    ---------------
 
-   function Wide_Hash (Key : in Wide_String) return Ada.Containers.Hash_Type is
+   function Wide_Hash (Key : Wide_String) return Ada.Containers.Hash_Type is
 
       use Ada.Containers;
 

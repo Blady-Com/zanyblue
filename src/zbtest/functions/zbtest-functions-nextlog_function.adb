@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -36,26 +37,26 @@ with Ada.Strings.Wide_Fixed;
 
 separate (ZBTest.Functions)
 function Nextlog_Function (State : access State_Type;
-                           Args  : in List_Type) return Wide_String is
+                           Args  : List_Type) return Wide_String is
 
    use Ada.Strings.Wide_Fixed;
 
    function Counter_Log_Name (State        : access State_Type;
-                              Counter_Name : in Wide_String;
-                              With_Undo    : in Boolean) return Wide_String;
+                              Counter_Name : Wide_String;
+                              With_Undo    : Boolean) return Wide_String;
 
    function Log_Name (State     : access State_Type;
-                      Base_Name : in Wide_String;
-                      Log_Num   : in Positive;
-                      With_Undo : in Boolean) return Wide_String;
+                      Base_Name : Wide_String;
+                      Log_Num   : Positive;
+                      With_Undo : Boolean) return Wide_String;
 
    ----------------------
    -- Counter_Log_Name --
    ----------------------
 
    function Counter_Log_Name (State        : access State_Type;
-                              Counter_Name : in Wide_String;
-                              With_Undo    : in Boolean) return Wide_String is
+                              Counter_Name : Wide_String;
+                              With_Undo    : Boolean) return Wide_String is
       Test_Name : constant Wide_String := State.Get_String ("_testname");
    begin
       if Counter_Name'Length = 0 or else Head (Counter_Name, 1) = "_" then
@@ -74,9 +75,9 @@ function Nextlog_Function (State : access State_Type;
    --------------
 
    function Log_Name (State     : access State_Type;
-                      Base_Name : in Wide_String;
-                      Log_Num   : in Positive;
-                      With_Undo : in Boolean) return Wide_String is
+                      Base_Name : Wide_String;
+                      Log_Num   : Positive;
+                      With_Undo : Boolean) return Wide_String is
 
       Result : constant Wide_String := Format ("{0}-{1,=2}.log",
                                                +Base_Name, +Log_Num);

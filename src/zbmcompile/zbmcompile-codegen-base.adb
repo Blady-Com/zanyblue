@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -48,41 +49,42 @@ package body ZBMCompile.Codegen.Base is
    use ZanyBlue.Wide_Directories;
 
    procedure Create_Message_List (File    : in out File_Type;
-                                  Catalog : in Catalog_Type;
-                                  Options : in Parameter_Set_Type);
+                                  Catalog : Catalog_Type;
+                                  Options : Parameter_Set_Type);
    --  Write the code to add the messages using indexes to vectors already
    --  generated.
 
    procedure Write_Name_List (File     : in out File_Type;
-                              Catalog  : in Catalog_Type;
-                              Name     : in Wide_String;
-                              Names    : in Wide_String;
-                              N        : in Natural;
-                              Options  : in Parameter_Set_Type;
+                              Catalog  : Catalog_Type;
+                              Name     : Wide_String;
+                              Names    : Wide_String;
+                              N        : Natural;
+                              Options  : Parameter_Set_Type;
                               Namer    : access
-                                 function (Catalog : in Catalog_Type;
-                                           I       : in Positive)
+                                 function (Catalog : Catalog_Type;
+                                           I       : Positive)
                                     return Wide_String);
    --  Write a list of names to the generated source file, Keys, Locales, etc.
 
    procedure Write_Query_Decl (File    : in out File_Type;
-                               Name    : in Wide_String;
-                               Options : in Parameter_Set_Type);
+                               Name    : Wide_String;
+                               Options : Parameter_Set_Type);
    --  Write the declaration for a generated query function which returns
    --  a facility or key name given an index.
 
    procedure Write_Query_Impl (File       : in out File_Type;
-                               Name       : in Wide_String;
-                               Table_Name : in Wide_String;
-                               Options    : in Parameter_Set_Type);
+                               Name       : Wide_String;
+                               Table_Name : Wide_String;
+                               Options    : Parameter_Set_Type);
    --  Write the implementation for a generated query function which returns
    --  a facility or key name given an index.
 
    procedure Write_String (File       : in out File_Type;
-                           Name       : in Wide_String;
-                           Value      : in Wide_String;
-                           Width      : in Positive;
-                           Decl_Index : in Positive := 1);
+                           Name       : Wide_String;
+                           Value      : Wide_String;
+                           ASCII      : Boolean;
+                           Width      : Positive;
+                           Decl_Index : Positive := 1);
    --  Write a string (facility names, keys names, locale names and string
    --  pool) allowing for line over-runs.  The string is written to the file
    --  in a series of sub-strings concatenated together (the output line
@@ -96,16 +98,16 @@ package body ZBMCompile.Codegen.Base is
    -------------------------
 
    procedure Create_Message_List (File    : in out File_Type;
-                                  Catalog : in Catalog_Type;
-                                  Options : in Parameter_Set_Type) is
+                                  Catalog : Catalog_Type;
+                                  Options : Parameter_Set_Type) is
 
-      procedure Add_Message (F        : in Facility_Index_Type;
-                             K        : in Key_Index_Type;
-                             L        : in Locale_Index_Type;
-                             EL       : in Locale_Index_Type;
-                             First    : in Positive;
-                             Last     : in Natural;
-                             Count    : in Natural);
+      procedure Add_Message (F        : Facility_Index_Type;
+                             K        : Key_Index_Type;
+                             L        : Locale_Index_Type;
+                             EL       : Locale_Index_Type;
+                             First    : Positive;
+                             Last     : Natural;
+                             Count    : Natural);
       --  Add an individual message definition, handling the case where
       --  the message is the last message in the list, i.e., no comma.
 
@@ -121,13 +123,13 @@ package body ZBMCompile.Codegen.Base is
       -- Add_Message --
       -----------------
 
-      procedure Add_Message (F        : in Facility_Index_Type;
-                             K        : in Key_Index_Type;
-                             L        : in Locale_Index_Type;
-                             EL       : in Locale_Index_Type;
-                             First    : in Positive;
-                             Last     : in Natural;
-                             Count    : in Natural) is
+      procedure Add_Message (F        : Facility_Index_Type;
+                             K        : Key_Index_Type;
+                             L        : Locale_Index_Type;
+                             EL       : Locale_Index_Type;
+                             First    : Positive;
+                             Last     : Natural;
+                             Count    : Natural) is
 
          pragma Unreferenced (Count);
 
@@ -144,8 +146,10 @@ package body ZBMCompile.Codegen.Base is
                                                            Last_Message),
                      Argument0 => +Positive (L),
                      Argument1 => +Positive (EL));
-         Write_Commented_Text (File, Pool (First .. Last),
-                               Options.Get_Integer ("comment_size"));
+         if not Options.Get_Boolean ("ascii_only") then
+            Write_Commented_Text (File, Pool (First .. Last),
+                                  Options.Get_Integer ("comment_size"));
+         end if;
          Current := Current + 1;
       end Add_Message;
 
@@ -165,8 +169,8 @@ package body ZBMCompile.Codegen.Base is
    -- Create_Root_Body --
    ----------------------
 
-   procedure Create_Root_Body (Catalog          : in Catalog_Type;
-                               Options          : in Parameter_Set_Type) is
+   procedure Create_Root_Body (Catalog          : Catalog_Type;
+                               Options          : Parameter_Set_Type) is
 
       Output_Directory : constant Wide_String
                               := Options.Get_String ("output_directory");
@@ -203,6 +207,7 @@ package body ZBMCompile.Codegen.Base is
                           Get_Locale_Name'Access);
          --  Write the string pool
          Write_String (File, "Pool_Data", Pool,
+                       Options.Get_Boolean ("ascii_only"),
                        Options.Get_Integer ("pool_size"));
          Print_Line (File, ZBMBase_Facility, "10014");
          Create_Message_List (File, Catalog, Options);
@@ -233,8 +238,8 @@ package body ZBMCompile.Codegen.Base is
    -- Create_Root_Spec --
    ----------------------
 
-   procedure Create_Root_Spec (Catalog          : in Catalog_Type;
-                               Options          : in Parameter_Set_Type) is
+   procedure Create_Root_Spec (Catalog          : Catalog_Type;
+                               Options          : Parameter_Set_Type) is
 
       pragma Unreferenced (Catalog);
 
@@ -263,7 +268,8 @@ package body ZBMCompile.Codegen.Base is
       Print_Line (File, ZBMBase_Facility, "00006");
       Write_Query_Decl (File, "Facility", Options);
       Write_Query_Decl (File, "Key", Options);
-      Print_Line (File, ZBMBase_Facility, "00009", +Modes_String (Options));
+      Print_Line (File, ZBMBase_Facility, "00009",
+                  +Modes_String (Options));
       if Options.Get_Boolean ("use_export_name") then
          Print_Line (File, ZBMBase_Facility, "00010",
                      Argument0 => +Options.Get_String ("export_name"));
@@ -283,18 +289,19 @@ package body ZBMCompile.Codegen.Base is
    ---------------------
 
    procedure Write_Name_List (File     : in out File_Type;
-                              Catalog  : in Catalog_Type;
-                              Name     : in Wide_String;
-                              Names    : in Wide_String;
-                              N        : in Natural;
-                              Options  : in Parameter_Set_Type;
+                              Catalog  : Catalog_Type;
+                              Name     : Wide_String;
+                              Names    : Wide_String;
+                              N        : Natural;
+                              Options  : Parameter_Set_Type;
                               Namer    : access
-                                 function (Catalog : in Catalog_Type;
-                                           I       : in Positive)
+                                 function (Catalog : Catalog_Type;
+                                           I       : Positive)
                                     return Wide_String) is
    begin
       for I in 1 .. N loop
          Write_String (File, Name, Namer (Catalog, I),
+                       Options.Get_Boolean ("ascii_only"),
                        Options.Get_Integer ("pool_size"),
                        Decl_Index => I);
       end loop;
@@ -330,8 +337,8 @@ package body ZBMCompile.Codegen.Base is
    ----------------------
 
    procedure Write_Query_Decl (File    : in out File_Type;
-                               Name    : in Wide_String;
-                               Options : in Parameter_Set_Type) is
+                               Name    : Wide_String;
+                               Options : Parameter_Set_Type) is
       M_String : constant Wide_String := Modes_String (Options);
    begin
       Print_Line (File, ZBMBase_Facility, "00007", +Name, +M_String);
@@ -343,9 +350,9 @@ package body ZBMCompile.Codegen.Base is
    ----------------------
 
    procedure Write_Query_Impl (File       : in out File_Type;
-                               Name       : in Wide_String;
-                               Table_Name : in Wide_String;
-                               Options    : in Parameter_Set_Type) is
+                               Name       : Wide_String;
+                               Table_Name : Wide_String;
+                               Options    : Parameter_Set_Type) is
       M_String : constant Wide_String := Modes_String (Options);
       Dash     : constant Wide_Character := '-';
    begin
@@ -360,10 +367,11 @@ package body ZBMCompile.Codegen.Base is
    ------------------
 
    procedure Write_String (File       : in out File_Type;
-                           Name       : in Wide_String;
-                           Value      : in Wide_String;
-                           Width      : in Positive;
-                           Decl_Index : in Positive := 1) is
+                           Name       : Wide_String;
+                           Value      : Wide_String;
+                           ASCII      : Boolean;
+                           Width      : Positive;
+                           Decl_Index : Positive := 1) is
 
       use Ada.Wide_Characters.Unicode;
 
@@ -419,16 +427,23 @@ package body ZBMCompile.Codegen.Base is
 
    begin
       Print_Line (File, ZBMBase_Facility, "10004", +Name, +Decl_Index);
-      while not Finished loop
-         if Is_Non_Graphic (Current_Character) then
+      if ASCII then
+         for I in Value'Range loop
             Print_Line (File, ZBMBase_Facility, "10005",
-                        +Current_Character_Pos);
-            Advance;
-         else
-            Print_Line (File, ZBMBase_Facility, "10006",
-                        +Buffered_Data);
-         end if;
-      end loop;
+                        +Wide_Character'Pos (Value (I)));
+         end loop;
+      else
+         while not Finished loop
+            if Is_Non_Graphic (Current_Character) then
+               Print_Line (File, ZBMBase_Facility, "10005",
+                           +Current_Character_Pos);
+               Advance;
+            else
+               Print_Line (File, ZBMBase_Facility, "10006",
+                           +Buffered_Data);
+            end if;
+         end loop;
+      end if;
       Print_Line (File, ZBMBase_Facility, "10007");
    end Write_String;
 

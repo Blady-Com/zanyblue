@@ -1,7 +1,8 @@
+#  -*- coding: utf-8 -*-
 #
 #  ZanyBlue, an Ada library and framework for finite element analysis.
 #
-#  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+#  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -52,14 +53,15 @@ OS ?= unix
 #TYPE=relocatable
 TYPE=static
 
-GNATMAKE=gnatmake
+# Lowercase macro
+lc = $(subst A,a,$(subst B,b,$(subst C,c,$(subst D,d,$(subst E,e,$(subst F,f,$(subst G,g,$(subst H,h,$(subst I,i,$(subst J,j,$(subst K,k,$(subst L,l,$(subst M,m,$(subst N,n,$(subst O,o,$(subst P,p,$(subst Q,q,$(subst R,r,$(subst S,s,$(subst T,t,$(subst U,u,$(subst V,v,$(subst W,w,$(subst X,x,$(subst Y,y,$(subst Z,z,$1))))))))))))))))))))))))))
+
+GPRBUILD=gprbuild
 GNATCHECK=gnat check
 GNATCLEAN=gnat clean
-GNATHTML=gnathtml.pl
-
-# HTML Preprocessor
-HTP=htp
+GNATDOC=gnatdoc
 TAR=tar
+MD5SUM=md5sum
 
 include $(TOP)/src/mkfile/$(OS).mk
 
@@ -81,6 +83,12 @@ PREPFLAGS+=-DCOPYRIGHT_YEAR=$(COPYRIGHT_YEAR)
 # If defs.mk doesn't exist, i.e., this is not a source tar ball
 # snapshot, query the environment for the svn version and copyright info.
 VERSION=$(V_MAJOR).$(V_MINOR).$(V_PATCH)
+VERSION_TLD=$(call lc,$(VERSION)$(V_STATUS_C))
+VERSION_S=$(subst :,-,$(call lc,$(VERSION_TLD)-r$(SVN_VERSION)))
+DOWNLOAD_ROOT="http://sourceforge.net/projects/zanyblue/files"
+DOWNLOAD_URL="$(DOWNLOAD_ROOT)/zanyblue-$(VERSION_S).tar.gz"
+DIST_TLD=$(call lc,zanyblue-$(VERSION_TLD))
+TARNAME=zanyblue-$(VERSION_S).tar.gz
 ifndef SVN_VERSION
 SVN_VERSION=$(shell svnversion $(TOP))
 COPYRIGHT_YEAR=$(CURRENT_YEAR)
@@ -97,13 +105,7 @@ GPRDIR=$(TOP)/lib/gnat
 SRCDIR=$(TOP)/src
 STAGEDIR=$(TOP)/stage
 ADMINDIR=$(SRCDIR)/admin
-ifeq ($(DEV_BUILD),no)
-GANALYTICSHTI=$(ADMINDIR)/ganalytics.hti
-else
-GANALYTICSHTI=$(ADMINDIR)/ganalytics-stub.hti
-endif
-DISTRIBUTION=$(wildcard $(TOP)/zanyblue-*.tar.gz)
-DISTRIBDIR=$(wildcard $(STAGEDIR)/*)
+DISTRIBUTION=$(TOP)/$(TARNAME)
 
 # The choices for BUILD are "Debug", for a debug build, "Production" for an
 # optimized production build, and  "Coverage" for a coverage enable build via
@@ -115,9 +117,14 @@ endif
 
 # ---------------------------------------------------------------------------
 # Macros derived from the configuration macros.
-GNATFLAGS+=-XOS=$(OS)
-GNATFLAGS+=-XTYPE=$(TYPE)
-GNATFLAGS+=-XBUILD=$(BUILD)
+GNATXDEFS+=-XOS=$(OS)
+GNATXDEFS+=-XTYPE=$(TYPE)
+GNATXDEFS+=-XBUILD=$(BUILD)
+GNATXDEFS+=-XV_MAJOR=$(V_MAJOR)
+GNATXDEFS+=-XV_MINOR=$(V_MINOR)
+GNATXDEFS+=-XV_PATCH=$(V_PATCH)
+GNATXDEFS+=-XV_STATUS=$(V_STATUS)
+GNATFLAGS+=$(GNATXDEFS)
 GNATFLAGS+=-aP$(TOP)/lib/gnat
 GNATFLAGS+=-aP$(TOP)/src
 
@@ -137,6 +144,10 @@ CLEAN_FILES+=$(wildcard $(TOP)/src/utils/*.gcov)
 #
 # Remove editor backup files
 CLEAN_FILES+=$(wildcard *~)
+
+#
+# Remove auto.cgpr files
+CLEAN_FILES+=$(wildcard auto.cgpr)
 
 #
 # Generated files should be removed ...

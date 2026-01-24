@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -38,7 +39,7 @@ package body ZanyBlue.Text.Unbounded_Strings is
    -- Create --
    ------------
 
-   function Create (Value : in Unbounded_String) return String_Argument_Type is
+   function Create (Value : Unbounded_String) return String_Argument_Type is
    begin
       return Create (To_String (Value));
    end Create;

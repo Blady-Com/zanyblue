@@ -1,7 +1,8 @@
+#  -*- coding: utf-8 -*-
 #
 #  ZanyBlue, an Ada library and framework for finite element analysis.
 #
-#  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+#  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -40,7 +41,7 @@
 TOP=../../..
 GNATFLAGS=-aP$(TOP)/lib
 ZBMCOMPILE=$(TOP)/bin/zbmcompile
-APPNAME=x_formatting
+APPNAME=zbx_formatting
 APPLICATION=$(TOP)/bin/$(APPNAME)
 PROPNAME=xformatting
 PACKAGE=XFormatting_Messages
@@ -49,7 +50,7 @@ GENERATED=$(PROPNAME)_messages.ads $(PROPNAME)_messages.adb
 include $(TOP)/src/mkfile/conf.mk
 
 all:	$(GENERATED)
-	$(GNATMAKE) -p $(GNATFLAGS) -P $(APPNAME).gpr
+	$(GPRBUILD) -p $(GNATFLAGS) -P $(APPNAME).gpr
 
 $(GENERATED):	$(wildcard $(PROPNAME)*.properties)
 	$(ZBMCOMPILE) -i -v $(PACKAGE) $(PROPNAME)

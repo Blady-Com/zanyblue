@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -45,7 +46,7 @@ package body ZanyBlue.Text.Generic_Modulars is
    -- Create --
    ------------
 
-   function Create (Value : in Modular_Type) return Modular_Argument_Type is
+   function Create (Value : Modular_Type) return Modular_Argument_Type is
    begin
       return Modular_Argument_Type'(Data => Value);
    end Create;
@@ -54,13 +55,14 @@ package body ZanyBlue.Text.Generic_Modulars is
    -- Format --
    ------------
 
-   function Format (Value     : in Modular_Argument_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   overriding
+   function Format (Value     : Modular_Argument_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       pragma Unreferenced (Type_Name);
 
-      procedure Generate_Number (X : in Modular_Type'Base);
+      procedure Generate_Number (X : Modular_Type'Base);
 
       Formatting : constant Format_Type := Parse (Template, Locale);
       Buffer     : Buffer_Type;
@@ -68,7 +70,7 @@ package body ZanyBlue.Text.Generic_Modulars is
       Digit_Map  : Wide_String (1 .. 16);
       Base       : Modular_Type'Base range 2 .. 16;
 
-      procedure Generate_Number (X : in Modular_Type'Base) is
+      procedure Generate_Number (X : Modular_Type'Base) is
       begin
          if X / Base > 0 then
             Generate_Number (X / Base);

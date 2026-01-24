@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -38,13 +39,14 @@ package ZBMCompile.Checks is
 
    use ZBMCompile.Parser_Handler;
 
-   procedure Accessors_Check (Handler  : in out ZBMC_Handler_Type);
+   procedure Accessors_Check (Handler       : in out ZBMC_Handler_Type;
+                              Ignore_Errors : Boolean);
    --  Check the facility and key names used are valid Ada identifier names
    --  to support accessor function generation.
 
    procedure Consistency_Check (Handler     : in out ZBMC_Handler_Type;
-                                Facility    : in Wide_String;
-                                Base_Locale : in Wide_String);
+                                Facility    : Wide_String;
+                                Base_Locale : Wide_String);
    --  Check cross locale consistency of messages, i.e., ensure localized
    --  messages do not have more argument references than the base locale.
    --  It's OK for a localized message to have less argument references.

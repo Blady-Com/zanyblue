@@ -1,5 +1,38 @@
 #!/usr/bin/env python
-# -*- encoding: utf8 -*-
+#  -*- coding: utf-8 -*-
+#
+#  ZanyBlue, an Ada library and framework for finite element analysis.
+#
+#  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+#  All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#
+#    * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#    * Redistributions in binary form must reproduce the above copyright
+#      notice, this list of conditions and the following disclaimer in the
+#      documentation and/or other materials provided with the distribution.
+#
+#    * Neither the name of ZanyBlue nor the names of its contributors may
+#      be used to endorse or promote products derived from this software
+#      without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+#  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+#  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+#  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+#  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+#  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+#  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+#  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+#  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+#  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
 
 """
 mkwebbundle: Generate the website tar ball for ZanyBlue
@@ -14,11 +47,9 @@ from optparse import OptionParser
 _ROOT_DIR = sys.path[0]
 sys.path.insert(0, os.path.join(_ROOT_DIR, "pylib"))
 
-from bundles import TarDestination, ZipDestination
+META = '<meta name="keywords" contents="Ada, g11n, i18n, l10n, finite element, testing , properties">'
 
-_EXAMPLES = [
-    "x_curtime", "x_dumplocale", "x_formatting", "x_jenkins", "x_tomcat"
-]
+from bundles import TarDestination, ZipDestination
 
 _0001 = "This is MKWEBBUNDLE, V{0} - {1} on {2}."
 _0002 = "Copyright © {0}, Michael Rohan.  All rights reserved."
@@ -27,10 +58,11 @@ _0004 = "Generating bundles for V{0}, r{2} ({1})"
 _0005 = "Generating the bundle \"{0}\" ({1} entries) ..."
 _0006 = "No output file types specified via the -t option"
 _0007 = "The output file type \"{0}\" is not known"
+_0008 = "The {0} must be defined on the command line (\"{1}\" option)"
 
 _DEFAULT_TYPE = ("zip" if os.sys.platform.startswith("win") else "tar.gz")
 _GANALYTICS_FILE = "src/admin/google-analytics.html"
-_GANALYTICS_NULL = "<!-- Google Analytics: Development, not included -->\n"
+_GANALYTICS_NULL = "<!-- Google Analytics: Not included -->\n"
 
 _FILE_TYPES = set(['tar', 'tar.bz2', 'tar.gz', 'zip'])
 
@@ -47,16 +79,6 @@ def locate_top(args):
         for i in range(3):
             top = os.path.dirname(top)
     return top
-
-
-def query_make(top, make, variable):
-    """
-    Return the value of a Makefile variable by querying the top level source
-    Makefile.
-    """
-    cmd = "{0} -s -C \"{1}/src\" print_{2}".format(make, top, variable)
-    result = os.popen(cmd).read().strip()
-    return result
 
 
 def load_file(top, path):
@@ -97,11 +119,6 @@ def mk_bundle(top, ganalytics, name, filetype, verbose, files,
             add_html(result, name, srcfile, ganalytics)
         else:
             result.add(srcfile, name)
-    for example in _EXAMPLES:
-        result.add(
-            os.path.join(top, "bin", example),
-            ".bin/{0}".format(example)
-        )
     return result
 
 
@@ -113,6 +130,8 @@ def add_html(result, name, srcfile, ganalytics):
         idx = line.lower().find("</body>")
         if idx != -1:
             outfile.write("{0}\n{1}{2}".format(line[:idx], ganalytics, line[idx:]))
+        elif '<head>' in line:
+            outfile.write("{0}\n    {1}\n".format(line, META))
         else:
             outfile.write(line)
     outfile.close()
@@ -184,15 +203,24 @@ def main():
         for filetype in unknown_types:
             print _0007.format(filetype)
         return 1
-    version = options.version or query_make(top, make, "VERSION")
-    revision = options.revision or query_make(top, make, "SVN_VERSION")
-    status = options.status or query_make(top, make, "V_STATUS")
+    version = options.version
+    if not version:
+        print _0011.format("version", "-V")
+        return 1
+    revision = options.revision
+    if not revision:
+        print _0011.format("revision", "-R")
+        return 1
+    status = options.status
+    if not status:
+        print _0011.format("status", "-S")
+        return 1
     # Normalize status and revision values
     revision = revision.replace(":", "-")
     print _0001.format(version, status, time.ctime())
     if verbose:
         print _0004.format(version, status, revision)
-    if options.production or 'M' not in revision:
+    if options.production:
         ganalytics = load_file(top, _GANALYTICS_FILE)
     else:
         ganalytics = _GANALYTICS_NULL

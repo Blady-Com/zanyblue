@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -37,23 +38,23 @@ with Ada.Strings.Wide_Unbounded;
 
 separate (ZBTest.Commands)
 procedure Setenv_Command (State : in out State_Type;
-                          Args  : in List_Type) is
+                          Args  : List_Type) is
 
    use Ada.Environment_Variables;
 
    procedure Set_Literal_Value (State       : in out State_Type;
-                                Name        : in Wide_String;
-                                Definition  : in Wide_String);
+                                Name        : Wide_String;
+                                Definition  : Wide_String);
    --  Set an environment variable from a literal value.
 
    procedure Set_List_Value (State     : in out State_Type;
-                             Name      : in Wide_String;
-                             Parameter : in Wide_String);
+                             Name      : Wide_String;
+                             Parameter : Wide_String);
    --  Set an environment variable from a list parameter value.
 
    procedure Set_Scalar_Value (State     : in out State_Type;
-                               Name      : in Wide_String;
-                               Parameter : in Wide_String);
+                               Name      : Wide_String;
+                               Parameter : Wide_String);
    --  Set an environment variable from a scalar parameter value.
 
    --------------------
@@ -61,8 +62,8 @@ procedure Setenv_Command (State : in out State_Type;
    --------------------
 
    procedure Set_List_Value (State     : in out State_Type;
-                             Name      : in Wide_String;
-                             Parameter : in Wide_String) is
+                             Name      : Wide_String;
+                             Parameter : Wide_String) is
       use Ada.Strings.Wide_Unbounded;
       List_Value : constant List_Type := State.Get_List (Parameter);
       PSep       : constant Wide_Character := State.Get_Character ("_pathsep");
@@ -83,8 +84,8 @@ procedure Setenv_Command (State : in out State_Type;
    -----------------------
 
    procedure Set_Literal_Value (State       : in out State_Type;
-                                Name        : in Wide_String;
-                                Definition  : in Wide_String) is
+                                Name        : Wide_String;
+                                Definition  : Wide_String) is
    begin
       if Exists (To_UTF8 (Name)) then
          State.Add_Undo_Action (Format ("setenv {0} ""{1}""",
@@ -101,8 +102,8 @@ procedure Setenv_Command (State : in out State_Type;
    ----------------------
 
    procedure Set_Scalar_Value (State     : in out State_Type;
-                               Name      : in Wide_String;
-                               Parameter : in Wide_String) is
+                               Name      : Wide_String;
+                               Parameter : Wide_String) is
    begin
       Set_Literal_Value (State, Name, State.Get_String (Parameter));
    end Set_Scalar_Value;

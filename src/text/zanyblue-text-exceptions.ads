@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -45,20 +46,20 @@ package ZanyBlue.Text.Exceptions is
    type Exception_Argument_Type (<>) is
       new Exception_Category_Type with private;
 
-   function Create (Value : in Exception_Occurrence)
+   function Create (Value : Exception_Occurrence)
       return Exception_Argument_Type;
    --  Create a "boxed" instance of a string type.
 
-   function "+" (Value : in Exception_Occurrence)
+   function "+" (Value : Exception_Occurrence)
       return Exception_Argument_Type
       renames Create;
    --  Utility renaming of the "Create" function.
 
    overriding
-   function Format (Value     : in Exception_Argument_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String;
+   function Format (Value     : Exception_Argument_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String;
    --  Format an individual argument using the Template to direct the
    --  conversion.
 

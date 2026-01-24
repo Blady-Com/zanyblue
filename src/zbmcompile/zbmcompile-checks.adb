@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -32,8 +33,6 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Strings.Wide_Fixed;
-with Ada.Strings.Wide_Maps.Wide_Constants;
 with ZanyBlue.Text.Catalogs;
 with ZanyBlue.Text.Formatting;
 
@@ -43,15 +42,12 @@ package body ZBMCompile.Checks is
    use ZanyBlue.Text.Catalogs;
    use ZanyBlue.Text.Formatting;
 
-   function Is_Ada_Identifier_OK (Name : in Wide_String) return Boolean;
-   --  Is the given name a valid Ada identifier name?  Leading digits are
-   --  OK as the name will be prefixed with standard prefixes later.
-
    ---------------------
    -- Accessors_Check --
    ---------------------
 
-   procedure Accessors_Check (Handler  : in out ZBMC_Handler_Type) is
+   procedure Accessors_Check (Handler       : in out ZBMC_Handler_Type;
+                              Ignore_Errors : Boolean) is
       Catalog : constant Catalog_Type := Get_Catalog (Handler);
       Facility_Index : Facility_Index_Type;
       Key_Index : Key_Index_Type;
@@ -62,17 +58,29 @@ package body ZBMCompile.Checks is
          if not Is_Ada_Identifier_OK (Get_Facility (Catalog,
                                                     Facility_Index))
          then
-            Print_Line (ZBMCompile_Facility, "E00017",
-                        Argument0 => +Get_Facility (Catalog, Facility_Index));
-            Handler.Increment_Errors;
+            if Ignore_Errors then
+               Print_Line (ZBMCompile_Facility, "I00009",
+                           Argument0 => +Get_Facility (Catalog,
+                                                       Facility_Index));
+            else
+               Print_Line (ZBMCompile_Facility, "E00017",
+                           Argument0 => +Get_Facility (Catalog,
+                                                       Facility_Index));
+               Handler.Increment_Errors;
+            end if;
          end if;
       end loop;
       for I in 1 .. Number_Of_Keys (Catalog) loop
          Key_Index := I;
          if not Is_Ada_Identifier_OK (Get_Key (Catalog, Key_Index)) then
-            Print_Line (ZBMCompile_Facility, "E00018",
-                        Argument0 => +Get_Key (Catalog, Key_Index));
-            Handler.Increment_Errors;
+            if Ignore_Errors then
+               Print_Line (ZBMCompile_Facility, "I00010",
+                           Argument0 => +Get_Key (Catalog, Key_Index));
+            else
+               Print_Line (ZBMCompile_Facility, "E00018",
+                           Argument0 => +Get_Key (Catalog, Key_Index));
+               Handler.Increment_Errors;
+            end if;
          end if;
       end loop;
    end Accessors_Check;
@@ -82,22 +90,22 @@ package body ZBMCompile.Checks is
    -----------------------
 
    procedure Consistency_Check (Handler     : in out ZBMC_Handler_Type;
-                                Facility    : in Wide_String;
-                                Base_Locale : in Wide_String) is
+                                Facility    : Wide_String;
+                                Base_Locale : Wide_String) is
 
-      procedure Callback (Catalog  : in Catalog_Type;
-                          Facility : in Wide_String;
-                          Key_Name : in Wide_String;
-                          Locales  : in Locale_Definitions_Map);
+      procedure Callback (Catalog  : Catalog_Type;
+                          Facility : Wide_String;
+                          Key_Name : Wide_String;
+                          Locales  : Locale_Definitions_Map);
 
       --------------
       -- Callback --
       --------------
 
-      procedure Callback (Catalog  : in Catalog_Type;
-                          Facility : in Wide_String;
-                          Key_Name : in Wide_String;
-                          Locales  : in Locale_Definitions_Map) is
+      procedure Callback (Catalog  : Catalog_Type;
+                          Facility : Wide_String;
+                          Key_Name : Wide_String;
+                          Locales  : Locale_Definitions_Map) is
 
          pragma Unreferenced (Catalog);
 
@@ -105,11 +113,11 @@ package body ZBMCompile.Checks is
 
          Ref_Arg_Count : Natural;
 
-         procedure Check_Other_Locales (Position : in Cursor);
+         procedure Check_Other_Locales (Position : Cursor);
 
-         procedure Report_Extra_Locales (Position : in Cursor);
+         procedure Report_Extra_Locales (Position : Cursor);
 
-         procedure Check_Other_Locales (Position : in Cursor) is
+         procedure Check_Other_Locales (Position : Cursor) is
             L : constant Natural :=
                 Natural (String_Vectors.Length (Element (Position).Arg_Types));
          begin
@@ -122,7 +130,7 @@ package body ZBMCompile.Checks is
             end if;
          end Check_Other_Locales;
 
-         procedure Report_Extra_Locales (Position : in Cursor) is
+         procedure Report_Extra_Locales (Position : Cursor) is
          begin
             Print_Line (ZBMCompile_Facility, "E00014",
                         Argument0 => +Key_Name,
@@ -155,17 +163,5 @@ package body ZBMCompile.Checks is
                      Argument1 => +Base_Locale);
       end if;
    end Consistency_Check;
-
-   --------------------------
-   -- Is_Ada_Identifier_OK --
-   --------------------------
-
-   function Is_Ada_Identifier_OK (Name : in Wide_String) return Boolean is
-      use Ada.Strings.Wide_Fixed;
-      use Ada.Strings.Wide_Maps;
-      use Ada.Strings.Wide_Maps.Wide_Constants;
-   begin
-      return Index (Name, not (Alphanumeric_Set or To_Set ("_"))) = 0;
-   end Is_Ada_Identifier_OK;
 
 end ZBMCompile.Checks;

@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -44,18 +45,18 @@ package ZanyBlue.Text.Generic_Modulars is
 
    type Modular_Argument_Type is new Modular_Category_Type with private;
 
-   function Create (Value : in Modular_Type) return Modular_Argument_Type;
+   function Create (Value : Modular_Type) return Modular_Argument_Type;
    --  Create "boxed" instance of a module type.
 
-   function "+" (Value : in Modular_Type) return Modular_Argument_Type
+   function "+" (Value : Modular_Type) return Modular_Argument_Type
       renames Create;
    --  Utility renaming for the Create function.
 
    overriding
-   function Format (Value     : in Modular_Argument_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String;
+   function Format (Value     : Modular_Argument_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String;
    --  Format a modular value for printing.
 
 private

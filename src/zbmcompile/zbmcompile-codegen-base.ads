@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -34,14 +35,14 @@
 
 package ZBMCompile.Codegen.Base is
 
-   procedure Create_Root_Body (Catalog          : in Catalog_Type;
-                               Options          : in Parameter_Set_Type);
+   procedure Create_Root_Body (Catalog          : Catalog_Type;
+                               Options          : Parameter_Set_Type);
    --  Create the generated Ada body file for the initialization
    --  routine used to load the message data: contains the actual
    --  string pool and static definitions of the strings.
 
-   procedure Create_Root_Spec (Catalog          : in Catalog_Type;
-                               Options          : in Parameter_Set_Type);
+   procedure Create_Root_Spec (Catalog          : Catalog_Type;
+                               Options          : Parameter_Set_Type);
    --  Create the generated Ada specification file for the initialization
    --  routine used to load the message data.
 

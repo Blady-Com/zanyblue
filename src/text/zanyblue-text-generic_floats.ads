@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -44,18 +45,18 @@ package ZanyBlue.Text.Generic_Floats is
 
    type Float_Argument_Type is new Float_Category_Type with private;
 
-   function Create (Float_Value : in Float_Type) return Float_Argument_Type;
+   function Create (Float_Value : Float_Type) return Float_Argument_Type;
    --  Create a "boxed" instance of a float value.
 
-   function "+" (Float_Value : in Float_Type) return Float_Argument_Type
+   function "+" (Float_Value : Float_Type) return Float_Argument_Type
       renames Create;
    --  Utility renaming of the "Create" function.
 
    overriding
-   function Format (Value     : in Float_Argument_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String;
+   function Format (Value     : Float_Argument_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String;
    --  Apply the formatting rule to generate the printable result.
 
 private

@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -43,20 +44,20 @@ package ZanyBlue.Text.Wide_Characters is
    type Wide_Character_Argument_Type is
       new Character_Category_Type with private;
 
-   function Create (Wide_Character_Value : in Wide_Character)
+   function Create (Wide_Character_Value : Wide_Character)
       return Wide_Character_Argument_Type;
    --  Create a "boxed" instance of a string type.
 
-   function "+" (Wide_Character_Value : in Wide_Character)
+   function "+" (Wide_Character_Value : Wide_Character)
       return Wide_Character_Argument_Type
       renames Create;
    --  Utility renaming of the Create function.
 
    overriding
-   function Format (Value     : in Wide_Character_Argument_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String;
+   function Format (Value     : Wide_Character_Argument_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String;
    --  Format a string for printing.
 
 private

@@ -1,7 +1,8 @@
+#  -*- coding: utf-8 -*-
 #
 #  ZanyBlue, an Ada library and framework for finite element analysis.
 #
-#  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+#  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -33,14 +34,11 @@
 #
 
 TOP=../../..
-ZBTESTFLAGS+=-N zanyblue -X summary.xml
+ZBTESTFLAGS+=-N $(firstword $(ZBTESTNAME) zanyblue)
+ZBTESTFLAGS+=-X summary.xml
 
 include $(TOP)/src/test/system/t_system.mk
 
 # Check with coverage
 gcheck:
 	$(ZBTEST) -d build_opt -XBUILD=Coverage $(ZBTESTFLAGS) system
-
-# Check with production build
-pcheck:
-	$(ZBTEST) -d build_opt -XBUILD=Production $(ZBTESTFLAGS) system

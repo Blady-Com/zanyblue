@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -37,9 +38,9 @@ package ZanyBlue.Text.Filter is
    type Message_Filter_Type is abstract tagged private;
    type Message_Filter_Access is access all Message_Filter_Type'Class;
 
-   function Is_Filtered (Filter    : in Message_Filter_Type;
-                         Facility  : in Wide_String;
-                         Key       : in Wide_String) return Boolean is
+   function Is_Filtered (Filter    : Message_Filter_Type;
+                         Facility  : Wide_String;
+                         Key       : Wide_String) return Boolean is
       abstract;
 
 private

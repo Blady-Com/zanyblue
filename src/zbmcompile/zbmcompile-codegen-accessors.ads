@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -39,8 +40,8 @@ package ZBMCompile.Codegen.Accessors is
    use ZBMCompile.Parser_Handler;
 
    procedure Create_Accessor_Packages
-      (Handler          : in ZBMC_Handler_Type;
-       Options          : in Parameter_Set_Type);
+      (Handler          : ZBMC_Handler_Type;
+       Options          : Parameter_Set_Type);
    --  Create the accessor packages for the facilities defined in the catalog.
 
 end ZBMCompile.Codegen.Accessors;

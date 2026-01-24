@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -32,40 +33,41 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Wide_Text_IO;
+with Ada.Text_IO;
 with ZanyBlue.OS;
 with ZanyBlue.Text.Locales;
 with ZanyBlue.Text.Catalogs;
 with ZanyBlue.Text.Arguments;
 with ZanyBlue.Text.Formatting;
 
-with ZBTest_Messages.ZBTest_Wide_Prints;
+with ZBTest_Messages.ZBTest_Prints;
 
 pragma Elaborate_All (ZanyBlue.OS);
-pragma Elaborate_All (ZBTest_Messages.ZBTest_Wide_Prints);
+pragma Elaborate_All (ZBTest_Messages.ZBTest_Prints);
 
 package body ZBTest.Commands is
 
-   use Ada.Wide_Text_IO;
+   use Ada.Text_IO;
    use ZanyBlue.OS;
+   use ZanyBlue.Text;
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Catalogs;
    use ZanyBlue.Text.Arguments;
    use ZanyBlue.Text.Formatting;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
+   use ZBTest_Messages.ZBTest_Prints;
 
    type Simple_Message_Printer is
-      access procedure (Destination : in File_Type    := Current_Output;
-                        With_NL     : in Boolean      := True;
-                        Locale      : in Locale_Type  := Current_Locale;
-                        Catalog     : in Catalog_Type := Standard_Catalog);
+      access procedure (Destination : File_Type    := Current_Output;
+                        With_NL     : Boolean      := True;
+                        Locale      : Locale_Type  := Current_Locale;
+                        Catalog     : Catalog_Type := Standard_Catalog);
 
    type Argument_Message_Printer is
-      access procedure (Argument0   : in Any_Category_Type'Class;
-                        Destination : in File_Type    := Current_Output;
-                        With_NL     : in Boolean      := True;
-                        Locale      : in Locale_Type  := Current_Locale;
-                        Catalog     : in Catalog_Type := Standard_Catalog);
+      access procedure (Argument0   : Any_Category_Type'Class;
+                        Destination : File_Type    := Current_Output;
+                        With_NL     : Boolean      := True;
+                        Locale      : Locale_Type  := Current_Locale;
+                        Catalog     : Catalog_Type := Standard_Catalog);
 
    type Command_Definition is
       record
@@ -81,58 +83,58 @@ package body ZBTest.Commands is
    --  List of known commands
 
    procedure Append_Command (State   : in out State_Type;
-                             Args    : in List_Type);
+                             Args    : List_Type);
    procedure Begin_Command (State   : in out State_Type;
-                            Args    : in List_Type);
+                            Args    : List_Type);
 
    procedure Compare_Command (State   : in out State_Type;
-                              Args    : in List_Type);
+                              Args    : List_Type);
    procedure Copy_Command (State   : in out State_Type;
-                           Args    : in List_Type);
+                           Args    : List_Type);
    procedure Delenv_Command (State   : in out State_Type;
-                             Args    : in List_Type);
+                             Args    : List_Type);
    procedure Delete_Command (State   : in out State_Type;
-                             Args    : in List_Type);
+                             Args    : List_Type);
    procedure Desc_Command (State   : in out State_Type;
-                           Args    : in List_Type);
+                           Args    : List_Type);
    procedure Dump_Command (State   : in out State_Type;
-                           Args    : in List_Type);
+                           Args    : List_Type);
    procedure Echo_Command (State   : in out State_Type;
-                           Args    : in List_Type);
+                           Args    : List_Type);
    procedure End_Command (State   : in out State_Type;
-                          Args    : in List_Type);
+                          Args    : List_Type);
    procedure Execute_Command (State   : in out State_Type;
-                              Args    : in List_Type);
+                              Args    : List_Type);
    procedure Exit_Command (State   : in out State_Type;
-                           Args    : in List_Type);
+                           Args    : List_Type);
    procedure Filestat_Command (State   : in out State_Type;
-                               Args    : in List_Type);
+                               Args    : List_Type);
    procedure Getenv_Command (State   : in out State_Type;
-                             Args    : in List_Type);
+                             Args    : List_Type);
    procedure Help_Command (State   : in out State_Type;
-                           Args    : in List_Type);
+                           Args    : List_Type);
    procedure Incr_Command (State   : in out State_Type;
-                           Args    : in List_Type);
+                           Args    : List_Type);
    procedure Mkdir_Command (State   : in out State_Type;
-                            Args    : in List_Type);
+                            Args    : List_Type);
    procedure Noop_Command (State   : in out State_Type;
-                           Args    : in List_Type);
+                           Args    : List_Type);
    procedure Prepend_Command (State   : in out State_Type;
-                              Args    : in List_Type);
+                              Args    : List_Type);
    procedure Print_Command (State   : in out State_Type;
-                            Args    : in List_Type);
+                            Args    : List_Type);
    procedure Rename_Command (State   : in out State_Type;
-                             Args    : in List_Type);
+                             Args    : List_Type);
    procedure Run_Command (State   : in out State_Type;
-                          Args    : in List_Type);
+                          Args    : List_Type);
    procedure Set_Command (State   : in out State_Type;
-                          Args    : in List_Type);
+                          Args    : List_Type);
    procedure Setenv_Command (State   : in out State_Type;
-                             Args    : in List_Type);
+                             Args    : List_Type);
    procedure Unknown_Command (State   : in out State_Type;
-                              Args    : in List_Type);
+                              Args    : List_Type);
    procedure Which_Command (State   : in out State_Type;
-                            Args    : in List_Type);
+                            Args    : List_Type);
 
    Command_Table : constant Command_List := (
                  (Name           => new Wide_String'("?"),
@@ -291,7 +293,7 @@ package body ZBTest.Commands is
                   Summary        => Print_30012'Access,
                   Help           => Print_40012'Access));
 
-   function Find_Index (Name : in Wide_String) return Natural;
+   function Find_Index (Name : Wide_String) return Natural;
    --  Return the index in the command table for the named command.  If the
    --  command is not found, 0 is returned.
 
@@ -300,7 +302,7 @@ package body ZBTest.Commands is
    --------------------
 
    procedure Append_Command (State   : in out State_Type;
-                             Args    : in List_Type) is
+                             Args    : List_Type) is
       separate;
 
    -------------------
@@ -308,7 +310,7 @@ package body ZBTest.Commands is
    -------------------
 
    procedure Begin_Command (State   : in out State_Type;
-                            Args    : in List_Type) is
+                            Args    : List_Type) is
       separate;
 
    ------------------
@@ -325,7 +327,7 @@ package body ZBTest.Commands is
    ---------------------
 
    procedure Compare_Command (State   : in out State_Type;
-                              Args    : in List_Type) is
+                              Args    : List_Type) is
       separate;
 
    ------------------
@@ -333,7 +335,7 @@ package body ZBTest.Commands is
    ------------------
 
    procedure Copy_Command (State   : in out State_Type;
-                           Args    : in List_Type) is
+                           Args    : List_Type) is
       separate;
 
    --------------------
@@ -341,7 +343,7 @@ package body ZBTest.Commands is
    --------------------
 
    procedure Delenv_Command (State   : in out State_Type;
-                             Args    : in List_Type) is
+                             Args    : List_Type) is
       separate;
 
    --------------------
@@ -349,7 +351,7 @@ package body ZBTest.Commands is
    --------------------
 
    procedure Delete_Command (State   : in out State_Type;
-                             Args    : in List_Type) is
+                             Args    : List_Type) is
       separate;
 
    ------------------
@@ -357,7 +359,7 @@ package body ZBTest.Commands is
    ------------------
 
    procedure Desc_Command (State   : in out State_Type;
-                           Args    : in List_Type) is
+                           Args    : List_Type) is
       separate;
 
    ------------------
@@ -365,7 +367,7 @@ package body ZBTest.Commands is
    ------------------
 
    procedure Dump_Command (State   : in out State_Type;
-                           Args    : in List_Type) is
+                           Args    : List_Type) is
       separate;
 
    ------------------
@@ -373,7 +375,7 @@ package body ZBTest.Commands is
    ------------------
 
    procedure Echo_Command (State   : in out State_Type;
-                           Args    : in List_Type) is
+                           Args    : List_Type) is
       separate;
 
    -----------------
@@ -381,7 +383,7 @@ package body ZBTest.Commands is
    -----------------
 
    procedure End_Command (State   : in out State_Type;
-                          Args    : in List_Type) is
+                          Args    : List_Type) is
       separate;
 
    ---------------------
@@ -389,7 +391,7 @@ package body ZBTest.Commands is
    ---------------------
 
    procedure Execute_Command (State   : in out State_Type;
-                              Args    : in List_Type) is
+                              Args    : List_Type) is
       separate;
 
    ------------------
@@ -397,7 +399,7 @@ package body ZBTest.Commands is
    ------------------
 
    procedure Exit_Command (State   : in out State_Type;
-                           Args    : in List_Type) is
+                           Args    : List_Type) is
       separate;
 
    ----------------------
@@ -405,14 +407,14 @@ package body ZBTest.Commands is
    ----------------------
 
    procedure Filestat_Command (State   : in out State_Type;
-                               Args    : in List_Type) is
+                               Args    : List_Type) is
       separate;
 
    ----------
    -- Find --
    ----------
 
-   function Find (Name : in Wide_String) return Command_Type is
+   function Find (Name : Wide_String) return Command_Type is
    begin
       return Command_Table (Find_Index (Name)).Implementation;
    end Find;
@@ -421,7 +423,7 @@ package body ZBTest.Commands is
    -- Find_Index --
    ----------------
 
-   function Find_Index (Name : in Wide_String) return Natural is
+   function Find_Index (Name : Wide_String) return Natural is
    begin
       for I in 1 .. Command_Table'Last loop
          if Name = Command_Table (I).Name.all then
@@ -436,7 +438,7 @@ package body ZBTest.Commands is
    --------------------
 
    procedure Getenv_Command (State   : in out State_Type;
-                             Args    : in List_Type) is
+                             Args    : List_Type) is
       separate;
 
    ------------------
@@ -444,7 +446,7 @@ package body ZBTest.Commands is
    ------------------
 
    procedure Help_Command (State   : in out State_Type;
-                           Args    : in List_Type) is
+                           Args    : List_Type) is
       separate;
 
    ------------------
@@ -452,7 +454,7 @@ package body ZBTest.Commands is
    ------------------
 
    procedure Incr_Command (State   : in out State_Type;
-                           Args    : in List_Type) is
+                           Args    : List_Type) is
       separate;
 
    ------------------------
@@ -469,7 +471,7 @@ package body ZBTest.Commands is
    -------------------
 
    procedure Mkdir_Command (State   : in out State_Type;
-                            Args    : in List_Type) is
+                            Args    : List_Type) is
       separate;
 
    ------------------
@@ -477,7 +479,7 @@ package body ZBTest.Commands is
    ------------------
 
    procedure Noop_Command (State   : in out State_Type;
-                           Args    : in List_Type) is
+                           Args    : List_Type) is
       separate;
 
    ---------------------
@@ -485,7 +487,7 @@ package body ZBTest.Commands is
    ---------------------
 
    procedure Prepend_Command (State   : in out State_Type;
-                              Args    : in List_Type) is
+                              Args    : List_Type) is
       separate;
 
    -------------------
@@ -493,14 +495,14 @@ package body ZBTest.Commands is
    -------------------
 
    procedure Print_Command (State   : in out State_Type;
-                            Args    : in List_Type) is
+                            Args    : List_Type) is
       separate;
 
    ------------------------
    -- Print_Command_Help --
    ------------------------
 
-   procedure Print_Command_Help (Name : in Wide_String) is
+   procedure Print_Command_Help (Name : Wide_String) is
    begin
       Command_Table (Find_Index (Name)).Help.all;
    end Print_Command_Help;
@@ -509,8 +511,8 @@ package body ZBTest.Commands is
    -- Print_Command_Summary --
    ---------------------------
 
-   procedure Print_Command_Summary (Name  : in Wide_String;
-                                    Index : in Positive) is
+   procedure Print_Command_Summary (Name  : Wide_String;
+                                    Index : Positive) is
    begin
       Command_Table (Find_Index (Name)).Summary.all (+Index);
    end Print_Command_Summary;
@@ -529,7 +531,7 @@ package body ZBTest.Commands is
    --------------------
 
    procedure Rename_Command (State   : in out State_Type;
-                             Args    : in List_Type) is
+                             Args    : List_Type) is
       separate;
 
    -----------------
@@ -537,7 +539,7 @@ package body ZBTest.Commands is
    -----------------
 
    procedure Run_Command (State   : in out State_Type;
-                          Args    : in List_Type) is
+                          Args    : List_Type) is
       separate;
 
    -----------------
@@ -545,7 +547,7 @@ package body ZBTest.Commands is
    -----------------
 
    procedure Set_Command (State   : in out State_Type;
-                          Args    : in List_Type) is
+                          Args    : List_Type) is
       separate;
 
    --------------------
@@ -553,7 +555,7 @@ package body ZBTest.Commands is
    --------------------
 
    procedure Setenv_Command (State   : in out State_Type;
-                             Args    : in List_Type) is
+                             Args    : List_Type) is
       separate;
 
    ---------------------
@@ -561,7 +563,7 @@ package body ZBTest.Commands is
    ---------------------
 
    procedure Unknown_Command (State   : in out State_Type;
-                              Args    : in List_Type) is
+                              Args    : List_Type) is
       separate;
 
    -------------------
@@ -569,7 +571,7 @@ package body ZBTest.Commands is
    -------------------
 
    procedure Which_Command (State   : in out State_Type;
-                            Args    : in List_Type) is
+                            Args    : List_Type) is
       separate;
 
 begin   -- ZBTest.Commands

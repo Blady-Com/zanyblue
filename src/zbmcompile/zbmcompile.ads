@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -86,7 +87,7 @@ package ZBMCompile is
    ZBMBase_Facility    : constant Wide_String := "zbmbase";
    ZBMCompile_Facility : constant Wide_String := "zbmcompile";
 
-   function Process (Options : in Parameter_Set_Type) return Boolean;
+   function Process (Options : Parameter_Set_Type) return Boolean;
    --  Perform the compilation of the .properties files.  Returns True for
    --  success, False for failure.
 
@@ -96,15 +97,19 @@ package ZBMCompile is
    --  Depending on Condition, return either the true or false message
    --  id.  This is a simple utility function.
 
-   procedure Print_If (Condition  : in Boolean;
-                       File       : in File_Type;
-                       Facility   : in Wide_String;
-                       Key        : in Wide_String;
-                       Argument0  : in Argument_Type'Class := Null_Argument;
-                       Argument1  : in Argument_Type'Class := Null_Argument;
-                       Argument2  : in Argument_Type'Class := Null_Argument;
-                       Argument3  : in Argument_Type'Class := Null_Argument;
-                       Argument4  : in Argument_Type'Class := Null_Argument);
+   procedure Print_If (Condition  : Boolean;
+                       File       : File_Type;
+                       Facility   : Wide_String;
+                       Key        : Wide_String;
+                       Argument0  : Argument_Type'Class := Null_Argument;
+                       Argument1  : Argument_Type'Class := Null_Argument;
+                       Argument2  : Argument_Type'Class := Null_Argument;
+                       Argument3  : Argument_Type'Class := Null_Argument;
+                       Argument4  : Argument_Type'Class := Null_Argument);
    --  Print a message if the given condition is true.
+
+   function Is_Ada_Identifier_OK (Name : Wide_String) return Boolean;
+   --  Is the given name a valid Ada identifier name?  Leading digits are
+   --  OK as the name will be prefixed with standard prefixes later.
 
 end ZBMCompile;

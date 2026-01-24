@@ -1,0 +1,24 @@
+Contributions
+=============
+
+This software includes contributions from the following open source developers:
+#foreach( $contributor in $contributors )
+* $contributor.name <$contributor.email>
+#end
+
+Contributions to ZanyBlue are contributed under the same BSD style license that
+covers the ZanyBlue project.
+
+The contributions made to the ZanyBlue project are:
+
+#foreach( $contributor in $contributors )
+
+$contributor.title
+
+Contact: <mailto:$contributor.email>
+
+#foreach( $contribution in $contributor.contributions )
+** $contribution.when
+    $contribution.description
+#end
+#end

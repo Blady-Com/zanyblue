@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -37,8 +38,10 @@ with ZanyBlue.Text.Buffer;
 
 package body ZanyBlue.Text.Arguments is
 
-   Missing_Start : constant Wide_Character := '⁅';   --  U+2045
-   Missing_End   : constant Wide_Character := '⁆';   --  U+2046
+   --  U+2045 LEFT SQUARE BRACKET WITH QUILL
+   Missing_Start : constant Wide_Character := Wide_Character'Val (16#2045#);
+   --  U+2046 LEFT SQUARE BRACKET WITH QUILL
+   Missing_End   : constant Wide_Character := Wide_Character'Val (16#2046#);
 
    type Format_Map_Type is
       record
@@ -76,7 +79,7 @@ package body ZanyBlue.Text.Arguments is
    ------------
 
    procedure Append (List      : in out Argument_List;
-                     Argument  : in Argument_Type'Class) is
+                     Argument  : Argument_Type'Class) is
    begin
       List.Contents.Append (Argument);
    end Append;
@@ -94,12 +97,12 @@ package body ZanyBlue.Text.Arguments is
    -- Format --
    ------------
 
-   function Format (List          : in Argument_List;
-                    Position      : in Natural;
-                    Message       : in Wide_String;
-                    Format_String : in Wide_String;
-                    Locale        : in Locale_Type;
-                    Raise_Errors  : in Boolean;
+   function Format (List          : Argument_List;
+                    Position      : Natural;
+                    Message       : Wide_String;
+                    Format_String : Wide_String;
+                    Locale        : Locale_Type;
+                    Raise_Errors  : Boolean;
                     Error_Handler : access Error_Handler_Type'Class
                                        := Standard_Error_Handler'Access)
       return Wide_String is
@@ -143,7 +146,7 @@ package body ZanyBlue.Text.Arguments is
    -- Length --
    ------------
 
-   function Length (List : in Argument_List) return Natural is
+   function Length (List : Argument_List) return Natural is
    begin
       return Natural (List.Contents.Length);
    end Length;

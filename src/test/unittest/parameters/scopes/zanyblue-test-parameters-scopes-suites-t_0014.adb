@@ -1,7 +1,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,28 +33,28 @@
 --
 
 separate (ZanyBlue.Test.Parameters.Scopes.Suites)
-procedure T_0014 (R : in out AUnit.Test_Cases.Test_Case'Class) is
+procedure T_0014 (T : in out Test_Case'Class) is
 
    use ZanyBlue.Parameters;
 
-   function Check_List1 (L  : in List_Type;
-                         V1 : in Wide_String) return Boolean;
+   function Check_List1 (L  : List_Type;
+                         V1 : Wide_String) return Boolean;
 
-   function Check_List2 (L  : in List_Type;
-                         V1 : in Wide_String;
-                         V2 : in Wide_String) return Boolean;
+   function Check_List2 (L  : List_Type;
+                         V1 : Wide_String;
+                         V2 : Wide_String) return Boolean;
 
-   function Check_List3 (L  : in List_Type;
-                         V1 : in Wide_String;
-                         V2 : in Wide_String;
-                         V3 : in Wide_String) return Boolean;
+   function Check_List3 (L  : List_Type;
+                         V1 : Wide_String;
+                         V2 : Wide_String;
+                         V3 : Wide_String) return Boolean;
 
    -----------------
    -- Check_List1 --
    -----------------
 
-   function Check_List1 (L  : in List_Type;
-                         V1 : in Wide_String) return Boolean is
+   function Check_List1 (L  : List_Type;
+                         V1 : Wide_String) return Boolean is
    begin
       if Length (L) /= 1 then
          return False;
@@ -69,9 +69,9 @@ procedure T_0014 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    -- Check_List2 --
    -----------------
 
-   function Check_List2 (L  : in List_Type;
-                         V1 : in Wide_String;
-                         V2 : in Wide_String) return Boolean is
+   function Check_List2 (L  : List_Type;
+                         V1 : Wide_String;
+                         V2 : Wide_String) return Boolean is
    begin
       if Length (L) /= 2 then
          return False;
@@ -89,10 +89,10 @@ procedure T_0014 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    -- Check_List3 --
    -----------------
 
-   function Check_List3 (L  : in List_Type;
-                         V1 : in Wide_String;
-                         V2 : in Wide_String;
-                         V3 : in Wide_String) return Boolean is
+   function Check_List3 (L  : List_Type;
+                         V1 : Wide_String;
+                         V2 : Wide_String;
+                         V3 : Wide_String) return Boolean is
    begin
       if Length (L) /= 3 then
          return False;
@@ -113,22 +113,22 @@ procedure T_0014 (R : in out AUnit.Test_Cases.Test_Case'Class) is
 
 begin
    Scope.New_Scope;
-   WAssert (R, not Scope.Is_Defined ("l"), "'l' should not be defined");
+   WAssert (T, not Scope.Is_Defined ("l"), "'l' should not be defined");
    Scope.Set_String ("l", "a");
-   WAssert (R, Check_List1 (Scope.Get_List ("l", Deep => True), "a"),
+   WAssert (T, Check_List1 (Scope.Get_List ("l", Deep => True), "a"),
             "'l' should be [a]");
    Scope.New_Scope;
    Scope.Set_String ("l", "b");
-   WAssert (R, Check_List2 (Scope.Get_List ("l", Deep => True), "b", "a"),
+   WAssert (T, Check_List2 (Scope.Get_List ("l", Deep => True), "b", "a"),
             "'l' should be [b, a]");
-   WAssert (R, Check_List1 (Scope.Get_List ("l", Deep => False), "b"),
+   WAssert (T, Check_List1 (Scope.Get_List ("l", Deep => False), "b"),
             "'l' should be [b]");
    Scope.Prepend ("l", "c");
-   WAssert (R, Check_List3 (Scope.Get_List ("l", Deep => True), "c", "b", "a"),
+   WAssert (T, Check_List3 (Scope.Get_List ("l", Deep => True), "c", "b", "a"),
             "'l' should be [c, b, a]");
-   WAssert (R, Check_List2 (Scope.Get_List ("l", Deep => False), "c", "b"),
+   WAssert (T, Check_List2 (Scope.Get_List ("l", Deep => False), "c", "b"),
             "'l' should be [c, b]");
    Scope.End_Scope;
-   WAssert (R, Check_List1 (Scope.Get_List ("l", Deep => True), "a"),
+   WAssert (T, Check_List1 (Scope.Get_List ("l", Deep => True), "a"),
             "'l' should be [a]");
 end T_0014;

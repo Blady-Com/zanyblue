@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -52,15 +53,15 @@ package body ZanyBlue.Text.Utils is
    use Ada.Strings.Unbounded;
    use Ada.Strings.Wide_Unbounded;
 
-   function Escape_Character (C : in Wide_Character) return String;
+   function Escape_Character (C : Wide_Character) return String;
    --  Return the String value for a Wide Character, either the character
    --  itself if within Character range or the Unicode_Escape string for
    --  the character.
 
-   function Requires_Unicode_Escape (C : in Wide_Character) return Boolean;
+   function Requires_Unicode_Escape (C : Wide_Character) return Boolean;
    --  Determine if a Wide character requires Unicode escaping for strings.
 
-   function Unicode_Escape (C : in Wide_Character) return String;
+   function Unicode_Escape (C : Wide_Character) return String;
    --  Return Unicode escape sequence for a wide character, e.g., "\u009e".
 
    -----------------------
@@ -90,7 +91,7 @@ package body ZanyBlue.Text.Utils is
    -- ASCII_Lowercase --
    ---------------------
 
-   function ASCII_Lowercase (C : in Wide_Character) return Wide_Character is
+   function ASCII_Lowercase (C : Wide_Character) return Wide_Character is
 
       use Ada.Characters.Handling;
 
@@ -119,7 +120,7 @@ package body ZanyBlue.Text.Utils is
    -- ASCII_Uppercase --
    ---------------------
 
-   function ASCII_Uppercase (C : in Wide_Character) return Wide_Character is
+   function ASCII_Uppercase (C : Wide_Character) return Wide_Character is
 
       use Ada.Characters.Handling;
 
@@ -137,7 +138,7 @@ package body ZanyBlue.Text.Utils is
    -- Escape_Character --
    ----------------------
 
-   function Escape_Character (C : in Wide_Character) return String is
+   function Escape_Character (C : Wide_Character) return String is
    begin
       if Requires_Unicode_Escape (C) then
          return Unicode_Escape (C);
@@ -150,7 +151,7 @@ package body ZanyBlue.Text.Utils is
    -- Escape_String --
    -------------------
 
-   function Escape_String (Source : in Wide_String) return String is
+   function Escape_String (Source : Wide_String) return String is
       Result : Unbounded_String;
    begin
       for I in Source'Range loop
@@ -163,7 +164,7 @@ package body ZanyBlue.Text.Utils is
    -- Non_Blank_Prefix --
    ----------------------
 
-   function Non_Blank_Prefix (S : in Wide_String) return Wide_String is
+   function Non_Blank_Prefix (S : Wide_String) return Wide_String is
    begin
       for I in S'Range loop
          if S (I) = ' ' then
@@ -177,7 +178,7 @@ package body ZanyBlue.Text.Utils is
    -- Requires_Unicode_Escape --
    -----------------------------
 
-   function Requires_Unicode_Escape (C : in Wide_Character) return Boolean is
+   function Requires_Unicode_Escape (C : Wide_Character) return Boolean is
       Pos : constant Natural := Wide_Character'Pos (C);
       Ch : Character;
    begin
@@ -192,9 +193,9 @@ package body ZanyBlue.Text.Utils is
    -- Starts_With --
    -----------------
 
-   function Starts_With (S      : in Wide_String;
-                         Start  : in Positive;
-                         Prefix : in Wide_String) return Boolean is
+   function Starts_With (S      : Wide_String;
+                         Start  : Positive;
+                         Prefix : Wide_String) return Boolean is
       use Ada.Strings.Wide_Fixed;
    begin
       return Head (S (Start .. S'Last), Prefix'Length) = Prefix;
@@ -204,7 +205,7 @@ package body ZanyBlue.Text.Utils is
    -- Unescape_String --
    ---------------------
 
-   function Unescape_String (Source : in String) return Wide_String is
+   function Unescape_String (Source : String) return Wide_String is
 
       use Ada.Characters.Conversions;
 
@@ -306,7 +307,7 @@ package body ZanyBlue.Text.Utils is
    -- Unicode_Escape --
    --------------------
 
-   function Unicode_Escape (C : in Wide_Character) return String is
+   function Unicode_Escape (C : Wide_Character) return String is
       Hex_Map : constant String (1 .. 16) := "0123456789abcdef";
       Result : String (1 .. 4);
       Pos : Natural := Wide_Character'Pos (C);

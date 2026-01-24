@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -90,19 +91,19 @@ package ZanyBlue.Text.Arguments is
    --  an integer, a string, etc.  The list is initially empty with arguments
    --  added using the the Append methods below.
 
-   function Format (List          : in Argument_List;
-                    Position      : in Natural;
-                    Message       : in Wide_String;
-                    Format_String : in Wide_String;
-                    Locale        : in Locale_Type;
-                    Raise_Errors  : in Boolean;
+   function Format (List          : Argument_List;
+                    Position      : Natural;
+                    Message       : Wide_String;
+                    Format_String : Wide_String;
+                    Locale        : Locale_Type;
+                    Raise_Errors  : Boolean;
                     Error_Handler : access Error_Handler_Type'Class
                                        := Standard_Error_Handler'Access)
       return Wide_String;
    --  Format an individual argument using the @Template@ to direct the
    --  conversion.
 
-   function Length (List : in Argument_List) return Natural;
+   function Length (List : Argument_List) return Natural;
    --  Return the length of an argument list, i.e., the number of arguments
    --  current on the list.
 
@@ -113,38 +114,29 @@ package ZanyBlue.Text.Arguments is
    --  Base type for all arguments types.  Used to define the methods
    --  supported by all arguments: @To_String@, @Format@ and @Append@.
 
-   function Format (Value     : in Argument_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Argument_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Format an argument value using the @Template@ to direct the convesion.
 
    procedure Append (List      : in out Argument_List;
-                     Argument  : in Argument_Type'Class);
+                     Argument  : Argument_Type'Class);
    --  Append an argument to a list of arguments.
 
-   type Any_Category_Type is
-      abstract new Argument_Type with null record;
+   subtype Any_Category_Type is Argument_Type;
    --  General type used as the unspecified type.
-
-   overriding
-   function Format (Value     : in Any_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
-      abstract;
-   --  Abstract formatting function.
 
    type Number_Category_Type is
       abstract new Any_Category_Type with null record;
    --  General numeric types (integer, floating point, fixed point etc).
 
    overriding
-   function Format (Value     : in Number_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Number_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 
@@ -153,10 +145,10 @@ package ZanyBlue.Text.Arguments is
    --  General category for real numbers.
 
    overriding
-   function Format (Value     : in Real_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Real_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 
@@ -165,10 +157,10 @@ package ZanyBlue.Text.Arguments is
    --  Category for floating point numbers.
 
    overriding
-   function Format (Value     : in Float_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Float_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 
@@ -177,10 +169,10 @@ package ZanyBlue.Text.Arguments is
    --  Category for fixed point numbers.
 
    overriding
-   function Format (Value     : in Fixed_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Fixed_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 
@@ -189,10 +181,10 @@ package ZanyBlue.Text.Arguments is
    --  General category for integer types.
 
    overriding
-   function Format (Value     : in Integer_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Integer_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 
@@ -201,10 +193,10 @@ package ZanyBlue.Text.Arguments is
    --  General category for modular types (from integers).
 
    overriding
-   function Format (Value     : in Modular_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Modular_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 
@@ -213,10 +205,10 @@ package ZanyBlue.Text.Arguments is
    --  General category for string types.
 
    overriding
-   function Format (Value     : in String_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : String_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 
@@ -225,10 +217,10 @@ package ZanyBlue.Text.Arguments is
    --  General category for string types.
 
    overriding
-   function Format (Value     : in Character_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Character_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 
@@ -237,10 +229,10 @@ package ZanyBlue.Text.Arguments is
    --  Category for enumeration types.
 
    overriding
-   function Format (Value     : in Enumeration_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Enumeration_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 
@@ -249,10 +241,10 @@ package ZanyBlue.Text.Arguments is
    --  Category for boolean types.
 
    overriding
-   function Format (Value     : in Boolean_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Boolean_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 
@@ -261,10 +253,10 @@ package ZanyBlue.Text.Arguments is
    --  Category for Calendar Time types.
 
    overriding
-   function Format (Value     : in Calendar_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Calendar_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 
@@ -273,10 +265,10 @@ package ZanyBlue.Text.Arguments is
    --  Category for Ada duration types.
 
    overriding
-   function Format (Value     : in Duration_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Duration_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 
@@ -285,10 +277,10 @@ package ZanyBlue.Text.Arguments is
    --  Category for Ada duration types.
 
    overriding
-   function Format (Value     : in Exception_Category_Type;
-                    Type_Name : in Wide_String;
-                    Template  : in Wide_String;
-                    Locale    : in Locale_Type) return Wide_String is
+   function Format (Value     : Exception_Category_Type;
+                    Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Locale    : Locale_Type) return Wide_String is
       abstract;
    --  Abstract formatting function.
 

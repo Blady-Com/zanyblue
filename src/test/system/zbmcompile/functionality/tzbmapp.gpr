@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -41,23 +42,13 @@ with "zanyblue";
 
 project TZBMApp is
 
-   type Build_Type is ("Debug", "Production", "Coverage");
+   type Build_Type is ("Debug", "Coverage");
    Build : Build_Type := External ("BUILD", "Debug");
 
    for Source_Dirs use ();
 
    package Compiler is
        case Build is
-       when "Production" =>
-          for Default_Switches ("Ada") use
-                 ("-O3",
-                  "-gnata",
-                  "-gnatVa",
-                  "-gnatQ",
-                  "-gnaty",
-                  "-gnatwae",
-                  "-gnat05",
-                  "-gnatW8");
        when "Debug" =>
           for Default_Switches ("Ada") use
                  ("-g",
@@ -67,7 +58,7 @@ project TZBMApp is
                   "-gnatQ",
                   "-gnaty",
                   "-gnatwae",
-                  "-gnat05",
+                  "-gnat2012",
                   "-gnatW8");
        when "Coverage" =>
           for Default_Switches ("Ada") use
@@ -78,7 +69,7 @@ project TZBMApp is
                   "-gnatQ",
                   "-gnaty",
                   "-gnatwae",
-                  "-gnat05",
+                  "-gnat2012",
                   "-gnatW8",
                   "-fprofile-arcs",
                   "-ftest-coverage");
@@ -87,14 +78,12 @@ project TZBMApp is
 
    package Linker is
       case Build is
-      when "Production" =>
-         for Default_Switches ("Ada") use ("-O3");
-      when "Debug" =>
-         for Default_Switches ("Ada") use ("-g");
-      when "Coverage" =>
-         for Default_Switches ("Ada") use ("-g",
-                                           "-fprofile-arcs",
-                                           "-ftest-coverage");
+         when "Debug" =>
+            for Default_Switches ("Ada") use ("-g");
+         when "Coverage" =>
+            for Default_Switches ("Ada") use ("-g",
+                                              "-fprofile-arcs",
+                                              "-ftest-coverage");
       end case;
    end Linker;
 

@@ -1,7 +1,8 @@
+--  -*- coding: utf-8 -*-
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -34,6 +35,9 @@
 
 with Ada.Calendar;
 with Ada.Strings.Wide_Unbounded;
+with Ada.Strings.Wide_Fixed;
+with Ada.Strings.Wide_Maps;
+with Ada.Strings.Wide_Maps.Wide_Constants;
 with ZanyBlue.OS;
 with ZanyBlue.Parameters;
 with ZanyBlue.Text.Locales;
@@ -60,24 +64,24 @@ package body ZBMCompile is
    use ZBMCompile.Codegen.Accessors;
 
    procedure Check_Loaded (Handler : in out ZBMC_Handler_Type;
-                           Options : in Parameter_Set_Type);
+                           Options : Parameter_Set_Type);
    --  Perform consistency checkes on the messages loaded.
 
    procedure Load_Files (Handler      : in out ZBMC_Handler_Type;
                          Files_Loaded : out Boolean;
-                         Options      : in Parameter_Set_Type);
+                         Options      : Parameter_Set_Type);
    --  Load the files defined by the command line arguments.  The File_Loaded
    --  argument is set to True if any files were loaded, i.e., something was
    --  processed.
 
-   function Savings (Total  : in Natural;
-                     Stored : in Natural) return Natural;
+   function Savings (Total  : Natural;
+                     Stored : Natural) return Natural;
    --  Return the percentage savings for stored characters in a catalog pool.
 
-   procedure Summarize (Catalog : in Catalog_Type);
+   procedure Summarize (Catalog : Catalog_Type);
    --  Print a summary of the facilities and messages loaded.
 
-   function Update_Stamp_File (File_Name : in Wide_String) return Boolean;
+   function Update_Stamp_File (File_Name : Wide_String) return Boolean;
    --  Update the contents of the "touch" file.  The file timestamp can
    --  be used to trigger dependency rules via make.  Return True if the
    --  file was successfully created, false on error.
@@ -87,7 +91,7 @@ package body ZBMCompile is
    ------------------
 
    procedure Check_Loaded (Handler : in out ZBMC_Handler_Type;
-                           Options : in Parameter_Set_Type) is
+                           Options : Parameter_Set_Type) is
       Facilities  : constant List_Type := Options.Get_List ("facilities");
    begin
       if Options.Get_Boolean ("disable_checks") then
@@ -98,9 +102,23 @@ package body ZBMCompile is
                             Options.Get_String ("reference_locale"));
       end loop;
       if Options.Get_Boolean ("generate_accessors") then
-         Accessors_Check (Handler);
+         Accessors_Check (
+            Handler,
+            Options.Get_String ("invalid_ada_key_handler") = "ignore");
       end if;
    end Check_Loaded;
+
+   --------------------------
+   -- Is_Ada_Identifier_OK --
+   --------------------------
+
+   function Is_Ada_Identifier_OK (Name : Wide_String) return Boolean is
+      use Ada.Strings.Wide_Fixed;
+      use Ada.Strings.Wide_Maps;
+      use Ada.Strings.Wide_Maps.Wide_Constants;
+   begin
+      return Index (Name, not (Alphanumeric_Set or To_Set ("_"))) = 0;
+   end Is_Ada_Identifier_OK;
 
    ----------------
    -- Load_Files --
@@ -108,7 +126,7 @@ package body ZBMCompile is
 
    procedure Load_Files (Handler      : in out ZBMC_Handler_Type;
                          Files_Loaded : out Boolean;
-                         Options      : in Parameter_Set_Type) is
+                         Options      : Parameter_Set_Type) is
 
       Directories : constant List_Type := Options.Get_List ("mesg_dirs");
       Facilities  : constant List_Type := Options.Get_List ("facilities");
@@ -168,15 +186,15 @@ package body ZBMCompile is
    -- Print_If --
    --------------
 
-   procedure Print_If (Condition  : in Boolean;
-                       File       : in File_Type;
-                       Facility   : in Wide_String;
-                       Key        : in Wide_String;
-                       Argument0  : in Argument_Type'Class := Null_Argument;
-                       Argument1  : in Argument_Type'Class := Null_Argument;
-                       Argument2  : in Argument_Type'Class := Null_Argument;
-                       Argument3  : in Argument_Type'Class := Null_Argument;
-                       Argument4  : in Argument_Type'Class := Null_Argument) is
+   procedure Print_If (Condition  : Boolean;
+                       File       : File_Type;
+                       Facility   : Wide_String;
+                       Key        : Wide_String;
+                       Argument0  : Argument_Type'Class := Null_Argument;
+                       Argument1  : Argument_Type'Class := Null_Argument;
+                       Argument2  : Argument_Type'Class := Null_Argument;
+                       Argument3  : Argument_Type'Class := Null_Argument;
+                       Argument4  : Argument_Type'Class := Null_Argument) is
    begin
       if Condition then
          Print_Line (File, Facility, Key,
@@ -188,7 +206,7 @@ package body ZBMCompile is
    -- Process --
    -------------
 
-   function Process (Options : in Parameter_Set_Type) return Boolean is
+   function Process (Options : Parameter_Set_Type) return Boolean is
 
       Disable_Checks : constant Boolean :=
                           Options.Get_Boolean ("disable_checks");
@@ -234,8 +252,8 @@ package body ZBMCompile is
    -- Savings --
    -------------
 
-   function Savings (Total  : in Natural;
-                     Stored : in Natural) return Natural is
+   function Savings (Total  : Natural;
+                     Stored : Natural) return Natural is
       Difference : Float;
    begin
       if Total = 0 then
@@ -264,7 +282,7 @@ package body ZBMCompile is
    -- Summarize --
    ---------------
 
-   procedure Summarize (Catalog : in Catalog_Type) is
+   procedure Summarize (Catalog : Catalog_Type) is
    begin
       Print_Line (ZBMCompile_Facility, "V00002",
                   Argument0 => +Number_Of_Facilities (Catalog),
@@ -282,7 +300,7 @@ package body ZBMCompile is
    -- Update_Stamp_File --
    -----------------------
 
-   function Update_Stamp_File (File_Name : in Wide_String) return Boolean is
+   function Update_Stamp_File (File_Name : Wide_String) return Boolean is
       use Ada.Calendar, ZanyBlue.Text;
       Now  : constant Time := Clock;
       File : File_Type;
