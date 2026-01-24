@@ -1,9 +1,8 @@
-#!/usr/bin/env python
 #  -*- coding: utf-8 -*-
 #
 #  ZanyBlue, an Ada library and framework for finite element analysis.
 #
-#  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+#  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -291,182 +290,182 @@ _ROOT_LOCALE_DATA = {
         'alias': None,
         'day': {
             'wide': {
-                'sun': u"Sunday",
-                'mon': u"Monday",
-                'tue': u"Tuesday",
-                'wed': u"Wednesday",
-                'thu': u"Thursday",
-                'fri': u"Friday",
-                'sat': u"Saturday"
+                'sun': "Sunday",
+                'mon': "Monday",
+                'tue': "Tuesday",
+                'wed': "Wednesday",
+                'thu': "Thursday",
+                'fri': "Friday",
+                'sat': "Saturday"
             },
             'abbreviated': {
-                'sun': u"Sun",
-                'mon': u"Mon",
-                'tue': u"Tue",
-                'wed': u"Wed",
-                'thu': u"Thu",
-                'fri': u"Fri",
-                'sat': u"Sat"
+                'sun': "Sun",
+                'mon': "Mon",
+                'tue': "Tue",
+                'wed': "Wed",
+                'thu': "Thu",
+                'fri': "Fri",
+                'sat': "Sat"
             }
         },
         'month': {
             'wide': {
-                '1':  u"January",
-                '2':  u"February",
-                '3':  u"March",
-                '4':  u"April",
-                '5':  u"May",
-                '6':  u"June",
-                '7':  u"July",
-                '8':  u"August",
-                '9':  u"September",
-                '10': u"October",
-                '11': u"November",
-                '12': u"December"
+                '1':  "January",
+                '2':  "February",
+                '3':  "March",
+                '4':  "April",
+                '5':  "May",
+                '6':  "June",
+                '7':  "July",
+                '8':  "August",
+                '9':  "September",
+                '10': "October",
+                '11': "November",
+                '12': "December"
             },
             'narrow': {        # Not used
-                '1':  u"",
-                '2':  u"",
-                '3':  u"",
-                '4':  u"",
-                '5':  u"",
-                '6':  u"",
-                '7':  u"",
-                '8':  u"",
-                '9':  u"",
-                '10': u"",
-                '11': u"",
-                '12': u""
+                '1':  "",
+                '2':  "",
+                '3':  "",
+                '4':  "",
+                '5':  "",
+                '6':  "",
+                '7':  "",
+                '8':  "",
+                '9':  "",
+                '10': "",
+                '11': "",
+                '12': ""
             },
             'abbreviated': {
-                '1':  u"Jan",
-                '2':  u"Feb",
-                '3':  u"Mar",
-                '4':  u"Apr",
-                '5':  u"May",
-                '6':  u"Jun",
-                '7':  u"Jul",
-                '8':  u"Aug",
-                '9':  u"Sep",
-                '10': u"Oct",
-                '11': u"Nov",
-                '12': u"Dec"
+                '1':  "Jan",
+                '2':  "Feb",
+                '3':  "Mar",
+                '4':  "Apr",
+                '5':  "May",
+                '6':  "Jun",
+                '7':  "Jul",
+                '8':  "Aug",
+                '9':  "Sep",
+                '10': "Oct",
+                '11': "Nov",
+                '12': "Dec"
             }
         },
         'day_period': {
             'values': {
-                'am':           u"AM",
-                'weeHours':     u"",
-                'earlyMorning': u"",
-                'morning':      u"",
-                'lateMorning':  u"",
-                'noon':         u"noon",
-                'midDay':       u"",
-                'afternoon':    u"",
-                'evening':      u"",
-                'lateEvening':  u"",
-                'night':        u"",
-                'pm':           u"PM"
+                'am':           "AM",
+                'weeHours':     "",
+                'earlyMorning': "",
+                'morning':      "",
+                'lateMorning':  "",
+                'noon':         "noon",
+                'midDay':       "",
+                'afternoon':    "",
+                'evening':      "",
+                'lateEvening':  "",
+                'night':        "",
+                'pm':           "PM"
             },
             'rules': {
                 'exact': {
-                    '0':  u'am',
-                    '1':  u'am',
-                    '2':  u'am',
-                    '3':  u'am',
-                    '4':  u'am',
-                    '5':  u'am',
-                    '6':  u'am',
-                    '7':  u'am',
-                    '8':  u'am',
-                    '9':  u'am',
-                    '10': u'am',
-                    '11': u'am',
-                    '12': u'pm',
-                    '13': u'pm',
-                    '14': u'pm',
-                    '15': u'pm',
-                    '16': u'pm',
-                    '17': u'pm',
-                    '18': u'pm',
-                    '19': u'pm',
-                    '20': u'pm',
-                    '21': u'pm',
-                    '22': u'pm',
-                    '23': u'pm'
+                    '0':  'am',
+                    '1':  'am',
+                    '2':  'am',
+                    '3':  'am',
+                    '4':  'am',
+                    '5':  'am',
+                    '6':  'am',
+                    '7':  'am',
+                    '8':  'am',
+                    '9':  'am',
+                    '10': 'am',
+                    '11': 'am',
+                    '12': 'pm',
+                    '13': 'pm',
+                    '14': 'pm',
+                    '15': 'pm',
+                    '16': 'pm',
+                    '17': 'pm',
+                    '18': 'pm',
+                    '19': 'pm',
+                    '20': 'pm',
+                    '21': 'pm',
+                    '22': 'pm',
+                    '23': 'pm'
                 },
                 'within': {
-                    '0':  u'am',
-                    '1':  u'am',
-                    '2':  u'am',
-                    '3':  u'am',
-                    '4':  u'am',
-                    '5':  u'am',
-                    '6':  u'am',
-                    '7':  u'am',
-                    '8':  u'am',
-                    '9':  u'am',
-                    '10': u'am',
-                    '11': u'am',
-                    '12': u'pm',
-                    '13': u'pm',
-                    '14': u'pm',
-                    '15': u'pm',
-                    '16': u'pm',
-                    '17': u'pm',
-                    '18': u'pm',
-                    '19': u'pm',
-                    '20': u'pm',
-                    '21': u'pm',
-                    '22': u'pm',
-                    '23': u'pm'
+                    '0':  'am',
+                    '1':  'am',
+                    '2':  'am',
+                    '3':  'am',
+                    '4':  'am',
+                    '5':  'am',
+                    '6':  'am',
+                    '7':  'am',
+                    '8':  'am',
+                    '9':  'am',
+                    '10': 'am',
+                    '11': 'am',
+                    '12': 'pm',
+                    '13': 'pm',
+                    '14': 'pm',
+                    '15': 'pm',
+                    '16': 'pm',
+                    '17': 'pm',
+                    '18': 'pm',
+                    '19': 'pm',
+                    '20': 'pm',
+                    '21': 'pm',
+                    '22': 'pm',
+                    '23': 'pm'
                 }
             }
         },
         'era': {
-            '0': u"BCE",
-            '1': u"CE"
+            '0': "BCE",
+            '1': "CE"
         },
         'numeric': {
-            'decimal':         u".",
-            'group':           u",",
-            'list':            u";",
-            'infinity':        u"Inf",
-            'plusSign':        u"+",
-            'minusSign':       u"-",
-            'exponential':     u"E",
-            'percentSign':     u"%",
-            'perMille':        u"‰",
-            'nativeZeroDigit': u"0",
-            'nan':             u"NaN",
-            'patternDigit':    u"#",
-            'numericDigits':   u"0123456789"
+            'decimal':         ".",
+            'group':           ",",
+            'list':            ";",
+            'infinity':        "Inf",
+            'plusSign':        "+",
+            'minusSign':       "-",
+            'exponential':     "E",
+            'percentSign':     "%",
+            'perMille':        "‰",
+            'nativeZeroDigit': "0",
+            'nan':             "NaN",
+            'patternDigit':    "#",
+            'numericDigits':   "0123456789"
         }
     },
     'formats': {
         'date': {
-            'full':   u"EEEE, MMMM d, y",
-            'long':   u"MMMM d, y",
-            'medium': u"MMM d, y",
-            'short':  u"M/d/yy"
+            'full':   "EEEE, MMMM d, y",
+            'long':   "MMMM d, y",
+            'medium': "MMM d, y",
+            'short':  "M/d/yy"
         },
         'time': {
-            'full':   u"h:mm:ss a zzzz",
-            'long':   u"h:mm:ss a z",
-            'medium': u"h:mm:ss a",
-            'short':  u"h:mm a"
+            'full':   "h:mm:ss a zzzz",
+            'long':   "h:mm:ss a z",
+            'medium': "h:mm:ss a",
+            'short':  "h:mm a"
         },
         'date_time': {
-            'full':   u"{1} {0}",
-            'long':   u"{1} {0}",
-            'medium': u"{1} {0}",
-            'short':  u"{1} {0}"
+            'full':   "{1} {0}",
+            'long':   "{1} {0}",
+            'medium': "{1} {0}",
+            'short':  "{1} {0}"
         },
         'numeric': {
-            'decimal':    u"#,##0.###",
-            'scientific': u"#E0",
-            'percent':    u"#,##0%",
-            'currency':   u"¤#,##0.00;(¤#,##0.00)"
+            'decimal':    "#,##0.###",
+            'scientific': "#E0",
+            'percent':    "#,##0%",
+            'currency':   "¤#,##0.00;(¤#,##0.00)"
         }
     },
     '*languages': {},
@@ -486,7 +485,7 @@ def info(fmt, *args):
     """
     Print an informational message.
     """
-    print fmt.format(*args)
+    print((fmt.format(*args)))
 
 
 class InvalidPathError(Exception):
@@ -547,7 +546,7 @@ class Locale(object):
         """
         Helper routine to recursively traverse the locale_data structure.
         """
-        for key in data_set.keys():
+        for key in list(data_set.keys()):
             value = data_set[key]
             if type(value).__name__ == 'dict':
                 if key[0] != '*':
@@ -611,7 +610,7 @@ class Locale(object):
             {"name": "supplementalData"}
         ])
         locale_sets = self.locale_data['*dayperiod']
-        for locales in locale_sets.keys():
+        for locales in list(locale_sets.keys()):
             if not ' ' in locales:
                 continue
             for locale in locales.split(' '):
@@ -619,9 +618,9 @@ class Locale(object):
                     locale, locales)
                 locale_sets[locale] = deepcopy(locale_sets[locales])
             del locale_sets[locales]
-        for locale in locale_sets.keys():
-            for hour_rule in locale_sets[locale].keys():
-                for rule in locale_sets[locale][hour_rule].keys():
+        for locale in list(locale_sets.keys()):
+            for hour_rule in list(locale_sets[locale].keys()):
+                for rule in list(locale_sets[locale][hour_rule].keys()):
                     if not rule.endswith(":00"):
                         info("Non-hour rule \"{0}\" for locale \"{1}\"",
                             rule, locale)
@@ -685,7 +684,7 @@ class Locale(object):
 
     def resolve_params(self, data, parent, path):
         result = 0
-        for key in data.keys():
+        for key in list(data.keys()):
             if type(data[key]) is dict:
                 result += self.resolve_params(data[key], parent, path + [key])
             elif data[key] is None:

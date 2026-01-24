@@ -1,0 +1,24 @@
+Notices
+=======
+
+ZanyBlue software includes code and data from the following open source
+projects:
+{% for notice in notices %}
+* {{ notice.name }}, {{ notice.version }}
+{% endfor %}
+
+The conditions for the use is detailed below.
+{% for notice in notices %}
+{{ notice.title }}
+
+{{ notice.description }}
+{% if notice.notice %}
+    {{ notice.notice }}
+{% endif %}
+
+{% for subnotice in notice.notices %}
+{{ subnotice.title }}
+
+    {{ subnotice.notice }}
+{% endfor %}
+{% endfor %}

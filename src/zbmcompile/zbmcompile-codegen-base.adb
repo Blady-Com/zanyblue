@@ -35,7 +35,6 @@
 
 with Ada.Wide_Characters.Unicode;
 with ZanyBlue.Text.Formatting;
-with ZanyBlue.Text.Version_Status_Arguments;
 with ZanyBlue.Utils;
 with ZanyBlue.Wide_Directories;
 
@@ -44,7 +43,6 @@ package body ZBMCompile.Codegen.Base is
    use ZanyBlue;
    use ZanyBlue.Text;
    use ZanyBlue.Text.Formatting;
-   use ZanyBlue.Text.Version_Status_Arguments;
    use ZanyBlue.Utils;
    use ZanyBlue.Wide_Directories;
 
@@ -188,7 +186,7 @@ package body ZBMCompile.Codegen.Base is
                   Argument0 => +Version_Major,
                   Argument1 => +Version_Minor,
                   Argument2 => +Version_Patch,
-                  Argument3 => +Version_Status);
+                  Argument3 => +Revision);
       Print_Line (File, ZBMBase_Facility, "10002",
                   Argument0 => +Package_Name);
       if Number_Of_Messages (Catalog) > 0 then
@@ -258,7 +256,7 @@ package body ZBMCompile.Codegen.Base is
                   Argument0 => +Version_Major,
                   Argument1 => +Version_Minor,
                   Argument2 => +Version_Patch,
-                  Argument3 => +Version_Status);
+                  Argument3 => +Revision);
       Print_Line (File, ZBMBase_Facility, "00002");
       Print_Line (File, ZBMBase_Facility, "00003",
                   Argument0 => +Package_Name);

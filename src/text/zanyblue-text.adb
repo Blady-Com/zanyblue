@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -50,12 +50,11 @@ package body ZanyBlue.Text is
 
    procedure Close_And_Update (File    : in out Ada.Wide_Text_IO.File_Type;
                                Updated : out Boolean) is
-      use Ada.Text_IO;
       use Ada.Wide_Text_IO;
       use Ada.Strings.Wide_Fixed;
       use ZanyBlue.Wide_Directories;
       Len       : constant Natural := Update_Extension'Length;
-      File_Name : constant Wide_String := From_UTF8 (Name (File));
+      File_Name : constant Wide_String := Wide_From_UTF8 (Name (File));
       Real_Name : constant Wide_String := Head (File_Name,
                                                 File_Name'Length - Len);
    begin
@@ -90,8 +89,8 @@ package body ZanyBlue.Text is
       Right        : File_Type;
 
    begin
-      Open (Left, In_File, To_UTF8 (Left_File_Name));
-      Open (Right, In_File, To_UTF8 (Right_File_Name));
+      Open (Left, In_File, Wide_To_UTF8 (Left_File_Name));
+      Open (Right, In_File, Wide_To_UTF8 (Right_File_Name));
       Left_Stream  := Stream (Left);
       Right_Stream := Stream (Right);
       while not Done loop

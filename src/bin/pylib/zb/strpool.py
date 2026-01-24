@@ -2,7 +2,7 @@
 #
 #  ZanyBlue, an Ada library and framework for finite element analysis.
 #
-#  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+#  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,7 @@ from string index value to start and end of the sub-string with the accumulated
 string corresponding to the index value.
 """
 
-from .zbmsg import *
+from zb.zbmsg import *
 
 
 class StringPool(object):
@@ -66,8 +66,8 @@ class StringPool(object):
         self.index_addresses = []
         self.n_saved = 0
         self.string_set = set()
-        self.pool = u""
-        self.index(u"")
+        self.pool = ""
+        self.index("")
         self.ascii_only = ascii_only
 
     def index(self, val):

@@ -44,7 +44,7 @@ import sys
 
 from optparse import OptionParser
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), u"pylib"))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "pylib"))
 
 from zb.localelist import LocaleList
 
@@ -102,7 +102,7 @@ def main():
     )
     (options, args) = parser.parse_args()
     if options.embed is None or options.props_dir is None:
-        print "Error: require both '-e' and '-p' be specified"
+        print("Error: require both '-e' and '-p' be specified")
         return 1
     verbose = options.verbose
     locales = LocaleList(options.cldr_dir, options.ascii_only)

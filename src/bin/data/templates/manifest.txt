@@ -1,0 +1,10 @@
+#
+# This is a simple MD5 manifest file for the contents of a ZanyBlue
+# distribution.  The contents of the files in the distribution can
+# be verified using the command (in the directory where the distribution
+# was extracted):
+#
+#    $ md5sum --check {{ versioned_name }}/MANIFEST.txt
+#
+{% for entry in manifest %}{{ entry.md5sum }}  {{ entry.filename }}
+{% endfor %}

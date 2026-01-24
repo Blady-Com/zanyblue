@@ -1,0 +1,24 @@
+Contributions
+=============
+
+This software includes contributions from the following open source developers:
+{% for contributor in contributors %}
+* {{ contributor.name }} <{{ contributor.email }}>
+{% endfor %}
+
+Contributions to ZanyBlue are contributed under the same BSD style license that
+covers the ZanyBlue project.
+
+The contributions made to the ZanyBlue project are:
+
+{% for contributor in contributors %}
+
+{{ contributor.title }}
+
+Contact: {{ contributor.email }}
+
+{% for contribution in contributor.contributions %}
+** {{ contribution.when }}
+    {{ contribution.description }}
+{% endfor %}
+{% endfor %}

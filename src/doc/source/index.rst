@@ -1,5 +1,5 @@
 .. -*- coding: utf-8 -*-
-   Copyright © 2016, Michael Rohan <mrohan@zanyblue.com>
+   Copyright (c) 2016, 2018, Michael Rohan <mrohan@zanyblue.com>
    All rights reserved.
 
 ZanyBlue Library and Tools
@@ -83,9 +83,11 @@ ZanyBlue Documentation
    license
    download
    intro
+   ahven
    releases
    root
    text/index.rst
+   zbtest/index.rst
    utilities/index.rst
    docs
    contribs

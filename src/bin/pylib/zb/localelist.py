@@ -1,9 +1,8 @@
-#!/usr/bin/env python
 #  -*- coding: utf-8 -*-
 #
 #  ZanyBlue, an Ada library and framework for finite element analysis.
 #
-#  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+#  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -43,10 +42,10 @@ import codecs
 from copy import deepcopy
 from xml.dom import minidom
 
-from .zbmsg import *
-from .locale import Locale
-from .strpool import StringPool
-from .zbxmlsupp import parse_element
+from zb.zbmsg import *
+from zb.locale import Locale
+from zb.strpool import StringPool
+from zb.zbxmlsupp import parse_element
 
 _END_CLDR_DATA = "END-CLDR-DATA"
 _BEGIN_CLDR_DATA = "BEGIN-CLDR-DATA"
@@ -56,7 +55,7 @@ def info(fmt, *args):
     """
     Print an informational message.
     """
-    print unicode(fmt).format(*args)
+    print((fmt.format(*args)))
 
 
 class LocaleList(object):
@@ -87,7 +86,7 @@ class LocaleList(object):
             {"name": "numberingSystems"},
             {"name": "supplementalData"}
         ])
-        for name in self.numbering_systems.keys():
+        for name in list(self.numbering_systems.keys()):
             info("Loaded numbering system \"{0}\"", name)
 
     def set_root_values(self, index):
@@ -121,7 +120,7 @@ class LocaleList(object):
             fp = codecs.open(path, "rb", 'UTF-8')
         except IOError:
             return None
-        xmldata = unicode(fp.read())
+        xmldata = fp.read()
         fp.close()
         return minidom.parseString(xmldata.encode("utf-8"))
 
@@ -195,7 +194,7 @@ class LocaleList(object):
 
     def write_code(self):
         strpool = StringPool(self.ascii_only)
-        for ns in self.numbering_systems.keys():
+        for ns in list(self.numbering_systems.keys()):
             info("Adding digits for \"{0}\" numbering system: {1}",
                   ns, self.numbering_systems[ns]
             )

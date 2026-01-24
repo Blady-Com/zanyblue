@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,14 +33,27 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Calendar;
+--  @usage run script
+--  @summary run another ZBTest script
+--  @start-doc
+--  Run a script given the script name, i.e., without the "zbt" extension.
+--  The script should either be in the current directory or in a sub-directory
+--  with the same name as the script, e.g., "run xmpl", will try the files::
+--
+--      xmpl.zbt
+--      xmpl/xmpl.zbt
+--
+--  Once located, the ZBTest commands in the script are executed within the
+--  context of a new implicit scope.  Modifications to the environment made
+--  by the script are discarded (via undo actions) when the script completes.
+--
+
 with ZanyBlue.Wide_Directories;
 
 separate (ZBTest.Commands)
 procedure Run_Command (State : in out State_Type;
                        Args  : List_Type) is
 
-   use Ada.Calendar;
    use ZanyBlue.Wide_Directories;
 
    procedure Execute_Script (State  : in out State_Type;
@@ -101,7 +114,7 @@ procedure Run_Command (State : in out State_Type;
                        := Wide_Compose (Script_Dir,
                                         ZBTest_Init_Name,
                                         ZBTest_Extension);
-      Init_Param : constant Wide_String := "_init⇨" & Init_Script;
+      Init_Param : constant Wide_String := "_init::" & Init_Script;
    begin
       begin
          --  Load the scripts in our parent directories first.
@@ -190,7 +203,6 @@ procedure Run_Command (State : in out State_Type;
       State.New_Scope;
       State.Initialize_Scope (Script_Dir, Implicit_Scope => True);
       Load_Init_Scripts (State, Script_Dir);
-      Register_XML_Scope (State);
       Execute_Script (State, Script);
       Wrap_Up (State, Full_Test_Name (State));
    end Run;
@@ -208,9 +220,8 @@ procedure Run_Command (State : in out State_Type;
       while not State.Is_Defined ("_implicit_scope", False) loop
          State.End_Scope;
       end loop;
-      Set_XML_Elapsed_Time (State);
       State.End_Scope (N_OK, N_Fail);
-      Print_00018 (+Test_Name, +N_OK, +N_Fail);
+      Print_00018 (+Test_Name, +N_Fail, +N_OK);
    end Wrap_Up;
 
 begin
