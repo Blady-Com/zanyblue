@@ -32,22 +32,13 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with ZBTest.Commands;
+separate (ZBTest.Commands)
+procedure Unknown_Command (State : in out State_Type;
+                           Args  : in List_Type) is
 
-package body ZBTest.Commands.Unknown_Command is
-
-   use ZBTest.Commands;
-
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
       pragma Unreferenced (State);
       pragma Unreferenced (Args);
-   begin
-      raise Unknown_Command_Error;
-   end Implementation;
 
-end ZBTest.Commands.Unknown_Command;
+begin
+   raise Unknown_Command_Error;
+end Unknown_Command;

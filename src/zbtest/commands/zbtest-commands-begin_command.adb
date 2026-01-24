@@ -32,19 +32,13 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-package body ZBTest.Commands.Begin_Command is
+separate (ZBTest.Commands)
+procedure Begin_Command (State   : in out State_Type;
+                         Args    : in List_Type) is
 
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State   : in out State_Type;
-                             Args    : in List_Type) is
-   begin
-      if Length (Args) /= 1 then
-         raise Command_Usage_Error;
-      end if;
-      State.New_Scope;
-   end Implementation;
-
-end ZBTest.Commands.Begin_Command;
+begin
+   if Length (Args) /= 1 then
+      raise Command_Usage_Error;
+   end if;
+   State.New_Scope;
+end Begin_Command;

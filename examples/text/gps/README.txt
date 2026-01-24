@@ -5,9 +5,9 @@ GPS.
 
 = OVERVIEW =
 
-The patch here converts the GPS 4.4.1 release to an externalized strings
-version using the ZanyBlue Text library.  The conversion was driven by the
-existing internationalization mechanism in GPS where strings to be localized
+The patches here convert GPS 4.4.1, 5.0.1 and 5.1.1 releases to an externalized
+strings version using the ZanyBlue Text library.  The conversion was driven by
+the existing internationalization mechanism in GPS where strings to be localized
 were identified by the "-" operator via the GPS.Intl package.
 
 Each top level component within GPS was independently externalized to ZanyBlue
@@ -70,7 +70,7 @@ the ZanyBlue library and application have already been build and the top
 level "zanyblue-VERSION" directory is pointed to by the environment variable
 ZBDIR, e.g.,
 
-    export ZBDIR=$HOME/zanyblue-0.2.0
+    export ZBDIR=$HOME/zanyblue-1.1.0b
 
 The ZanyBlue bin directory will need to be on the PATH and the lib directory
 needs to be on the ADA_PROJECT_PATH:
@@ -82,7 +82,13 @@ Note, the variable ZBDIR is only used to simplify the definition of these
 two environment variables.  It is not used by the ZanyBlue library or apps.
 
 To build, the patches need to be applied to a base GPS release.  In the
-following, replace "4.4.1" with "5.0.1" if building GPS v5.0.1:
+following, replace "4.4.1" with "5.0.1" or "5.1.1" if building other GPS
+versions.
+
+The "5.1.1" version was built using GNAT 2011 rather than GNAT 2012.  The
+"configure" and "gnatlib/configure" scripts were manually updated to enable
+"gtkada" regardless of the results of the test for the installation of the
+package.
 
 1) Download the release and extract the release bundle:
 

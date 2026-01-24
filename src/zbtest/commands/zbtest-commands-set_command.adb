@@ -34,16 +34,12 @@
 
 with Ada.Calendar;
 with Ada.Strings.Wide_Fixed;
-with ZanyBlue.Text.Formatting;
-with ZBTest.Commands;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Set_Command is
+separate (ZBTest.Commands)
+procedure Set_Command (State : in out State_Type;
+                       Args  : in List_Type) is
 
    use Ada.Strings.Wide_Fixed;
-   use ZanyBlue.Text.Formatting;
-   use ZBTest.Commands;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    type Type_Char_Type is ('s', 'i', 'b', 'f', 't');
 
@@ -53,48 +49,6 @@ package body ZBTest.Commands.Set_Command is
                         Name         : in Wide_String;
                         Value        : in Wide_String);
    --  Set a parameter value.
-
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      Type_Char : Type_Char_Type := 's';
-      Undef_Check  : Boolean := False;
-      Param_Idx : Natural := 0;
-      Value_Idx : Natural := 0;
-   begin
-      for I in 2 .. Length (Args) loop
-         if Value (Args, I) = "-s" then
-            Type_Char := 's';
-         elsif Value (Args, I) = "-i" then
-            Type_Char := 'i';
-         elsif Value (Args, I) = "-b" then
-            Type_Char := 'b';
-         elsif Value (Args, I) = "-f" then
-            Type_Char := 'f';
-         elsif Value (Args, I) = "-t" then
-            Type_Char := 't';
-         elsif Value (Args, I) = "-u" then
-            Undef_Check := True;
-         elsif Head (Value (Args, I), 1) = "-" then
-            raise Command_Usage_Error;
-         elsif Param_Idx = 0 then
-            Param_Idx := I;
-         elsif Value_Idx = 0 then
-            Value_Idx := I;
-         else
-            raise Command_Usage_Error;
-         end if;
-      end loop;
-      if Param_Idx = 0 or else Value_Idx = 0 then
-         raise Command_Usage_Error;
-      end if;
-      Set_Value (State, Undef_Check, Type_Char,
-                        Value (Args, Param_Idx),
-                        Value (Args, Value_Idx));
-   end Implementation;
 
    ---------------
    -- Set_Value --
@@ -133,4 +87,39 @@ package body ZBTest.Commands.Set_Command is
       Print_10004 (+Value);
    end Set_Value;
 
-end ZBTest.Commands.Set_Command;
+   Type_Char : Type_Char_Type := 's';
+   Undef_Check  : Boolean := False;
+   Param_Idx : Natural := 0;
+   Value_Idx : Natural := 0;
+
+begin
+   for I in 2 .. Length (Args) loop
+      if Value (Args, I) = "-s" then
+         Type_Char := 's';
+      elsif Value (Args, I) = "-i" then
+         Type_Char := 'i';
+      elsif Value (Args, I) = "-b" then
+         Type_Char := 'b';
+      elsif Value (Args, I) = "-f" then
+         Type_Char := 'f';
+      elsif Value (Args, I) = "-t" then
+         Type_Char := 't';
+      elsif Value (Args, I) = "-u" then
+         Undef_Check := True;
+      elsif Head (Value (Args, I), 1) = "-" then
+         raise Command_Usage_Error;
+      elsif Param_Idx = 0 then
+         Param_Idx := I;
+      elsif Value_Idx = 0 then
+         Value_Idx := I;
+      else
+         raise Command_Usage_Error;
+      end if;
+   end loop;
+   if Param_Idx = 0 or else Value_Idx = 0 then
+      raise Command_Usage_Error;
+   end if;
+   Set_Value (State, Undef_Check, Type_Char,
+                     Value (Args, Param_Idx),
+                     Value (Args, Value_Idx));
+end Set_Command;

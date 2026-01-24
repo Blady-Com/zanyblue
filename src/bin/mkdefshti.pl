@@ -11,7 +11,8 @@
 use strict;
 use FileHandle;
 
-my $SFLOGO = "http://sflogo.sourceforge.net/sflogo.php?group_id=225351&amp;type=11";
+#my $SFLOGO = "http://sflogo.sourceforge.net/sflogo.php?group_id=225351&amp;type=11";
+my $SFLOGO = "/favicon.ico";
 my $DOWNLOADURL = "http://sourceforge.net/projects/zanyblue/files/";
 my $TRACKERURL = "http://sourceforge.net/tracker/?group_id=225351";
 my $PROJECTURL = "http://sourceforge.net/projects/zanyblue/";

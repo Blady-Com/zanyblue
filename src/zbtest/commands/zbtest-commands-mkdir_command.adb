@@ -33,43 +33,18 @@
 --
 
 with Ada.Strings.Wide_Fixed;
-with ZanyBlue.Text.Formatting;
 with ZanyBlue.Wide_Directories;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Mkdir_Command is
+separate (ZBTest.Commands)
+procedure Mkdir_Command (State : in out State_Type;
+                         Args  : in List_Type) is
 
    use Ada.Strings.Wide_Fixed;
-   use ZanyBlue.Text.Formatting;
    use ZanyBlue.Wide_Directories;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    procedure Make_Directory (State : in out State_Type;
                              Name  : in Wide_String);
    --  The make directory helper function.
-
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      Target_Index : Natural := 0;
-   begin
-      for I in 2 .. Length (Args) loop
-         if Head (Value (Args, I), 1) = "-" then
-            raise Command_Usage_Error;
-         elsif Target_Index = 0 then
-            Target_Index := I;
-         else
-            raise Command_Usage_Error;
-         end if;
-      end loop;
-      if Target_Index = 0 then
-         raise Command_Usage_Error;
-      end if;
-      Make_Directory (State, Value (Args, Target_Index));
-   end Implementation;
 
    --------------------
    -- Make_Directory --
@@ -87,4 +62,20 @@ package body ZBTest.Commands.Mkdir_Command is
       Print_10029 (+Name, +E);
    end Make_Directory;
 
-end ZBTest.Commands.Mkdir_Command;
+   Target_Index : Natural := 0;
+
+begin
+   for I in 2 .. Length (Args) loop
+      if Head (Value (Args, I), 1) = "-" then
+         raise Command_Usage_Error;
+      elsif Target_Index = 0 then
+         Target_Index := I;
+      else
+         raise Command_Usage_Error;
+      end if;
+   end loop;
+   if Target_Index = 0 then
+      raise Command_Usage_Error;
+   end if;
+   Make_Directory (State, Value (Args, Target_Index));
+end Mkdir_Command;

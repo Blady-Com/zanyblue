@@ -35,30 +35,25 @@
 with Ada.Strings.Wide_Unbounded;
 with ZanyBlue.Wide_Directories;
 
-package body ZBTest.Functions.Joinpaths_Function is
+separate (ZBTest.Functions)
+function Joinpaths_Function (State : access State_Type;
+                             Args  : in List_Type) return Wide_String is
+   pragma Unreferenced (State);
 
    use Ada.Strings.Wide_Unbounded;
    use ZanyBlue.Wide_Directories;
 
-   --------------------
-   -- Implementation --
-   --------------------
-
-   function Implementation (State : access State_Type;
-                            Args  : in List_Type) return Wide_String is
-      pragma Unreferenced (State);
       Buffer : Unbounded_Wide_String;
-   begin
-      if Length (Args) < 2 then
-         raise Function_Usage_Error;
-      end if;
-      Append (Buffer, Value (Args, 2));
-      for I in 3 .. Length (Args) loop
-         Set_Unbounded_Wide_String (Buffer,
-                                    Wide_Compose (To_Wide_String (Buffer),
-                                                  Value (Args, I)));
-      end loop;
-      return To_Wide_String (Buffer);
-   end Implementation;
 
-end ZBTest.Functions.Joinpaths_Function;
+begin
+   if Length (Args) < 2 then
+      raise Function_Usage_Error;
+   end if;
+   Append (Buffer, Value (Args, 2));
+   for I in 3 .. Length (Args) loop
+      Set_Unbounded_Wide_String (Buffer,
+                                 Wide_Compose (To_Wide_String (Buffer),
+                                               Value (Args, I)));
+   end loop;
+   return To_Wide_String (Buffer);
+end Joinpaths_Function;

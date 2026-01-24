@@ -32,38 +32,19 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Wide_Text_IO;
-with ZanyBlue.Text.Formatting;
 with ZanyBlue.Wide_Directories;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Rename_Command is
+separate (ZBTest.Commands)
+procedure Rename_Command (State : in out State_Type;
+                          Args  : in List_Type) is
 
-   use ZanyBlue.Text.Formatting;
+   pragma Unreferenced (State);
+
    use ZanyBlue.Wide_Directories;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    procedure Rename_File (Old_Name : in Wide_String;
                           New_Name : in Wide_String);
    --  Rename the file.
-
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      pragma Unreferenced (State);
-   begin
-      if Length (Args) = 3 then
-         Rename_File (Value (Args, 2), Value (Args, 3));
-      else
-         raise Command_Usage_Error;
-      end if;
-   exception
-   when E : ZanyBlue.Wide_Directories.Use_Error =>
-      Print_10019 (+Value (Args, 2), +Value (Args, 3), +E);
-   end Implementation;
 
    -----------------
    -- Rename_File --
@@ -79,4 +60,13 @@ package body ZBTest.Commands.Rename_Command is
       Print_10034 (+Old_Name, +New_Name, +E);
    end Rename_File;
 
-end ZBTest.Commands.Rename_Command;
+begin
+   if Length (Args) = 3 then
+      Rename_File (Value (Args, 2), Value (Args, 3));
+   else
+      raise Command_Usage_Error;
+   end if;
+exception
+when E : ZanyBlue.Wide_Directories.Use_Error =>
+   Print_10019 (+Value (Args, 2), +Value (Args, 3), +E);
+end Rename_Command;

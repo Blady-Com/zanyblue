@@ -33,18 +33,12 @@
 --
 
 with Ada.Environment_Variables;
-with ZanyBlue.Text.Formatting;
-with ZanyBlue.OS;
-with ZBTest.Commands;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Delenv_Command is
+separate (ZBTest.Commands)
+procedure Delenv_Command (State : in out State_Type;
+                          Args  : in List_Type) is
 
    use Ada.Environment_Variables;
-   use ZanyBlue.Text.Formatting;
-   use ZanyBlue.OS;
-   use ZBTest.Commands;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    procedure Delenv (State : in out State_Type;
                      Name  : in Wide_String);
@@ -67,17 +61,9 @@ package body ZBTest.Commands.Delenv_Command is
       end if;
    end Delenv;
 
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-   begin
-      if Length (Args) /= 2 then
-         raise Command_Usage_Error;
-      end if;
-      Delenv (State, Value (Args, 2));
-   end Implementation;
-
-end ZBTest.Commands.Delenv_Command;
+begin
+   if Length (Args) /= 2 then
+      raise Command_Usage_Error;
+   end if;
+   Delenv (State, Value (Args, 2));
+end Delenv_Command;

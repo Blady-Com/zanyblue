@@ -2,8 +2,7 @@ This example is a simple text based application that uses the messages from
 the TomCat server.  This example shows multiple facilities being compiled to
 a single message package (the messages are also optimized for locale based
 access, i.e., the messages for each locale are stored together).  A subset
-of the message set is displayed for the current
-locale when run.
+of the message set is displayed for the current locale when run.
 
 Since this example is based on an existing Java .properties file set, the
 messages are externalized and are first compiled to the Ada package

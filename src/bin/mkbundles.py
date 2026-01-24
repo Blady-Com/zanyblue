@@ -20,7 +20,7 @@ _V_MAJOR = 1
 _V_MINOR = 0
 _V_PATCH = 0
 
-_0001 = "This is MKTARBALLS, V{0}.{1}.{2} on {3}."
+_0001 = "This is MKBUNDLES, V{0}.{1}.{2} on {3}."
 _0002 = "Copyright (c) {0}, Michael Rohan.  All rights reserved."
 _0003 = "Scanning the ZanyBlue directory \"{0}\" ..."
 _0004 = "Generating bundles for V{0}, r{2} ({1})"
@@ -164,6 +164,11 @@ def main():
     parser.add_option("-S", "--status",
                       dest="status",
                       help="Release status (ALPHA, BETA, ...)")
+    parser.add_option("-L", "--libs3rd",
+                      action="store_true",
+                      dest="libs3rd",
+                      default=False,
+                      help="Generate the libs3rd bundle")
     parser.add_option("-Y", "--copyright-year",
                       dest="copyright_year",
                       help="Copyright year")
@@ -227,10 +232,11 @@ def main():
                            filesets.get_category_files("source"))
         dest.add_data(_DEFS_FILE, defs_data)
         dest.close()
-        dest = open_bundle(top, prefix, libs3rd_bundle, filetype, verbose,
-                           filesets.get_category_files("libs3rd"),
-                           "MANIFEST-LIBS3RD.txt")
-        dest.close()
+        if options.libs3rd:
+            dest = open_bundle(top, prefix, libs3rd_bundle, filetype, verbose,
+                               filesets.get_category_files("libs3rd"),
+                               "MANIFEST-LIBS3RD.txt")
+            dest.close()
     return 0
 
 if __name__ == '__main__':

@@ -49,7 +49,7 @@ INCLUDE_FILES=$(patsubst %,$(INCDIR)/%,$(INCLUDE_SRCS))
 GENERATED=$(INCLUDE_FILES)
 APPDIRS=zbmcompile zbtest
 APPTARGETS=$(patsubst %,%.app,$(APPDIRS))
-CLEAN_DEPS=$(patsubst %,%.clean,$(APPDIRS) root test)
+CLEAN_DEPS=$(patsubst %,%.clean,$(APPDIRS) root doc test)
 CLEAN_FILES+=$(wildcard bin/pylib/*.pyc)
 CLEAN_FILES+=$(wildcard bin/pylib/zb/*.pyc)
 CLEAN_FILES+=$(wildcard gnatcheck.out)
@@ -69,7 +69,10 @@ library:
 applications:	$(APPTARGETS)
 
 docs:
-	$(MAKE) -C doc install
+	$(MAKE) -C doc
+
+website:
+	$(MAKE) -C doc/website
 
 changelog:
 	$(SRCDIR)/bin/mkchangelog

@@ -32,19 +32,14 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-package body ZBTest.Commands.Noop_Command is
+separate (ZBTest.Commands)
+procedure Noop_Command (State : in out State_Type;
+                        Args  : in List_Type) is
 
-   --------------------
-   -- Implementation --
-   --------------------
+   pragma Unreferenced (State);
 
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      pragma Unreferenced (State);
-   begin
-      if Length (Args) /= 1 then
-         raise Command_Usage_Error;
-      end if;
-   end Implementation;
-
-end ZBTest.Commands.Noop_Command;
+begin
+   if Length (Args) /= 1 then
+      raise Command_Usage_Error;
+   end if;
+end Noop_Command;

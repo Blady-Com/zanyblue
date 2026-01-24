@@ -46,11 +46,13 @@ procedure X_CurTime is
    use Ada.Calendar;
    use ZanyBlue.Text.Formatting;
 
-   procedure Process_Command_Line;
+   type Mode_Type is (Normal, Help);
 
    Usage_Error : exception;
 
-   procedure Process_Command_Line is
+   procedure Process_Command_Line (Mode : in out Mode_Type);
+
+   procedure Process_Command_Line (Mode : in out Mode_Type) is
       use Ada.Command_Line;
       use ZanyBlue.Text.Pseudo;
       use ZanyBlue.Text.Locales;
@@ -67,8 +69,12 @@ procedure X_CurTime is
                Pseudo_Translate (Lowercase_Map);
             elsif Option = "-xu" then
                Pseudo_Translate (Uppercase_Map);
+            elsif Option = "-xn" then
+               null;
             elsif Option (1 .. 2) = "-l" then
                Set_Locale (Option (3 .. Option'Last));
+            elsif Option = "-h" then
+               Mode := Help;
             else
                raise Usage_Error;
             end if;
@@ -79,17 +85,23 @@ procedure X_CurTime is
    Time_Format : constant String := "EEE MMM d HH:mm:ss yyyy";
 
    Now : constant Time := Clock;
+   Mode : Mode_Type := Normal;
 
 begin
-   Process_Command_Line;
-   Print_Line ("curtime", "0001", +Now);
-   Print_Line ("curtime", "0002", +Now);
-   Print_Line ("curtime", "0003", +Now);
-   Print_Line ("curtime", "0004", +Now);
-   Print_Line ("curtime", "0005", +Now);
-   Print_Line ("curtime", "0006", +Now);
-   Print_Line ("curtime", "0007", +Now);
-   Print_Line ("curtime", "0008", +Now);
-   Print_Line ("curtime", "0009", +Now);
-   Print_Line ("curtime", "0010", +Now, +Time_Format);
+   Process_Command_Line (Mode);
+   case Mode is
+   when Normal =>
+      Print_Line ("curtime", "0001", +Now);
+      Print_Line ("curtime", "0002", +Now);
+      Print_Line ("curtime", "0003", +Now);
+      Print_Line ("curtime", "0004", +Now);
+      Print_Line ("curtime", "0005", +Now);
+      Print_Line ("curtime", "0006", +Now);
+      Print_Line ("curtime", "0007", +Now);
+      Print_Line ("curtime", "0008", +Now);
+      Print_Line ("curtime", "0009", +Now);
+      Print_Line ("curtime", "0010", +Now, +Time_Format);
+   when Help =>
+      Print_Line ("curtime", "0011");
+   end case;
 end X_CurTime;

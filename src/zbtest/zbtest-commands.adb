@@ -33,41 +33,16 @@
 --
 
 with Ada.Wide_Text_IO;
+with ZanyBlue.OS;
 with ZanyBlue.Text.Locales;
 with ZanyBlue.Text.Catalogs;
 with ZanyBlue.Text.Arguments;
 with ZanyBlue.Text.Formatting;
 
-with ZBTest.Commands.Append_Command;
-with ZBTest.Commands.Begin_Command;
-with ZBTest.Commands.Compare_Command;
-with ZBTest.Commands.Copy_Command;
-with ZBTest.Commands.Delenv_Command;
-with ZBTest.Commands.Delete_Command;
-with ZBTest.Commands.Desc_Command;
-with ZBTest.Commands.Dump_Command;
-with ZBTest.Commands.Echo_Command;
-with ZBTest.Commands.End_Command;
-with ZBTest.Commands.Execute_Command;
-with ZBTest.Commands.Exit_Command;
-with ZBTest.Commands.Filestat_Command;
-with ZBTest.Commands.Getenv_Command;
-with ZBTest.Commands.Help_Command;
-with ZBTest.Commands.Incr_Command;
-with ZBTest.Commands.Mkdir_Command;
-with ZBTest.Commands.Noop_Command;
-with ZBTest.Commands.Prepend_Command;
-with ZBTest.Commands.Print_Command;
-with ZBTest.Commands.Rename_Command;
-with ZBTest.Commands.Run_Command;
-with ZBTest.Commands.Set_Command;
-with ZBTest.Commands.Setenv_Command;
-with ZBTest.Commands.Unknown_Command;
-with ZBTest.Commands.Which_Command;
-with ZanyBlue.OS;
-pragma Elaborate_All (ZanyBlue.OS);
-
 with ZBTest_Messages.ZBTest_Wide_Prints;
+
+pragma Elaborate_All (ZanyBlue.OS);
+pragma Elaborate_All (ZBTest_Messages.ZBTest_Wide_Prints);
 
 package body ZBTest.Commands is
 
@@ -105,159 +80,213 @@ package body ZBTest.Commands is
    type Command_List is array (Natural range <>) of Command_Definition;
    --  List of known commands
 
+   procedure Append_Command (State   : in out State_Type;
+                             Args    : in List_Type);
+   procedure Begin_Command (State   : in out State_Type;
+                            Args    : in List_Type);
+
+   procedure Compare_Command (State   : in out State_Type;
+                              Args    : in List_Type);
+   procedure Copy_Command (State   : in out State_Type;
+                           Args    : in List_Type);
+   procedure Delenv_Command (State   : in out State_Type;
+                             Args    : in List_Type);
+   procedure Delete_Command (State   : in out State_Type;
+                             Args    : in List_Type);
+   procedure Desc_Command (State   : in out State_Type;
+                           Args    : in List_Type);
+   procedure Dump_Command (State   : in out State_Type;
+                           Args    : in List_Type);
+   procedure Echo_Command (State   : in out State_Type;
+                           Args    : in List_Type);
+   procedure End_Command (State   : in out State_Type;
+                          Args    : in List_Type);
+   procedure Execute_Command (State   : in out State_Type;
+                              Args    : in List_Type);
+   procedure Exit_Command (State   : in out State_Type;
+                           Args    : in List_Type);
+   procedure Filestat_Command (State   : in out State_Type;
+                               Args    : in List_Type);
+   procedure Getenv_Command (State   : in out State_Type;
+                             Args    : in List_Type);
+   procedure Help_Command (State   : in out State_Type;
+                           Args    : in List_Type);
+   procedure Incr_Command (State   : in out State_Type;
+                           Args    : in List_Type);
+   procedure Mkdir_Command (State   : in out State_Type;
+                            Args    : in List_Type);
+   procedure Noop_Command (State   : in out State_Type;
+                           Args    : in List_Type);
+   procedure Prepend_Command (State   : in out State_Type;
+                              Args    : in List_Type);
+   procedure Print_Command (State   : in out State_Type;
+                            Args    : in List_Type);
+   procedure Rename_Command (State   : in out State_Type;
+                             Args    : in List_Type);
+   procedure Run_Command (State   : in out State_Type;
+                          Args    : in List_Type);
+   procedure Set_Command (State   : in out State_Type;
+                          Args    : in List_Type);
+   procedure Setenv_Command (State   : in out State_Type;
+                             Args    : in List_Type);
+   procedure Unknown_Command (State   : in out State_Type;
+                              Args    : in List_Type);
+   procedure Which_Command (State   : in out State_Type;
+                            Args    : in List_Type);
+
    Command_Table : constant Command_List := (
                  (Name           => new Wide_String'("?"),
-                  Implementation => Unknown_Command.Implementation'Access,
+                  Implementation => Unknown_Command'Access,
                   Usage          => Print_20000'Access,
                   Summary        => Print_30000'Access,
                   Help           => Print_40000'Access),
 
                  (Name           => new Wide_String'("append"),
-                  Implementation => Append_Command.Implementation'Access,
+                  Implementation => Append_Command'Access,
                   Usage          => Print_20001'Access,
                   Summary        => Print_30001'Access,
                   Help           => Print_40001'Access),
 
                  (Name           => new Wide_String'("begin"),
-                  Implementation => Begin_Command.Implementation'Access,
+                  Implementation => Begin_Command'Access,
                   Usage          => Print_20002'Access,
                   Summary        => Print_30002'Access,
                   Help           => Print_40002'Access),
 
                  (Name           => new Wide_String'("compare"),
-                  Implementation => Compare_Command.Implementation'Access,
+                  Implementation => Compare_Command'Access,
                   Usage          => Print_20019'Access,
                   Summary        => Print_30019'Access,
                   Help           => Print_40019'Access),
 
                  (Name           => new Wide_String'("copy"),
-                  Implementation => Copy_Command.Implementation'Access,
+                  Implementation => Copy_Command'Access,
                   Usage          => Print_20013'Access,
                   Summary        => Print_30013'Access,
                   Help           => Print_40013'Access),
 
                  (Name           => new Wide_String'("delenv"),
-                  Implementation => Delenv_Command.Implementation'Access,
+                  Implementation => Delenv_Command'Access,
                   Usage          => Print_20026'Access,
                   Summary        => Print_30026'Access,
                   Help           => Print_40026'Access),
 
                  (Name           => new Wide_String'("delete"),
-                  Implementation => Delete_Command.Implementation'Access,
+                  Implementation => Delete_Command'Access,
                   Usage          => Print_20020'Access,
                   Summary        => Print_30020'Access,
                   Help           => Print_40020'Access),
 
                  (Name           => new Wide_String'("desc"),
-                  Implementation => Desc_Command.Implementation'Access,
+                  Implementation => Desc_Command'Access,
                   Usage          => Print_20017'Access,
                   Summary        => Print_30017'Access,
                   Help           => Print_40017'Access),
 
                  (Name           => new Wide_String'("dump"),
-                  Implementation => Dump_Command.Implementation'Access,
+                  Implementation => Dump_Command'Access,
                   Usage          => Print_20003'Access,
                   Summary        => Print_30003'Access,
                   Help           => Print_40003'Access),
 
                  (Name           => new Wide_String'("echo"),
-                  Implementation => Echo_Command.Implementation'Access,
+                  Implementation => Echo_Command'Access,
                   Usage          => Print_20023'Access,
                   Summary        => Print_30023'Access,
                   Help           => Print_40023'Access),
 
                  (Name           => new Wide_String'("end"),
-                  Implementation => End_Command.Implementation'Access,
+                  Implementation => End_Command'Access,
                   Usage          => Print_20004'Access,
                   Summary        => Print_30004'Access,
                   Help           => Print_40004'Access),
 
                  (Name           => new Wide_String'("execute"),
-                  Implementation => Execute_Command.Implementation'Access,
+                  Implementation => Execute_Command'Access,
                   Usage          => Print_20014'Access,
                   Summary        => Print_30014'Access,
                   Help           => Print_40014'Access),
 
                  (Name           => new Wide_String'("exit"),
-                  Implementation => Exit_Command.Implementation'Access,
+                  Implementation => Exit_Command'Access,
                   Usage          => Print_20005'Access,
                   Summary        => Print_30005'Access,
                   Help           => Print_40005'Access),
 
                  (Name           => new Wide_String'("filestat"),
-                  Implementation => Filestat_Command.Implementation'Access,
+                  Implementation => Filestat_Command'Access,
                   Usage          => Print_20022'Access,
                   Summary        => Print_30022'Access,
                   Help           => Print_40022'Access),
 
                  (Name           => new Wide_String'("getenv"),
-                  Implementation => Getenv_Command.Implementation'Access,
+                  Implementation => Getenv_Command'Access,
                   Usage          => Print_20006'Access,
                   Summary        => Print_30006'Access,
                   Help           => Print_40006'Access),
 
                  (Name           => new Wide_String'("help"),
-                  Implementation => Help_Command.Implementation'Access,
+                  Implementation => Help_Command'Access,
                   Usage          => Print_20007'Access,
                   Summary        => Print_30007'Access,
                   Help           => Print_40007'Access),
 
                  (Name           => new Wide_String'("incr"),
-                  Implementation => Incr_Command.Implementation'Access,
+                  Implementation => Incr_Command'Access,
                   Usage          => Print_20024'Access,
                   Summary        => Print_30024'Access,
                   Help           => Print_40024'Access),
 
                  (Name           => new Wide_String'("mkdir"),
-                  Implementation => Mkdir_Command.Implementation'Access,
+                  Implementation => Mkdir_Command'Access,
                   Usage          => Print_20021'Access,
                   Summary        => Print_30021'Access,
                   Help           => Print_40021'Access),
 
                  (Name           => new Wide_String'("noop"),
-                  Implementation => Noop_Command.Implementation'Access,
+                  Implementation => Noop_Command'Access,
                   Usage          => Print_20008'Access,
                   Summary        => Print_30008'Access,
                   Help           => Print_40008'Access),
 
                  (Name           => new Wide_String'("prepend"),
-                  Implementation => Prepend_Command.Implementation'Access,
+                  Implementation => Prepend_Command'Access,
                   Usage          => Print_20009'Access,
                   Summary        => Print_30009'Access,
                   Help           => Print_40009'Access),
 
                  (Name           => new Wide_String'("print"),
-                  Implementation => Print_Command.Implementation'Access,
+                  Implementation => Print_Command'Access,
                   Usage          => Print_20010'Access,
                   Summary        => Print_30010'Access,
                   Help           => Print_40010'Access),
 
                  (Name           => new Wide_String'("rename"),
-                  Implementation => Rename_Command.Implementation'Access,
+                  Implementation => Rename_Command'Access,
                   Usage          => Print_20015'Access,
                   Summary        => Print_30015'Access,
                   Help           => Print_40015'Access),
 
                  (Name           => new Wide_String'("run"),
-                  Implementation => Run_Command.Implementation'Access,
+                  Implementation => Run_Command'Access,
                   Usage          => Print_20016'Access,
                   Summary        => Print_30016'Access,
                   Help           => Print_40016'Access),
 
                  (Name           => new Wide_String'("set"),
-                  Implementation => Set_Command.Implementation'Access,
+                  Implementation => Set_Command'Access,
                   Usage          => Print_20011'Access,
                   Summary        => Print_30011'Access,
                   Help           => Print_40011'Access),
 
                  (Name           => new Wide_String'("setenv"),
-                  Implementation => Setenv_Command.Implementation'Access,
+                  Implementation => Setenv_Command'Access,
                   Usage          => Print_20025'Access,
                   Summary        => Print_30025'Access,
                   Help           => Print_40025'Access),
 
                  (Name           => new Wide_String'("which"),
-                  Implementation => Which_Command.Implementation'Access,
+                  Implementation => Which_Command'Access,
                   Usage          => Print_20012'Access,
                   Summary        => Print_30012'Access,
                   Help           => Print_40012'Access));
@@ -265,6 +294,22 @@ package body ZBTest.Commands is
    function Find_Index (Name : in Wide_String) return Natural;
    --  Return the index in the command table for the named command.  If the
    --  command is not found, 0 is returned.
+
+   --------------------
+   -- Append_Command --
+   --------------------
+
+   procedure Append_Command (State   : in out State_Type;
+                             Args    : in List_Type) is
+      separate;
+
+   -------------------
+   -- Begin_Command --
+   -------------------
+
+   procedure Begin_Command (State   : in out State_Type;
+                            Args    : in List_Type) is
+      separate;
 
    ------------------
    -- Command_Name --
@@ -274,6 +319,94 @@ package body ZBTest.Commands is
    begin
       return Command_Table (Index).Name.all;
    end Command_Name;
+
+   ---------------------
+   -- Compare_Command --
+   ---------------------
+
+   procedure Compare_Command (State   : in out State_Type;
+                              Args    : in List_Type) is
+      separate;
+
+   ------------------
+   -- Copy_Command --
+   ------------------
+
+   procedure Copy_Command (State   : in out State_Type;
+                           Args    : in List_Type) is
+      separate;
+
+   --------------------
+   -- Delenv_Command --
+   --------------------
+
+   procedure Delenv_Command (State   : in out State_Type;
+                             Args    : in List_Type) is
+      separate;
+
+   --------------------
+   -- Delete_Command --
+   --------------------
+
+   procedure Delete_Command (State   : in out State_Type;
+                             Args    : in List_Type) is
+      separate;
+
+   ------------------
+   -- Desc_Command --
+   ------------------
+
+   procedure Desc_Command (State   : in out State_Type;
+                           Args    : in List_Type) is
+      separate;
+
+   ------------------
+   -- Dump_Command --
+   ------------------
+
+   procedure Dump_Command (State   : in out State_Type;
+                           Args    : in List_Type) is
+      separate;
+
+   ------------------
+   -- Echo_Command --
+   ------------------
+
+   procedure Echo_Command (State   : in out State_Type;
+                           Args    : in List_Type) is
+      separate;
+
+   -----------------
+   -- End_Command --
+   -----------------
+
+   procedure End_Command (State   : in out State_Type;
+                          Args    : in List_Type) is
+      separate;
+
+   ---------------------
+   -- Execute_Command --
+   ---------------------
+
+   procedure Execute_Command (State   : in out State_Type;
+                              Args    : in List_Type) is
+      separate;
+
+   ------------------
+   -- Exit_Command --
+   ------------------
+
+   procedure Exit_Command (State   : in out State_Type;
+                           Args    : in List_Type) is
+      separate;
+
+   ----------------------
+   -- Filestat_Command --
+   ----------------------
+
+   procedure Filestat_Command (State   : in out State_Type;
+                               Args    : in List_Type) is
+      separate;
 
    ----------
    -- Find --
@@ -298,6 +431,30 @@ package body ZBTest.Commands is
       return 0;
    end Find_Index;
 
+   --------------------
+   -- Getenv_Command --
+   --------------------
+
+   procedure Getenv_Command (State   : in out State_Type;
+                             Args    : in List_Type) is
+      separate;
+
+   ------------------
+   -- Help_Command --
+   ------------------
+
+   procedure Help_Command (State   : in out State_Type;
+                           Args    : in List_Type) is
+      separate;
+
+   ------------------
+   -- Incr_Command --
+   ------------------
+
+   procedure Incr_Command (State   : in out State_Type;
+                           Args    : in List_Type) is
+      separate;
+
    ------------------------
    -- Number_Of_Commands --
    ------------------------
@@ -306,6 +463,38 @@ package body ZBTest.Commands is
    begin
       return Command_Table'Last;
    end Number_Of_Commands;
+
+   -------------------
+   -- Mkdir_Command --
+   -------------------
+
+   procedure Mkdir_Command (State   : in out State_Type;
+                            Args    : in List_Type) is
+      separate;
+
+   ------------------
+   -- Noop_Command --
+   ------------------
+
+   procedure Noop_Command (State   : in out State_Type;
+                           Args    : in List_Type) is
+      separate;
+
+   ---------------------
+   -- Prepend_Command --
+   ---------------------
+
+   procedure Prepend_Command (State   : in out State_Type;
+                              Args    : in List_Type) is
+      separate;
+
+   -------------------
+   -- Print_Command --
+   -------------------
+
+   procedure Print_Command (State   : in out State_Type;
+                            Args    : in List_Type) is
+      separate;
 
    ------------------------
    -- Print_Command_Help --
@@ -334,6 +523,54 @@ package body ZBTest.Commands is
    begin
       Command_Table (Find_Index (Name)).Usage.all;
    end Print_Command_Usage;
+
+   --------------------
+   -- Rename_Command --
+   --------------------
+
+   procedure Rename_Command (State   : in out State_Type;
+                             Args    : in List_Type) is
+      separate;
+
+   -----------------
+   -- Run_Command --
+   -----------------
+
+   procedure Run_Command (State   : in out State_Type;
+                          Args    : in List_Type) is
+      separate;
+
+   -----------------
+   -- Set_Command --
+   -----------------
+
+   procedure Set_Command (State   : in out State_Type;
+                          Args    : in List_Type) is
+      separate;
+
+   --------------------
+   -- Setenv_Command --
+   --------------------
+
+   procedure Setenv_Command (State   : in out State_Type;
+                             Args    : in List_Type) is
+      separate;
+
+   ---------------------
+   -- Unknown_Command --
+   ---------------------
+
+   procedure Unknown_Command (State   : in out State_Type;
+                              Args    : in List_Type) is
+      separate;
+
+   -------------------
+   -- Which_Command --
+   -------------------
+
+   procedure Which_Command (State   : in out State_Type;
+                            Args    : in List_Type) is
+      separate;
 
 begin   -- ZBTest.Commands
    for I in Command_Table'First .. Command_Table'Last - 1 loop

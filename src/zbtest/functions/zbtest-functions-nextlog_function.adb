@@ -33,12 +33,12 @@
 --
 
 with Ada.Strings.Wide_Fixed;
-with ZanyBlue.Text.Formatting;
 
-package body ZBTest.Functions.Nextlog_Function is
+separate (ZBTest.Functions)
+function Nextlog_Function (State : access State_Type;
+                           Args  : in List_Type) return Wide_String is
 
    use Ada.Strings.Wide_Fixed;
-   use ZanyBlue.Text.Formatting;
 
    function Counter_Log_Name (State        : access State_Type;
                               Counter_Name : in Wide_String;
@@ -69,40 +69,6 @@ package body ZBTest.Functions.Nextlog_Function is
                        State.Get_Integer (Counter_Name), With_Undo);
    end Counter_Log_Name;
 
-   --------------------
-   -- Implementation --
-   --------------------
-
-   function Implementation (State : access State_Type;
-                            Args  : in List_Type) return Wide_String is
-
-      Counter_Index : Natural := 0;
-      With_Undo     : Boolean := True;
-      Index         : Positive := 2;
-
-   begin
-      while Index <= Length (Args) loop
-         if Value (Args, Index) = "-n" then
-            With_Undo := not With_Undo;
-         elsif Value (Args, Index) = "-c" and then Index < Length (Args) then
-            Index := Index + 1;
-            Counter_Index := Index;
-            With_Undo := not With_Undo;
-         else
-            raise Function_Usage_Error;
-         end if;
-         Index := Index + 1;
-      end loop;
-      if Counter_Index /= 0 then
-         return Counter_Log_Name (State, Value (Args, Counter_Index),
-                                  With_Undo);
-      else
-         State.Increment ("_lognum", Deep => False);
-         return Log_Name (State, State.Get_String ("_testname"),
-                          State.Get_Integer ("_lognum"), With_Undo);
-      end if;
-   end Implementation;
-
    --------------
    -- Log_Name --
    --------------
@@ -121,4 +87,29 @@ package body ZBTest.Functions.Nextlog_Function is
       return Result;
    end Log_Name;
 
-end ZBTest.Functions.Nextlog_Function;
+   Counter_Index : Natural := 0;
+   With_Undo     : Boolean := True;
+   Index         : Positive := 2;
+
+begin
+   while Index <= Length (Args) loop
+      if Value (Args, Index) = "-n" then
+         With_Undo := not With_Undo;
+      elsif Value (Args, Index) = "-c" and then Index < Length (Args) then
+         Index := Index + 1;
+         Counter_Index := Index;
+         With_Undo := not With_Undo;
+      else
+         raise Function_Usage_Error;
+      end if;
+      Index := Index + 1;
+   end loop;
+   if Counter_Index /= 0 then
+      return Counter_Log_Name (State, Value (Args, Counter_Index),
+                               With_Undo);
+   else
+      State.Increment ("_lognum", Deep => False);
+      return Log_Name (State, State.Get_String ("_testname"),
+                       State.Get_Integer ("_lognum"), With_Undo);
+   end if;
+end Nextlog_Function;

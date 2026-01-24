@@ -37,6 +37,7 @@ with Ada.Containers;
 with Ada.Command_Line;
 with DL_Messages;
 with ZanyBlue.OS.Ld_Run_Path;
+with ZanyBlue.Text.Pseudo;
 with ZanyBlue.Text.Locales;
 with ZanyBlue.Text.Arguments;
 with ZanyBlue.Text.Formatting;
@@ -81,16 +82,30 @@ procedure X_DumpLocale is
    use Numeric_Style_Arguments;
    use Date_Time_Style_Arguments;
 
+   type Mode_Type is (Normal, Help);
+
+   Usage_Error : exception;
+
    procedure Display (Attribute  : String;
                       Value      : Argument_Type'Class;
                       Quoted     : Boolean := False);
+   procedure Dump_Locale (Locale : Locale_Type);
+   procedure Process_Command_Line (Mode : in out Mode_Type);
 
-   procedure Dump_Locale (Name : String);
-
-   procedure Dump_Locale (Name : String) is
-      Locale : constant Locale_Type := Make_Locale (To_Wide_String (Name));
+   procedure Display (Attribute  : String;
+                      Value      : Argument_Type'Class;
+                      Quoted     : Boolean := False) is
    begin
-      Print_Line ("dl", "0002", +Name);
+      if Quoted then
+         Print_Line ("dl", "0004", +Attribute, Value);
+      else
+         Print_Line ("dl", "0003", +Attribute, Value);
+      end if;
+   end Display;
+
+   procedure Dump_Locale (Locale : Locale_Type) is
+   begin
+      Print_Line ("dl", "0002", +Locale_Name (Locale));
       Display ("Language",       +Language (Locale), True);
       Display ("Script",         +Script (Locale), True);
       Display ("Territory",      +Territory (Locale), True);
@@ -143,23 +158,47 @@ procedure X_DumpLocale is
       end loop;
    end Dump_Locale;
 
-   procedure Display (Attribute  : String;
-                      Value      : Argument_Type'Class;
-                      Quoted     : Boolean := False) is
+   procedure Process_Command_Line (Mode : in out Mode_Type) is
+      use ZanyBlue.Text.Pseudo;
    begin
-      if Quoted then
-         Print_Line ("dl", "0004", +Attribute, Value);
-      else
-         Print_Line ("dl", "0003", +Attribute, Value);
-      end if;
-   end Display;
+      for I in 1 .. Argument_Count loop
+         declare
+            Option : constant String := Argument (I);
+         begin
+            if Option = "-xh" or Option = "-x" then
+               Pseudo_Translate (Halfwidth_Forms_Map);
+            elsif Option = "-xe" then
+               Pseudo_Translate (Enclosed_Alphanumeric_Map);
+            elsif Option = "-xl" then
+               Pseudo_Translate (Lowercase_Map);
+            elsif Option = "-xu" then
+               Pseudo_Translate (Uppercase_Map);
+            elsif Option = "-xn" then
+               null;
+            elsif Option = "-h" then
+               Mode := Help;
+            elsif Option (1 .. 2) = "-l" then
+               Set_Locale (Option (3 .. Option'Last));
+            elsif Option (1) = '-' then
+               raise Usage_Error;
+            else
+               Set_Locale (Option);
+            end if;
+         end;
+      end loop;
+   end Process_Command_Line;
+
+   Mode : Mode_Type := Normal;
 
 begin
-   if Argument_Count = 0 then
-      Dump_Locale ("");
-   elsif Argument_Count = 1 then
-      Dump_Locale (Argument (1));
-   else
-      Print_Line ("dl", "0001");
-   end if;
+   Process_Command_Line (Mode);
+   case Mode is
+   when Normal =>
+      Dump_Locale (Current_Locale);
+   when Help =>
+      Print_Line ("dl", "0017");
+   end case;
+exception
+when Usage_Error =>
+   Print_Line ("dl", "0001");
 end X_DumpLocale;

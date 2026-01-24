@@ -104,6 +104,7 @@ def write_htp_file(top, notices):
                     fh.write("{0}\n".format(line))
                 fh.write("</pre>\n")
             fh.write("\n")
+    fh.write("<file include=\"trailer.hti\">\n")
     fh.close()
 
 def write_txt_file(top, notices):

@@ -42,20 +42,27 @@ include $(TOP)/src/mkfile/conf.mk
 IMAGEDIR=$(SRCDIR)/doc/images
 DATADIR=$(SRCDIR)/doc/website/data
 INCLUDES=defs.hti header.hti title.hti trailer.hti
-TEMPLATES=$(wildcard *.htp)
-HTMLPAGES=$(patsubst %.htp,$(DOCDIR)/%.html,$(TEMPLATES))
-IMAGEFILES=$(patsubst $(IMAGEDIR)/%,$(DOCDIR)/%,$(wildcard $(IMAGEDIR)/*.png))
-DATAFILES=$(patsubst $(DATADIR)/%,$(DOCDIR)/%,$(wildcard $(DATADIR)/*))
-SUPPORTFILES=$(IMAGEFILES) $(DATAFILES)
-CLEAN_FILES+=$(HTMLPAGES)
-CLEAN_FILES+=$(SUPPORTFILES)
+TEMPLATES+=$(wildcard *.htp)
+HTMLPAGES+=$(patsubst %.htp,$(DOCDIR)/%.html,$(TEMPLATES))
+IMAGEFILES+=$(wildcard $(IMAGEDIR)/*.png)
+DATAFILES+=$(wildcard $(DATADIR)/*)
+# The Makefile wildcard ignore dot files, explicitly add .htaccess
+DATAFILES+=$(DATADIR)/.htaccess
+WEBFILES+=$(patsubst %.htp,$(DOCDIR)/%.html,$(TEMPLATES))
+WEBFILES+=$(patsubst $(IMAGEDIR)/%,$(DOCDIR)/%,$(IMAGEFILES))
+WEBFILES+=$(patsubst $(DATADIR)/%,$(DOCDIR)/%,$(DATAFILES))
+WEBFILES+=$(DOCDIR)/zbxmpls.cgi
+CLEAN_FILES+=$(WEBFILES)
 
-all: $(DOCDIR) $(HTMLPAGES) $(SUPPORTFILES)
+all: $(DOCDIR) $(WEBFILES)
 
 $(HTMLPAGES):	$(TEMPLATES)
 
 $(DOCDIR)/%.html:	%.htp
 	$(HTP) $*.htp $(DOCDIR)/$*.html
+
+$(DOCDIR)/zbxmpls.cgi:	zbxmpls.cgi
+	$(call COPY,zbxmpls.cgi,$(DOCDIR)/zbxmpls.cgi)
 
 $(DOCDIR)/%:	$(DATADIR)/%
 	$(call COPY,$(DATADIR)/$*,$(DOCDIR)/$*)
@@ -65,6 +72,9 @@ $(DOCDIR)/%:	$(IMAGEDIR)/%
 
 $(DOCDIR):
 	$(error Please build in the doc directory first)
+
+mkr:
+	@echo $(DATAFILES)
 
 # Include general rules.
 include $(TOP)/src/mkfile/rules.mk

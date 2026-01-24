@@ -52,7 +52,7 @@ all:	$(GENERATED)
 	$(GNATMAKE) -p $(GNATFLAGS) -P $(APPNAME).gpr
 
 $(GENERATED):	$(wildcard mesg/ojdbc*.properties)
-	$(ZBMCOMPILE) -O -v $(PACKAGE) -d mesg Jenkins
+	$(ZBMCOMPILE) -O -v $(PACKAGE) -d mesg App Jenkins
 
 run:	all
 	$(APPLICATION)

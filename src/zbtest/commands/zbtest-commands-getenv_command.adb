@@ -34,17 +34,13 @@
 
 with Ada.Environment_Variables;
 with Ada.Characters.Conversions;
-with ZanyBlue.Text.Formatting;
-with ZBTest.Commands;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Getenv_Command is
+separate (ZBTest.Commands)
+procedure Getenv_Command (State : in out State_Type;
+                          Args  : in List_Type) is
 
    use Ada.Environment_Variables;
    use Ada.Characters.Conversions;
-   use ZanyBlue.Text.Formatting;
-   use ZBTest.Commands;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    procedure Get_List_Value (State         : in out State_Type;
                              Source        : in Wide_String;
@@ -106,50 +102,43 @@ package body ZBTest.Commands.Getenv_Command is
       end if;
    end Get_List_Value;
 
-   --------------------
-   -- Implementation --
-   --------------------
+   Get_To_List   : Boolean := False;
+   Append_Values : Boolean := True;
+   Source_Idx    : Natural := 0;
+   Target_Idx    : Natural := 0;
 
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      Get_To_List   : Boolean := False;
-      Append_Values : Boolean := True;
-      Source_Idx    : Natural := 0;
-      Target_Idx    : Natural := 0;
-   begin
-      for I in 2 .. Length (Args) loop
-         if Value (Args, I) = "-l" then
-            Get_To_List := True;
-         elsif Value (Args, I) = "-s" then
-            Get_To_List := False;
-         elsif Value (Args, I) = "-a" then
-            Get_To_List := True;
-            Append_Values := True;
-         elsif Value (Args, I) = "-p" then
-            Get_To_List := True;
-            Append_Values := False;
-         elsif Source_Idx = 0 then
-            Source_Idx := I;
-         elsif Target_Idx = 0 then
-            Target_Idx := I;
-         else
-            raise Command_Usage_Error;
-         end if;
-      end loop;
-      if Source_Idx = 0 then
+begin
+   for I in 2 .. Length (Args) loop
+      if Value (Args, I) = "-l" then
+         Get_To_List := True;
+      elsif Value (Args, I) = "-s" then
+         Get_To_List := False;
+      elsif Value (Args, I) = "-a" then
+         Get_To_List := True;
+         Append_Values := True;
+      elsif Value (Args, I) = "-p" then
+         Get_To_List := True;
+         Append_Values := False;
+      elsif Source_Idx = 0 then
+         Source_Idx := I;
+      elsif Target_Idx = 0 then
+         Target_Idx := I;
+      else
          raise Command_Usage_Error;
       end if;
-      if Target_Idx = 0 then
-         Target_Idx := Source_Idx;
-      end if;
-      if Get_To_List then
-         Get_List_Value (State, Value (Args, Source_Idx),
-                         Value (Args, Target_Idx), Append_Values);
-      else
-         State.Set_String (
-               Value (Args, Target_Idx),
-               To_Wide_String (Value (To_String (Value (Args, Source_Idx)))));
-      end if;
-   end Implementation;
-
-end ZBTest.Commands.Getenv_Command;
+   end loop;
+   if Source_Idx = 0 then
+      raise Command_Usage_Error;
+   end if;
+   if Target_Idx = 0 then
+      Target_Idx := Source_Idx;
+   end if;
+   if Get_To_List then
+      Get_List_Value (State, Value (Args, Source_Idx),
+                      Value (Args, Target_Idx), Append_Values);
+   else
+      State.Set_String (
+            Value (Args, Target_Idx),
+            To_Wide_String (Value (To_String (Value (Args, Source_Idx)))));
+   end if;
+end Getenv_Command;

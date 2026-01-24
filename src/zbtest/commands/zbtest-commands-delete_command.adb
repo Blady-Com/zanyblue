@@ -33,16 +33,14 @@
 --
 
 with Ada.Strings.Wide_Fixed;
-with ZanyBlue.Text.Formatting;
 with ZanyBlue.Wide_Directories;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Delete_Command is
+separate (ZBTest.Commands)
+procedure Delete_Command (State : in out State_Type;
+                          Args  : in List_Type) is
 
    use Ada.Strings.Wide_Fixed;
-   use ZanyBlue.Text.Formatting;
    use ZanyBlue.Wide_Directories;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    procedure Delete_Directory (State : in out State_Type;
                                Name : in Wide_String);
@@ -76,37 +74,30 @@ package body ZBTest.Commands.Delete_Command is
       Print_00017 (+Name);
    end Delete_File;
 
-   --------------------
-   -- Implementation --
-   --------------------
+   Target_Index : Natural := 0;
+   Recursive    : Boolean := False;
 
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      Target_Index : Natural := 0;
-      Recursive    : Boolean := False;
-   begin
-      for I in 2 .. Length (Args) loop
-         if Value (Args, I) = "-r" then
-            Recursive := True;
-         elsif Head (Value (Args, I), 1) = "-" then
-            raise Command_Usage_Error;
-         elsif Target_Index = 0 then
-            Target_Index := I;
-         else
-            raise Command_Usage_Error;
-         end if;
-      end loop;
-      if Target_Index = 0 then
+begin
+   for I in 2 .. Length (Args) loop
+      if Value (Args, I) = "-r" then
+         Recursive := True;
+      elsif Head (Value (Args, I), 1) = "-" then
+         raise Command_Usage_Error;
+      elsif Target_Index = 0 then
+         Target_Index := I;
+      else
          raise Command_Usage_Error;
       end if;
-      if Recursive then
-         Delete_Directory (State, Value (Args, Target_Index));
-      else
-         Delete_File (State, Value (Args, Target_Index));
-      end if;
-   exception
-   when E : ZanyBlue.Wide_Directories.Name_Error =>
-      Print_10026 (+Value (Args, Target_Index), +E);
-   end Implementation;
-
-end ZBTest.Commands.Delete_Command;
+   end loop;
+   if Target_Index = 0 then
+      raise Command_Usage_Error;
+   end if;
+   if Recursive then
+      Delete_Directory (State, Value (Args, Target_Index));
+   else
+      Delete_File (State, Value (Args, Target_Index));
+   end if;
+exception
+when E : ZanyBlue.Wide_Directories.Name_Error =>
+   Print_10026 (+Value (Args, Target_Index), +E);
+end Delete_Command;

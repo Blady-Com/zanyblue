@@ -33,54 +33,19 @@
 --
 
 with ZBTest.Functions;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Help_Command is
+separate (ZBTest.Commands)
+procedure Help_Command (State : in out State_Type;
+                        Args  : in List_Type) is
+   pragma Unreferenced (State);
 
    use ZBTest.Functions;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    procedure Print_Command_Summary;
    --  Print a summary list of available commands.
 
    procedure Print_Function_Summary;
    --  Print a summary list of available functions.
-
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      pragma Unreferenced (State);
-      Command_Help  : Boolean := False;
-      Function_Help : Boolean := False;
-      Item_Index    : Natural := 0;
-   begin
-      for I in 2 .. Length (Args) loop
-         if Value (Args, I) = "-c" then
-            Command_Help := True;
-         elsif Value (Args, I) = "-f" then
-            Function_Help := True;
-         elsif Item_Index = 0 then
-            Item_Index := I;
-         else
-            raise Command_Usage_Error;
-         end if;
-      end loop;
-      if Function_Help and then Item_Index = 0 then
-         Print_Function_Summary;
-      elsif Function_Help and then Item_Index /= 0 then
-         Print_Function_Help (Value (Args, Item_Index));
-      elsif Command_Help and then Item_Index = 0 then
-         Print_Command_Summary;
-      elsif Item_Index /= 0 then
-         Print_Command_Help (Value (Args, Item_Index));
-      else
-         --  No arguments or options, give help on help
-         Print_Command_Help ("help");
-      end if;
-   end Implementation;
 
    ---------------------------
    -- Print_Command_Summary --
@@ -108,4 +73,32 @@ package body ZBTest.Commands.Help_Command is
       Print_00042;
    end Print_Function_Summary;
 
-end ZBTest.Commands.Help_Command;
+   Command_Help  : Boolean := False;
+   Function_Help : Boolean := False;
+   Item_Index    : Natural := 0;
+
+begin
+   for I in 2 .. Length (Args) loop
+      if Value (Args, I) = "-c" then
+         Command_Help := True;
+      elsif Value (Args, I) = "-f" then
+         Function_Help := True;
+      elsif Item_Index = 0 then
+         Item_Index := I;
+      else
+         raise Command_Usage_Error;
+      end if;
+   end loop;
+   if Function_Help and then Item_Index = 0 then
+      Print_Function_Summary;
+   elsif Function_Help and then Item_Index /= 0 then
+      Print_Function_Help (Value (Args, Item_Index));
+   elsif Command_Help and then Item_Index = 0 then
+      Print_Command_Summary;
+   elsif Item_Index /= 0 then
+      Print_Command_Help (Value (Args, Item_Index));
+   else
+      --  No arguments or options, give help on help
+      Print_Command_Help ("help");
+   end if;
+end Help_Command;

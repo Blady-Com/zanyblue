@@ -69,6 +69,8 @@ GNATFLAGS+=-aP$(TOP)/src
 GNATMAKE=gnatmake
 GNATCHECK=gnat check
 GNATCLEAN=gnat clean
+#GNATHTML=$(SRCDIR)/bin/gnathtml.pl
+GNATHTML=gnathtml.pl
 
 # HTML Preprocessor
 HTP=htp

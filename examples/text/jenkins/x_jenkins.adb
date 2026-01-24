@@ -42,14 +42,24 @@ with Ada.Command_Line;
 with Jenkins.Messages;
 with ZanyBlue.Text.Pseudo;
 with ZanyBlue.Text.Locales;
+with ZanyBlue.Text.Arguments;
+with ZanyBlue.Text.Null_Object;
 with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.Formatting;
 
 procedure X_Jenkins is
 
+   use ZanyBlue.Text.Null_Object;
+   use ZanyBlue.Text.Arguments;
    use ZanyBlue.Text.Formatting;
 
+   Help_Error  : exception;
    Usage_Error : exception;
+
+   procedure Display (Key : Wide_String;
+                      Argument0 : Argument_Type'Class := Null_Argument;
+                      Argument1 : Argument_Type'Class := Null_Argument;
+                      Argument2 : Argument_Type'Class := Null_Argument);
 
    procedure Process_Command_Line;
 
@@ -70,6 +80,10 @@ procedure X_Jenkins is
                Pseudo_Translate (Lowercase_Map);
             elsif Option = "-xu" then
                Pseudo_Translate (Uppercase_Map);
+            elsif Option = "-xn" then
+               null;
+            elsif Option = "-h" then
+               raise Help_Error;
             elsif Option (1 .. 2) = "-l" then
                Set_Locale (Option (3 .. Option'Last));
             else
@@ -79,52 +93,52 @@ procedure X_Jenkins is
       end loop;
    end Process_Command_Line;
 
-   Filename : constant String := "xmpl/file.in";
-   Path1    : constant String := "/home/user/project";
-   Path2    : constant String := "/home/user/other/path";
-   Name     : constant String := "Example";
+   procedure Display (Key : Wide_String;
+                      Argument0 : Argument_Type'Class := Null_Argument;
+                      Argument1 : Argument_Type'Class := Null_Argument;
+                      Argument2 : Argument_Type'Class := Null_Argument) is
+   begin
+      Print_Line ("Jenkins", Key, Argument0, Argument1, Argument2);
+   end Display;
+
+   Name1    : constant String := "This";
+   Name2    : constant String := "That";
+   Name3    : constant String := "Other";
    Num1     : constant Integer := 10;
    Num2     : constant Integer := 100;
 
 begin
-   Process_Command_Line;
    Jenkins.Messages.Initialize;
-   Print_Line ("Jenkins", "MavenBuild.FailedEarlier");
-   Print_Line ("Jenkins", "MavenBuild.KeptBecauseOfParent", +Name);
-   Print_Line ("Jenkins", "MavenBuild.Triggering", +Num1);
-   Print_Line ("Jenkins", "MavenBuilder.Aborted");
-   Print_Line ("Jenkins", "MavenBuilder.AsyncFailed");
-   Print_Line ("Jenkins", "MavenBuilder.Failed");
-   Print_Line ("Jenkins", "MavenBuilder.Waiting");
-   Print_Line ("Jenkins", "MavenModule.Pronoun");
-   Print_Line ("Jenkins", "MavenModuleSet.DiplayName");
-   Print_Line ("Jenkins", "MavenModuleSet.AlternateSettingsRelativePath");
-   Print_Line ("Jenkins", "MavenModuleSetBuild.DiscoveredModule",
-                          +Name, +Num1);
-   Print_Line ("Jenkins", "MavenModuleSetBuild.DownloadedArtifact",
-                          +Num1, +Num2);
-   Print_Line ("Jenkins", "MavenModuleSetBuild.FailedToParsePom");
-   Print_Line ("Jenkins", "MavenModuleSetBuild.FailedToTransfer", +Filename);
-   Print_Line ("Jenkins", "MavenModuleSetBuild.FoundModuleWithoutProject",
-                          +Path1);
-   Print_Line ("Jenkins", "MavenModuleSetBuild.NoMavenConfigured");
-   Print_Line ("Jenkins", "MavenModuleSetBuild.NoSuchPOMFile", +Filename);
-   Print_Line ("Jenkins", "MavenModuleSetBuild.NoSuchAlternateSettings",
-                          +Filename);
-   Print_Line ("Jenkins", "MavenModuleSetBuild.NoMavenInstall");
-   Print_Line ("Jenkins",
-               "MavenModuleSetBuild.SettinsgXmlAndPrivateRepository",
-               +Path1, +Path2);
-   Print_Line ("Jenkins", "MavenProbeAction.DisplayName");
-   Print_Line ("Jenkins", "MavenProcessFactory.ClassWorldsNotFound",
-                          +Path1);
-   Print_Line ("Jenkins", "MavenRedeployer.DisplayName");
-   Print_Line ("Jenkins", "MavenVersionCallable.MavenHomeDoesntExist",
-                          +Path1);
-   Print_Line ("Jenkins", "MavenVersionCallable.MavenHomeIsNotDirectory",
-                          +Path1);
-   Print_Line ("Jenkins", "ProcessCache.Reusing");
-   Print_Line ("Jenkins", "RedeployPublisher.getDisplayName");
-   Print_Line ("Jenkins", "RedeployPublisher.RepositoryURL.Mandatory");
-   Print_Line ("Jenkins", "ReleaseAction.DisplayName");
+   Process_Command_Line;
+   Display ("FilePath.validateAntFileMask.whitespaceSeprator");
+   Display ("FilePath.validateAntFileMask.doesntMatchAndSuggest",
+            +Name1, +Name2);
+   Display ("FilePath.validateAntFileMask.portionMatchAndSuggest",
+            +Name1, +Name2);
+   Display ("FilePath.validateAntFileMask." &
+            "portionMatchButPreviousNotMatchAndSuggest",
+            +Name1, +Name2, +Name3);
+   Display ("FilePath.validateAntFileMask.doesntMatchAnything", +Name1);
+   Display ("FilePath.validateAntFileMask.doesntMatchAnythingAndSuggest",
+            +Name1, +Name2);
+   Display ("FilePath.validateRelativePath.wildcardNotAllowed");
+   Display ("FilePath.validateRelativePath.notFile", +Name1);
+   Display ("FilePath.validateRelativePath.notDirectory", +Name1);
+   Display ("FilePath.validateRelativePath.noSuchFile", +Name1);
+   Display ("FilePath.validateRelativePath.noSuchDirectory", +Name1);
+   Display ("PluginManager.PluginDoesntSupportDynamicLoad.RestartRequired",
+            +Name1);
+   Display ("PluginManager.PluginIsAlreadyInstalled.RestartRequired",
+            +Name1);
+   Display ("FilePath.TildaDoesntWork");
+   Display ("PluginManager.DisplayName");
+   Display ("PluginManager.PortNotANumber");
+   Display ("PluginManager.PortNotInRange", +Num1, +Num2);
+   Display ("AboutJenkins.DisplayName");
+   Display ("AboutJenkins.Description");
+exception
+when Usage_Error =>
+   Print_Line ("App", "Usage");
+when Help_Error =>
+   Print_Line ("App", "Help");
 end X_Jenkins;

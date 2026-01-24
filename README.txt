@@ -51,6 +51,13 @@ The unitary "+" operator is overloaded by the ZanyBlue.Text package to create
 the "boxed" object.  See the ZanyBlue documentation for details on the types
 supported by the package.
 
+Website
+-------
+
+For up-to-date information, visit the web site:
+
+   http://zanyblue.sourceforge.net
+
 Downloading
 -----------
 

@@ -37,7 +37,6 @@
 #
 
 TOP=../..
-GNATHTML=$(SRCDIR)/bin/gnathtml.pl
 DOCSUBST=$(SRCDIR)/bin/docsubst.py
 MKNOTICES=$(SRCDIR)/bin/mknotices.py
 MKDEFSHTI=$(SRCDIR)/bin/mkdefshti.pl
@@ -71,7 +70,7 @@ CLEAN_FILES+=$(wildcard $(DEFSHTI))
 all::	pdffile html notices $(DEFSHTI)
 	cp zanyblue.pdf $(DOCDIR)/zanyblue.pdf
 
-$(DEFSHTI):	$(LABELSPL)
+defs $(DEFSHTI):	$(LABELSPL)
 	$(MKDEFSHTI) $(DEFSHTI) $(LABELSPL) $(VERSION) $(V_STATUS) $(SVN_VERSION)
 
 pdffile:	zbdefs.tex

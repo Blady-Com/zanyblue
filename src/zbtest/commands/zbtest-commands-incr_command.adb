@@ -32,43 +32,32 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with ZanyBlue.Text.Formatting;
-with ZBTest_Messages.ZBTest_Wide_Prints;
+separate (ZBTest.Commands)
+procedure Incr_Command (State : in out State_Type;
+                        Args  : in List_Type) is
 
-package body ZBTest.Commands.Incr_Command is
-
-   use ZanyBlue.Text.Formatting;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
-
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
       Param_Idx : Natural := 0;
       All_P     : Boolean := False;
-   begin
-      for I in 2 .. Length (Args) loop
-         if Value (Args, I) = "-a" then
-            All_P := True;
-         elsif Param_Idx = 0 then
-            Param_Idx := I;
-         else
-            raise Command_Usage_Error;
-         end if;
-      end loop;
-      if Param_Idx = 0 then
+
+begin
+   for I in 2 .. Length (Args) loop
+      if Value (Args, I) = "-a" then
+         All_P := True;
+      elsif Param_Idx = 0 then
+         Param_Idx := I;
+      else
          raise Command_Usage_Error;
       end if;
-      State.Increment (Value (Args, Param_Idx), Deep => All_P);
-      Print_00016 (+Value (Args, Param_Idx),
-                   +State.Get_Integer (Value (Args, Param_Idx)));
-   exception
-   when Not_An_Integer_Error =>
-      Print_10021 (+Value (Args, Param_Idx));
-   when Not_Defined_Error =>
-      Print_10005 (+Value (Args, Param_Idx));
-   end Implementation;
-
-end ZBTest.Commands.Incr_Command;
+   end loop;
+   if Param_Idx = 0 then
+      raise Command_Usage_Error;
+   end if;
+   State.Increment (Value (Args, Param_Idx), Deep => All_P);
+   Print_00016 (+Value (Args, Param_Idx),
+                +State.Get_Integer (Value (Args, Param_Idx)));
+exception
+when Not_An_Integer_Error =>
+   Print_10021 (+Value (Args, Param_Idx));
+when Not_Defined_Error =>
+   Print_10005 (+Value (Args, Param_Idx));
+end Incr_Command;

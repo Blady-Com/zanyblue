@@ -32,42 +32,32 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Wide_Text_IO;
+separate (ZBTest.Commands)
+procedure Dump_Command (State : in out State_Type;
+                        Args  : in List_Type) is
 
-package body ZBTest.Commands.Dump_Command is
-
-   use Ada.Wide_Text_IO;
-
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      Output_Index : Natural := 0;
-      All_Scopes   : Boolean := False;
-      Index        : Positive := 2;
-   begin
-      while Index <= Length (Args) loop
-         if Value (Args, Index) = "-a" then
-            All_Scopes := True;
-         elsif Value (Args, Index) = "-o"  and then Output_Index = 0 then
-            if Index < Length (Args) then
-               Index := Index + 1;
-               Output_Index := Index;
-            else
-               raise Command_Usage_Error;
-            end if;
+   Output_Index : Natural := 0;
+   All_Scopes   : Boolean := False;
+   Index        : Positive := 2;
+begin
+   while Index <= Length (Args) loop
+      if Value (Args, Index) = "-a" then
+         All_Scopes := True;
+      elsif Value (Args, Index) = "-o"  and then Output_Index = 0 then
+         if Index < Length (Args) then
+            Index := Index + 1;
+            Output_Index := Index;
          else
             raise Command_Usage_Error;
          end if;
-         Index := Index + 1;
-      end loop;
-      if Output_Index /= 0 then
-         State.Dump (Value (Args, Output_Index), All_Scopes);
       else
-         State.Dump (Standard_Output, All_Scopes);
+         raise Command_Usage_Error;
       end if;
-   end Implementation;
-
-end ZBTest.Commands.Dump_Command;
+      Index := Index + 1;
+   end loop;
+   if Output_Index /= 0 then
+      State.Dump (Value (Args, Output_Index), All_Scopes);
+   else
+      State.Dump (Standard_Output, All_Scopes);
+   end if;
+end Dump_Command;

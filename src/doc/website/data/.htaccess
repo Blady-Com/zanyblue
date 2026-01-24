@@ -32,21 +32,9 @@
 #  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-# Target used to generate the .tar.gz and .zip bundles to upload to
-# Source Forge.
+#
+# Enable cgi script execution on the web site's htdocs directory.
+#
 
-.PHONY:	dist-bundles bundles tar-bundles zip-bundles
-
-MKBUNDLES=$(TOP)/src/bin/mkbundles.py
-MKWEBBUNDLE=$(TOP)/src/bin/mkwebbundle.py
-
-dist-bundles bundles: tar-bundles
-
-ws-bundle:
-	$(MKWEBBUNDLE) -t tar.gz
-
-tar-bundles:
-	$(MKBUNDLES) -t tar.gz
-
-zip-bundles:
-	$(MKBUNDLES) -t zip
+AddHandler cgi-script .cgi
+Options +ExecCGI 

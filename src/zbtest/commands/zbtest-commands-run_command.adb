@@ -33,22 +33,16 @@
 --
 
 with Ada.Calendar;
-with Ada.Wide_Text_IO;
-with ZanyBlue.OS;
-with ZanyBlue.Text.Formatting;
 with ZanyBlue.Wide_Directories;
 with ZBTest.XML_Data;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Run_Command is
+separate (ZBTest.Commands)
+procedure Run_Command (State : in out State_Type;
+                       Args  : in List_Type) is
 
    use Ada.Calendar;
-   use Ada.Wide_Text_IO;
-   use ZanyBlue.OS;
-   use ZanyBlue.Text.Formatting;
    use ZanyBlue.Wide_Directories;
    use ZBTest.XML_Data;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    procedure Execute_Script (State  : in out State_Type;
                              Script : in Wide_String);
@@ -88,24 +82,6 @@ package body ZBTest.Commands.Run_Command is
       end if;
       Print_10040 (+E, +Script);
    end Execute_Script;
-
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-   begin
-      if Length (Args) = 2 then
-         Run (State, Value (Args, 2));
-      else
-         raise Command_Usage_Error;
-      end if;
-   exception
-   when File_Not_Found =>
-      Register_Run_Failure (State, Value (Args, 2));
-      Print_10020 (+Value (Args, 2));
-   end Implementation;
 
    -------------------
    -- Locate_Script --
@@ -198,4 +174,14 @@ package body ZBTest.Commands.Run_Command is
       Set_Attribute (XML_Node, "time", Format ("{0:f}", +Elapsed));
    end Wrap_Up;
 
-end ZBTest.Commands.Run_Command;
+begin
+   if Length (Args) = 2 then
+      Run (State, Value (Args, 2));
+   else
+      raise Command_Usage_Error;
+   end if;
+exception
+when File_Not_Found =>
+   Register_Run_Failure (State, Value (Args, 2));
+   Print_10020 (+Value (Args, 2));
+end Run_Command;

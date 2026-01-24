@@ -33,35 +33,26 @@
 --
 
 with Ada.Strings.Wide_Unbounded;
-with ZanyBlue.Text.Formatting;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Desc_Command is
+separate (ZBTest.Commands)
+procedure Desc_Command (State : in out State_Type;
+                        Args  : in List_Type) is
 
    use Ada.Strings.Wide_Unbounded;
    use ZanyBlue.Text;
-   use ZanyBlue.Text.Formatting;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
-   --------------------
-   -- Implementation --
-   --------------------
+   Buffer : Unbounded_Wide_String;
 
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      Buffer : Unbounded_Wide_String;
-   begin
-      if Length (Args) = 1 then
-         raise Command_Usage_Error;
+begin
+   if Length (Args) = 1 then
+      raise Command_Usage_Error;
+   end if;
+   for I in 2 .. Length (Args) loop
+      Append (Buffer, Value (Args, I));
+      if I /= Length (Args) then
+         Append (Buffer, " ");
       end if;
-      for I in 2 .. Length (Args) loop
-         Append (Buffer, Value (Args, I));
-         if I /= Length (Args) then
-            Append (Buffer, " ");
-         end if;
-      end loop;
-      State.Set_String ("_desc", To_Wide_String (Buffer));
-      Print_00015 (+To_Wide_String (Buffer));
-   end Implementation;
-
-end ZBTest.Commands.Desc_Command;
+   end loop;
+   State.Set_String ("_desc", To_Wide_String (Buffer));
+   Print_00015 (+To_Wide_String (Buffer));
+end Desc_Command;

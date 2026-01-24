@@ -64,7 +64,7 @@ procedure X_Formatting is
    use ZB_Floats;
    use Status_Args;
 
-   Usage_Error : exception;
+   Usage_Error, Help_Error : exception;
 
    procedure Process_Command_Line;
 
@@ -89,6 +89,10 @@ procedure X_Formatting is
                Pseudo_Translate (Lowercase_Map);
             elsif Option = "-xu" then
                Pseudo_Translate (Uppercase_Map);
+            elsif Option = "-xn" then
+               null;
+            elsif Option = "-h" then
+               raise Help_Error;
             elsif Option (1 .. 2) = "-l" then
                Set_Locale (Option (3 .. Option'Last));
             else
@@ -154,7 +158,6 @@ procedure X_Formatting is
 
 begin
    Process_Command_Line;
-   Print_Line ("xformatting", "mkr");
    Print_Line ("xformatting", "banner", +Integer'(Version_Major),
                                         +Integer'(Version_Minor),
                                         +Integer'(Version_Patch),
@@ -182,6 +185,8 @@ begin
    Disable_Exceptions;
    Print_Line ("xformatting", "00023");
 exception
+when Help_Error =>
+   Print_Line ("xformatting", "help");
 when Usage_Error =>
    Print_Line ("xformatting", "usage");
 end X_Formatting;

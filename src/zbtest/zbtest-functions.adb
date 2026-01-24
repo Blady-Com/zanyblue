@@ -37,12 +37,9 @@ with ZanyBlue.Text.Locales;
 with ZanyBlue.Text.Catalogs;
 with ZanyBlue.Text.Arguments;
 with ZanyBlue.Text.Formatting;
-with ZBTest.Functions.Dirname_Function;
-with ZBTest.Functions.Joinpaths_Function;
-with ZBTest.Functions.Nextlog_Function;
-with ZBTest.Functions.Which_Function;
-
 with ZBTest_Messages.ZBTest_Wide_Prints;
+
+pragma Elaborate_All (ZBTest_Messages.ZBTest_Wide_Prints);
 
 package body ZBTest.Functions is
 
@@ -83,30 +80,47 @@ package body ZBTest.Functions is
    --  Return the index in the function table for the named command.  If the
    --  function is not found, 0 is returned.
 
+   function Dirname_Function (State   : access State_Type;
+                              Args    : in List_Type) return Wide_String;
+   function Joinpaths_Function (State   : access State_Type;
+                                Args    : in List_Type) return Wide_String;
+   function Nextlog_Function (State   : access State_Type;
+                              Args    : in List_Type) return Wide_String;
+   function Which_Function (State   : access State_Type;
+                            Args    : in List_Type) return Wide_String;
+
    Function_Table : constant Function_List := (
                  (Name           => new Wide_String'("dirname"),
-                  Implementation => Dirname_Function.Implementation'Access,
+                  Implementation => Dirname_Function'Access,
                   Usage          => Print_21000'Access,
                   Summary        => Print_31000'Access,
                   Help           => Print_41000'Access),
 
                  (Name           => new Wide_String'("joinpaths"),
-                  Implementation => Joinpaths_Function.Implementation'Access,
+                  Implementation => Joinpaths_Function'Access,
                   Usage          => Print_21001'Access,
                   Summary        => Print_31001'Access,
                   Help           => Print_41001'Access),
 
                  (Name           => new Wide_String'("nextlog"),
-                  Implementation => Nextlog_Function.Implementation'Access,
+                  Implementation => Nextlog_Function'Access,
                   Usage          => Print_21002'Access,
                   Summary        => Print_31002'Access,
                   Help           => Print_41002'Access),
 
                  (Name           => new Wide_String'("which"),
-                  Implementation => Which_Function.Implementation'Access,
+                  Implementation => Which_Function'Access,
                   Usage          => Print_21003'Access,
                   Summary        => Print_31003'Access,
                   Help           => Print_41003'Access));
+
+   ----------------------
+   -- Dirname_Function --
+   ----------------------
+
+   function Dirname_Function (State   : access State_Type;
+                              Args    : in List_Type) return Wide_String is
+      separate;
 
    ----------
    -- Find --
@@ -139,6 +153,22 @@ package body ZBTest.Functions is
    begin
       return Function_Table (Index).Name.all;
    end Function_Name;
+
+   ------------------------
+   -- Joinpaths_Function --
+   ------------------------
+
+   function Joinpaths_Function (State   : access State_Type;
+                                Args    : in List_Type) return Wide_String is
+      separate;
+
+   ----------------------
+   -- Nextlog_Function --
+   ----------------------
+
+   function Nextlog_Function (State   : access State_Type;
+                              Args    : in List_Type) return Wide_String is
+      separate;
 
    -------------------------
    -- Number_Of_Functions --
@@ -179,5 +209,13 @@ package body ZBTest.Functions is
    begin
       Function_Table (Find_Index (Name)).Usage.all;
    end Print_Function_Usage;
+
+   --------------------
+   -- Which_Function --
+   --------------------
+
+   function Which_Function (State   : access State_Type;
+                            Args    : in List_Type) return Wide_String is
+      separate;
 
 end ZBTest.Functions;

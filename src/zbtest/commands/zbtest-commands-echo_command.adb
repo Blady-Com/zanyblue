@@ -32,27 +32,18 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Wide_Text_IO;
+separate (ZBTest.Commands)
+procedure Echo_Command (State : in out State_Type;
+                        Args  : in List_Type) is
 
-package body ZBTest.Commands.Echo_Command is
-
-   use Ada.Wide_Text_IO;
-
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
       pragma Unreferenced (State);
-   begin
-      for I in 2 .. Length (Args) loop
-         Put (Value (Args, I));
-         if I /= Length (Args) then
-            Put (" ");
-         end if;
-      end loop;
-      New_Line;
-   end Implementation;
 
-end ZBTest.Commands.Echo_Command;
+begin
+   for I in 2 .. Length (Args) loop
+      Put (Value (Args, I));
+      if I /= Length (Args) then
+         Put (" ");
+      end if;
+   end loop;
+   New_Line;
+end Echo_Command;

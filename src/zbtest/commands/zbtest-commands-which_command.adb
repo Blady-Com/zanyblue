@@ -33,14 +33,12 @@
 --
 
 with Ada.Strings.Wide_Fixed;
-with ZanyBlue.Text.Formatting;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Which_Command is
+separate (ZBTest.Commands)
+procedure Which_Command (State : in out State_Type;
+                         Args  : in List_Type) is
 
    use Ada.Strings.Wide_Fixed;
-   use ZanyBlue.Text.Formatting;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    procedure Display_Path (State      : in State_Type;
                            Name       : Wide_String;
@@ -65,25 +63,18 @@ package body ZBTest.Commands.Which_Command is
       Print_10010 (+Name);
    end Display_Path;
 
-   --------------------
-   -- Implementation --
-   --------------------
+   Executable : Boolean := False;
 
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      Executable : Boolean := False;
-   begin
-      for I in 2 .. Length (Args) loop
-         if Value (Args, I) = "-e" then
-            Executable := True;
-         elsif Value (Args, I) = "-f" then
-            Executable := False;
-         elsif Head (Value (Args, I), 1) = "-" then
-            raise Command_Usage_Error;
-         else
-            Display_Path (State, Value (Args, I), Executable);
-         end if;
-      end loop;
-   end Implementation;
-
-end ZBTest.Commands.Which_Command;
+begin
+   for I in 2 .. Length (Args) loop
+      if Value (Args, I) = "-e" then
+         Executable := True;
+      elsif Value (Args, I) = "-f" then
+         Executable := False;
+      elsif Head (Value (Args, I), 1) = "-" then
+         raise Command_Usage_Error;
+      else
+         Display_Path (State, Value (Args, I), Executable);
+      end if;
+   end loop;
+end Which_Command;

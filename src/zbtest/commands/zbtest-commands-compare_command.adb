@@ -32,22 +32,16 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Wide_Text_IO;
 with Ada.Strings.Wide_Unbounded;
-with ZanyBlue.OS;
-with ZanyBlue.Text.Formatting;
 with ZanyBlue.Wide_Directories;
 with ZanyBlue.Wide_Regexp;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Compare_Command is
+separate (ZBTest.Commands)
+procedure Compare_Command (State : in out State_Type;
+                           Args  : in List_Type) is
 
-   use Ada.Wide_Text_IO;
    use Ada.Strings.Wide_Unbounded;
-   use ZanyBlue.OS;
-   use ZanyBlue.Text.Formatting;
    use ZanyBlue.Wide_Directories;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    procedure Compare (State    : in out State_Type;
                       Log_Name : in Wide_String;
@@ -170,23 +164,6 @@ package body ZBTest.Commands.Compare_Command is
       Print_10027 (+Status_Name, +E);
    end Compare;
 
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-   begin
-      case Length (Args) is
-      when 2 =>
-         Compare (State, Value (Args, 2), Value (Args, 2));
-      when 3 =>
-         Compare (State, Value (Args, 2), Value (Args, 3));
-      when others =>
-         raise Command_Usage_Error;
-      end case;
-   end Implementation;
-
    -----------------
    -- Match_Lines --
    -----------------
@@ -238,4 +215,13 @@ package body ZBTest.Commands.Compare_Command is
       return To_Wide_String (Buffer);
    end Status_File_Name;
 
-end ZBTest.Commands.Compare_Command;
+begin
+   case Length (Args) is
+   when 2 =>
+      Compare (State, Value (Args, 2), Value (Args, 2));
+   when 3 =>
+      Compare (State, Value (Args, 2), Value (Args, 3));
+   when others =>
+      raise Command_Usage_Error;
+   end case;
+end Compare_Command;

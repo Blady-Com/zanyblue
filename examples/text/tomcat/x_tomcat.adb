@@ -51,7 +51,7 @@ procedure X_Tomcat is
 
    procedure Process_Command_Line;
 
-   Usage_Error : exception;
+   Usage_Error, Help_Error : exception;
 
    procedure Process_Command_Line is
       use Ada.Command_Line;
@@ -70,6 +70,11 @@ procedure X_Tomcat is
                Pseudo_Translate (Lowercase_Map);
             elsif Option = "-xu" then
                Pseudo_Translate (Uppercase_Map);
+            elsif Option = "-xn" then
+               --  No pseudo translation
+               null;
+            elsif Option = "-h" then
+               raise Help_Error;
             elsif Option (1 .. 2) = "-l" then
                Set_Locale (Option (3 .. Option'Last));
             else
@@ -126,4 +131,9 @@ begin
    Print_Line ("servlet", "err.not_iso8859_1", +WCh);
    Print_Line ("tribes", "cluster.mbean.register.already", +Bean);
    Print_Line ("util-threads", "threadpool.thread_error", +Ex_Name, +Th_Name);
+exception
+when Help_Error =>
+   Print_Line ("zbtomcat", "Help");
+when Usage_Error =>
+   Print_Line ("zbtomcat", "Usage");
 end X_Tomcat;

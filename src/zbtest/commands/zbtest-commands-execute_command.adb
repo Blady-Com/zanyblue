@@ -33,21 +33,14 @@
 --
 
 with GNAT.OS_Lib;
-with Ada.Wide_Text_IO;
 with Ada.Strings.Wide_Fixed;
 with Ada.Strings.Wide_Unbounded;
-with ZanyBlue.OS;
-with ZanyBlue.Text.Formatting;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Execute_Command is
+separate (ZBTest.Commands)
+procedure Execute_Command (State : in out State_Type;
+                           Args  : in List_Type) is
 
-   use GNAT.OS_Lib;
-   use Ada.Wide_Text_IO;
    use Ada.Strings.Wide_Fixed;
-   use ZanyBlue.OS;
-   use ZanyBlue.Text.Formatting;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    procedure Execute_Command (State          : in out State_Type;
                               Command        : in Wide_String;
@@ -77,7 +70,7 @@ package body ZBTest.Commands.Execute_Command is
                               Output_Name    : in Wide_String) is
       use Ada.Strings.Wide_Unbounded;
       Command_Line : Unbounded_Wide_String;
-      Arguments    : Argument_List (1 .. N_Args);
+      Arguments    : GNAT.OS_Lib.Argument_List (1 .. N_Args);
       Success      : Boolean;
       Return_Code  : Integer;
    begin
@@ -89,76 +82,20 @@ package body ZBTest.Commands.Execute_Command is
          Append (Command_Line, " ");
       end loop;
       if Output_Name'Length > 0 then
-         Spawn (To_UTF8 (Command), Arguments, To_UTF8 (Output_Name),
-                Success, Return_Code);
+         GNAT.OS_Lib.Spawn (To_UTF8 (Command), Arguments,
+                            To_UTF8 (Output_Name),
+                            Success, Return_Code);
       else
-         Return_Code := Spawn (To_UTF8 (Command), Arguments);
+         Return_Code := GNAT.OS_Lib.Spawn (To_UTF8 (Command), Arguments);
       end if;
       if not (Expect_Failure xor Return_Code = 0) then
          Register_Execute_Failure (State, To_Wide_String (Command_Line),
                                    Expect_Failure, Success);
       end if;
       for I in Arguments'Range loop
-         Free (Arguments (I));
+         GNAT.OS_Lib.Free (Arguments (I));
       end loop;
    end Execute_Command;
-
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      Expect_Failure     : Boolean := False;
-      Command_Index      : Natural := 0;
-      Output_Index       : Natural := 0;
-      Index              : Positive := 2;
-   begin
-      while Index <= Length (Args) and then Command_Index = 0 loop
-         if Value (Args, Index) = "-f" then
-            Expect_Failure := True;
-         elsif Value (Args, Index) = "-s" then
-            Expect_Failure := False;
-         elsif Value (Args, Index) = "-o" then
-            if Index <= Length (Args) then
-               Index := Index + 1;
-               Output_Index := Index;
-            else
-               raise Command_Usage_Error;
-            end if;
-         elsif Head (Value (Args, Index), 1) = "-" then
-            raise Command_Usage_Error;
-         else
-            Command_Index := Index;
-         end if;
-         Index := Index + 1;
-      end loop;
-      if Command_Index = 0 then
-         raise Command_Usage_Error;
-      end if;
-      if Output_Index /= 0 then
-         Execute_Command (State,
-                          State.Locate_Executable (Value (Args,
-                                                          Command_Index)),
-                          Expect_Failure,
-                          Args,
-                          Command_Index + 1,
-                          Length (Args) - Command_Index,
-                          Value (Args, Output_Index));
-      else
-         Execute_Command (State,
-                          State.Locate_Executable (Value (Args,
-                                                          Command_Index)),
-                          Expect_Failure,
-                          Args,
-                          Command_Index + 1,
-                          Length (Args) - Command_Index,
-                          "");
-      end if;
-   exception
-   when File_Not_Found =>
-      Print_10036 (+Value (Args, Command_Index));
-   end Implementation;
 
    ------------------------------
    -- Register_Execute_Failure --
@@ -191,4 +128,54 @@ package body ZBTest.Commands.Execute_Command is
       State.Register_Failure (Test_Name);
    end Register_Execute_Failure;
 
-end ZBTest.Commands.Execute_Command;
+   Expect_Failure     : Boolean := False;
+   Command_Index      : Natural := 0;
+   Output_Index       : Natural := 0;
+   Index              : Positive := 2;
+
+begin
+   while Index <= Length (Args) and then Command_Index = 0 loop
+      if Value (Args, Index) = "-f" then
+         Expect_Failure := True;
+      elsif Value (Args, Index) = "-s" then
+         Expect_Failure := False;
+      elsif Value (Args, Index) = "-o" then
+         if Index <= Length (Args) then
+            Index := Index + 1;
+            Output_Index := Index;
+         else
+            raise Command_Usage_Error;
+         end if;
+      elsif Head (Value (Args, Index), 1) = "-" then
+         raise Command_Usage_Error;
+      else
+         Command_Index := Index;
+      end if;
+      Index := Index + 1;
+   end loop;
+   if Command_Index = 0 then
+      raise Command_Usage_Error;
+   end if;
+   if Output_Index /= 0 then
+      Execute_Command (State,
+                       State.Locate_Executable (Value (Args,
+                                                       Command_Index)),
+                       Expect_Failure,
+                       Args,
+                       Command_Index + 1,
+                       Length (Args) - Command_Index,
+                       Value (Args, Output_Index));
+   else
+      Execute_Command (State,
+                       State.Locate_Executable (Value (Args,
+                                                       Command_Index)),
+                       Expect_Failure,
+                       Args,
+                       Command_Index + 1,
+                       Length (Args) - Command_Index,
+                       "");
+   end if;
+exception
+when File_Not_Found =>
+   Print_10036 (+Value (Args, Command_Index));
+end Execute_Command;

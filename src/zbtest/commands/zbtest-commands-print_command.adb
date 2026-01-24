@@ -33,16 +33,12 @@
 --
 
 with Ada.Strings.Wide_Fixed;
-with ZBTest.Commands;
-with ZBTest_Messages.ZBTest_Wide_Prints;
-with ZanyBlue.Text.Formatting;
 
-package body ZBTest.Commands.Print_Command is
+separate (ZBTest.Commands)
+procedure Print_Command (State : in out State_Type;
+                         Args  : in List_Type) is
 
    use Ada.Strings.Wide_Fixed;
-   use ZBTest.Commands;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
-   use ZanyBlue.Text.Formatting;
 
    procedure Handle_Argument (State    : in out State_Type;
                               Argument : in Wide_String;
@@ -76,19 +72,6 @@ package body ZBTest.Commands.Print_Command is
       Print_10005 (+Argument);
    end Handle_Argument;
 
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      Scalar : Boolean := True;
-   begin
-      for I in 2 .. Length (Args) loop
-         Handle_Argument (State, Value (Args, I), Scalar);
-      end loop;
-   end Implementation;
-
    ----------------
    -- Print_List --
    ----------------
@@ -107,4 +90,10 @@ package body ZBTest.Commands.Print_Command is
       end if;
    end Print_List;
 
-end ZBTest.Commands.Print_Command;
+   Scalar : Boolean := True;
+
+begin
+   for I in 2 .. Length (Args) loop
+      Handle_Argument (State, Value (Args, I), Scalar);
+   end loop;
+end Print_Command;

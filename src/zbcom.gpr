@@ -38,7 +38,7 @@
 
 project zbcom is
 
-   Version := "0.2.0";
+   Version := "1.1.0";
    Name    := "zanyblue";
 
    for Source_Dirs use ();
@@ -70,6 +70,7 @@ project zbcom is
                                                            "-ftest-coverage");
          when "Profile" =>
             for Default_Switches ("Ada") use C_Switches & ("-pg",
+                                                           "-O3",
                                                            "-fprofile-arcs");
          when "Production" =>
             for Default_Switches ("Ada") use C_Switches & ("-O3");

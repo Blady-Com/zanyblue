@@ -33,19 +33,17 @@
 --
 
 with Ada.Directories;
-with Ada.Wide_Text_IO;
 with Ada.Strings.Wide_Fixed;
-with ZanyBlue.OS;
-with ZanyBlue.Text.Formatting;
 with ZanyBlue.Wide_Directories;
 with ZanyBlue.Text.Generic_Integers;
 with ZanyBlue.Text.Generic_Enumerations;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
 pragma Elaborate_All (ZanyBlue.Text.Generic_Integers);
 pragma Elaborate_All (ZanyBlue.Text.Generic_Enumerations);
 
-package body ZBTest.Commands.Filestat_Command is
+separate (ZBTest.Commands)
+procedure Filestat_Command (State : in out State_Type;
+                            Args  : in List_Type) is
 
    package File_Size_Arguments is
       new ZanyBlue.Text.Generic_Integers (
@@ -55,12 +53,8 @@ package body ZBTest.Commands.Filestat_Command is
       new ZanyBlue.Text.Generic_Enumerations (
             Enumeration_Type => ZanyBlue.Wide_Directories.Wide_File_Kind);
 
-   use Ada.Wide_Text_IO;
    use Ada.Strings.Wide_Fixed;
-   use ZanyBlue.OS;
-   use ZanyBlue.Text.Formatting;
    use ZanyBlue.Wide_Directories;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
    use File_Size_Arguments;
    use File_Type_Arguments;
 
@@ -96,30 +90,23 @@ package body ZBTest.Commands.Filestat_Command is
       Close (Log_File);
    end File_Stat;
 
-   --------------------
-   -- Implementation --
-   --------------------
+   Source_Index : Natural := 0;
+   Log_Index    : Natural := 0;
 
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      Source_Index : Natural := 0;
-      Log_Index    : Natural := 0;
-   begin
-      for I in 2 .. Length (Args) loop
-         if Head (Value (Args, I), 1) = "-" then
-            raise Command_Usage_Error;
-         elsif Source_Index = 0 then
-            Source_Index := I;
-         elsif Log_Index = 0 then
-            Log_Index := I;
-         else
-            raise Command_Usage_Error;
-         end if;
-      end loop;
-      if Source_Index = 0 or else Log_Index = 0 then
+begin
+   for I in 2 .. Length (Args) loop
+      if Head (Value (Args, I), 1) = "-" then
+         raise Command_Usage_Error;
+      elsif Source_Index = 0 then
+         Source_Index := I;
+      elsif Log_Index = 0 then
+         Log_Index := I;
+      else
          raise Command_Usage_Error;
       end if;
-      File_Stat (State, Value (Args, Source_Index), Value (Args, Log_Index));
-   end Implementation;
-
-end ZBTest.Commands.Filestat_Command;
+   end loop;
+   if Source_Index = 0 or else Log_Index = 0 then
+      raise Command_Usage_Error;
+   end if;
+   File_Stat (State, Value (Args, Source_Index), Value (Args, Log_Index));
+end Filestat_Command;

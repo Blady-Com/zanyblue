@@ -34,9 +34,12 @@ class Destination(object):
 
     def add(self, pathname, renamed=None):
         """Add a file to the output destination, possibly renamed."""
-        destname = os.path.join(self.prefix, pathname)
         if renamed:
-            destname = os.path.join(self.prefix, renamed)
+           destname = renamed
+        else:
+           destname = pathname
+        if self.prefix:
+            destname = os.path.join(self.prefix, destname)
         if not self.quiet:
             print 'Adding the file "%s" ("%s")' % (pathname, destname)
         if not os.path.isdir(pathname):
@@ -63,11 +66,14 @@ class Destination(object):
 
     def close(self):
         """Close the destination."""
-        MANIFEST = MANIFEST_HEADER.format(self.prefix, self.manifest)
-        for path in sorted(self.checksums.keys ()):
-            checksum = self.checksums[path]
-            MANIFEST += "{0}  {1}\n".format(checksum, path)
-        self.add_data(self.manifest, MANIFEST)
+        if self.prefix:
+            MANIFEST = MANIFEST_HEADER.format(self.prefix, self.manifest)
+            for path in sorted(self.checksums.keys ()):
+                checksum = self.checksums[path]
+                MANIFEST += "{0}  {1}\n".format(checksum, path)
+            self.add_data(self.manifest, MANIFEST)
+        else:
+            pass
 
     def create_temp_file(self, filedata):
         # pylint: disable-msg = R0201

@@ -33,18 +33,14 @@
 --
 
 with Ada.Strings.Wide_Fixed;
-with ZanyBlue.OS;
-with ZanyBlue.Text.Formatting;
 with ZanyBlue.Wide_Directories;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Copy_Command is
+separate (ZBTest.Commands)
+procedure Copy_Command (State : in out State_Type;
+                        Args  : in List_Type) is
 
    use Ada.Strings.Wide_Fixed;
-   use ZanyBlue.OS;
-   use ZanyBlue.Text.Formatting;
    use ZanyBlue.Wide_Directories;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    procedure Copy_Directory (State            : in out State_Type;
                              Source_Name      : in Wide_String;
@@ -85,45 +81,38 @@ package body ZBTest.Commands.Copy_Command is
       State.Add_Undo_Action (Format ("delete {0}", +Destination_Name));
    end Copy_File;
 
-   --------------------
-   -- Implementation --
-   --------------------
+   Source_Index      : Natural := 0;
+   Destination_Index : Natural := 0;
+   Recursive         : Boolean := False;
 
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      Source_Index      : Natural := 0;
-      Destination_Index : Natural := 0;
-      Recursive         : Boolean := False;
-   begin
-      for I in 2 .. Length (Args) loop
-         if Value (Args, I) = "-r" then
-            Recursive := True;
-         elsif Head (Value (Args, I), 1) = "-" then
-            raise Command_Usage_Error;
-         elsif Source_Index = 0 then
-            Source_Index := I;
-         elsif Destination_Index = 0 then
-            Destination_Index := I;
-         else
-            raise Command_Usage_Error;
-         end if;
-      end loop;
-      if Source_Index = 0 then
+begin
+   for I in 2 .. Length (Args) loop
+      if Value (Args, I) = "-r" then
+         Recursive := True;
+      elsif Head (Value (Args, I), 1) = "-" then
+         raise Command_Usage_Error;
+      elsif Source_Index = 0 then
+         Source_Index := I;
+      elsif Destination_Index = 0 then
+         Destination_Index := I;
+      else
          raise Command_Usage_Error;
       end if;
-      if Destination_Index = 0 then
-         Destination_Index := Source_Index;
-      end if;
-      if Recursive then
-         Copy_Directory (State, Value (Args, Source_Index),
-                                Value (Args, Destination_Index));
-      else
-         Copy_File (State, Value (Args, Source_Index),
-                           Value (Args, Destination_Index));
-      end if;
-   exception
-   when File_Not_Found =>
-      Print_10018 (+Value (Args, Source_Index));
-   end Implementation;
-
-end ZBTest.Commands.Copy_Command;
+   end loop;
+   if Source_Index = 0 then
+      raise Command_Usage_Error;
+   end if;
+   if Destination_Index = 0 then
+      Destination_Index := Source_Index;
+   end if;
+   if Recursive then
+      Copy_Directory (State, Value (Args, Source_Index),
+                             Value (Args, Destination_Index));
+   else
+      Copy_File (State, Value (Args, Source_Index),
+                        Value (Args, Destination_Index));
+   end if;
+exception
+when File_Not_Found =>
+   Print_10018 (+Value (Args, Source_Index));
+end Copy_Command;

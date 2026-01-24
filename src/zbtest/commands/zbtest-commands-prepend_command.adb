@@ -32,20 +32,14 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-package body ZBTest.Commands.Prepend_Command is
+separate (ZBTest.Commands)
+procedure Prepend_Command (State : in out State_Type;
+                           Args  : in List_Type) is
 
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-   begin
-      if Length (Args) = 3 then
-         State.Prepend (Value (Args, 2), Value (Args, 3));
-      else
-         raise Command_Usage_Error;
-      end if;
-   end Implementation;
-
-end ZBTest.Commands.Prepend_Command;
+begin
+   if Length (Args) = 3 then
+      State.Prepend (Value (Args, 2), Value (Args, 3));
+   else
+      raise Command_Usage_Error;
+   end if;
+end Prepend_Command;

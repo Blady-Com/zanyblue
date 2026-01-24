@@ -32,31 +32,22 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with ZBTest_Messages.ZBTest_Wide_Prints;
+separate (ZBTest.Commands)
+procedure End_Command (State : in out State_Type;
+                       Args  : in List_Type) is
 
-package body ZBTest.Commands.End_Command is
+   pragma Unreferenced (Args);
 
-   use ZBTest_Messages.ZBTest_Wide_Prints;
-
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      pragma Unreferenced (Args);
-   begin
-      if State.Is_Defined ("_implicit_scope", False) then
-         --  The _implicit_scope parameter is defined by running a script,
-         --  cannot end implicit scope.
-         Print_10039;
-         return;
-      end if;
-      if State.Get_Integer ("_level") > 0 then
-         State.End_Scope;
-      else
-         Print_10001;
-      end if;
-   end Implementation;
-
-end ZBTest.Commands.End_Command;
+begin
+   if State.Is_Defined ("_implicit_scope", False) then
+      --  The _implicit_scope parameter is defined by running a script,
+      --  cannot end implicit scope.
+      Print_10039;
+      return;
+   end if;
+   if State.Get_Integer ("_level") > 0 then
+      State.End_Scope;
+   else
+      Print_10001;
+   end if;
+end End_Command;

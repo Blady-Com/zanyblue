@@ -34,23 +34,18 @@
 
 with ZanyBlue.Wide_Directories;
 
-package body ZBTest.Functions.Dirname_Function is
+separate (ZBTest.Functions)
+function Dirname_Function (State : access State_Type;
+                           Args  : in List_Type) return Wide_String is
+
+   pragma Unreferenced (State);
 
    use ZanyBlue.Wide_Directories;
 
-   --------------------
-   -- Implementation --
-   --------------------
-
-   function Implementation (State : access State_Type;
-                            Args  : in List_Type) return Wide_String is
-      pragma Unreferenced (State);
-   begin
-      if Length (Args) = 2 then
-         return Wide_Containing_Directory (Value (Args, 2));
-      else
-         raise Function_Usage_Error;
-      end if;
-   end Implementation;
-
-end ZBTest.Functions.Dirname_Function;
+begin
+   if Length (Args) = 2 then
+      return Wide_Containing_Directory (Value (Args, 2));
+   else
+      raise Function_Usage_Error;
+   end if;
+end Dirname_Function;

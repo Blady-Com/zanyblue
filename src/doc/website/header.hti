@@ -11,10 +11,10 @@
         content="en-us" />
   <link rel="shortcut icon"
         type="image/x-icon"
-        href="favicon.ico"/>
+        href="/favicon.ico"/>
   <link rel="stylesheet"
         type="text/css"
-        href="zanyblue.css"/>
+        href="/zanyblue.css"/>
   <title>ZanyBlue: <use name></title>
 </head>
 

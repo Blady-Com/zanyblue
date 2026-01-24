@@ -34,34 +34,29 @@
 
 with Ada.Strings.Wide_Fixed;
 
-package body ZBTest.Commands.Append_Command is
+separate (ZBTest.Commands)
+procedure Append_Command (State   : in out State_Type;
+                          Args    : in List_Type) is
 
    use Ada.Strings.Wide_Fixed;
 
-   --------------------
-   -- Implementation --
-   --------------------
+   Param_Idx : Natural := 0;
+   Value_Idx : Natural := 0;
 
-   procedure Implementation (State   : in out State_Type;
-                             Args    : in List_Type) is
-      Param_Idx : Natural := 0;
-      Value_Idx : Natural := 0;
-   begin
-      for I in 2 .. Length (Args) loop
-         if Head (Value (Args, I), 1) = "-" then
-            raise Command_Usage_Error;
-         elsif Param_Idx = 0 then
-            Param_Idx := I;
-         elsif Value_Idx = 0 then
-            Value_Idx := I;
-         else
-            raise Command_Usage_Error;
-         end if;
-      end loop;
-      if Param_Idx * Value_Idx = 0 then
-            raise Command_Usage_Error;
+begin
+   for I in 2 .. Length (Args) loop
+      if Head (Value (Args, I), 1) = "-" then
+         raise Command_Usage_Error;
+      elsif Param_Idx = 0 then
+         Param_Idx := I;
+      elsif Value_Idx = 0 then
+         Value_Idx := I;
+      else
+         raise Command_Usage_Error;
       end if;
-      State.Append (Value (Args, Param_Idx), Value (Args, Value_Idx));
-   end Implementation;
-
-end ZBTest.Commands.Append_Command;
+   end loop;
+   if Param_Idx * Value_Idx = 0 then
+         raise Command_Usage_Error;
+   end if;
+   State.Append (Value (Args, Param_Idx), Value (Args, Value_Idx));
+end Append_Command;

@@ -32,22 +32,16 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-package body ZBTest.Commands.Exit_Command is
+separate (ZBTest.Commands)
+procedure Exit_Command (State : in out State_Type;
+                        Args  : in List_Type) is
 
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-   begin
-      if Length (Args) /= 1 then
-         raise Command_Usage_Error;
-      end if;
-      while State.Get_Integer ("_level") > 0 loop
-         State.End_Scope;
-      end loop;
-      State.Set_Boolean ("_terminate", True);
-   end Implementation;
-
-end ZBTest.Commands.Exit_Command;
+begin
+   if Length (Args) /= 1 then
+      raise Command_Usage_Error;
+   end if;
+   while State.Get_Integer ("_level") > 0 loop
+      State.End_Scope;
+   end loop;
+   State.Set_Boolean ("_terminate", True);
+end Exit_Command;

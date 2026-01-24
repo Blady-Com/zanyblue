@@ -47,7 +47,7 @@ APPLICATION=$(TOP)/bin/$(APPNAME)
 FACILITIES=ajp authenticator connector core ha ha-session ha-tcp host http11 \
 	http jasper jsse loader manager mbeans membership naming naming-res \
 	realm security servlet servlets session startup transport tribes users \
-	util-buf util-http util-net util util-threads valves webapps
+	util-buf util-http util-net util util-threads valves webapps zbtomcat
 PACKAGE=Apache.Tomcat.Messages
 GENERATED=apache-tomcat-messages.ads apache-tomcat-messages.adb
 

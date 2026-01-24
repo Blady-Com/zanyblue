@@ -34,18 +34,12 @@
 
 with Ada.Environment_Variables;
 with Ada.Strings.Wide_Unbounded;
-with ZanyBlue.Text.Formatting;
-with ZanyBlue.OS;
-with ZBTest.Commands;
-with ZBTest_Messages.ZBTest_Wide_Prints;
 
-package body ZBTest.Commands.Setenv_Command is
+separate (ZBTest.Commands)
+procedure Setenv_Command (State : in out State_Type;
+                          Args  : in List_Type) is
 
    use Ada.Environment_Variables;
-   use ZanyBlue.Text.Formatting;
-   use ZanyBlue.OS;
-   use ZBTest.Commands;
-   use ZBTest_Messages.ZBTest_Wide_Prints;
 
    procedure Set_Literal_Value (State       : in out State_Type;
                                 Name        : in Wide_String;
@@ -61,48 +55,6 @@ package body ZBTest.Commands.Setenv_Command is
                                Name      : in Wide_String;
                                Parameter : in Wide_String);
    --  Set an environment variable from a scalar parameter value.
-
-   --------------------
-   -- Implementation --
-   --------------------
-
-   procedure Implementation (State : in out State_Type;
-                             Args  : in List_Type) is
-      Set_From_Parameter : Boolean := False;
-      Set_From_List      : Boolean := False;
-      Name_Idx           : Natural := 0;
-      Value_Idx          : Natural := 0;
-   begin
-      for I in 2 .. Length (Args) loop
-         if Value (Args, I) = "-l" then
-            Set_From_List := True;
-         elsif Value (Args, I) = "-p" then
-            Set_From_Parameter := True;
-         elsif Name_Idx = 0 then
-            Name_Idx := I;
-         elsif Value_Idx = 0 then
-            Value_Idx := I;
-         else
-            raise Command_Usage_Error;
-         end if;
-      end loop;
-      if Name_Idx = 0 then
-         raise Command_Usage_Error;
-      end if;
-      if Value_Idx = 0 then
-         raise Command_Usage_Error;
-      end if;
-      if Set_From_List then
-         Set_List_Value (State, Value (Args, Name_Idx),
-                                Value (Args, Value_Idx));
-      elsif Set_From_Parameter then
-         Set_Scalar_Value (State, Value (Args, Name_Idx),
-                                  Value (Args, Value_Idx));
-      else
-         Set_Literal_Value (State, Value (Args, Name_Idx),
-                                   Value (Args, Value_Idx));
-      end if;
-   end Implementation;
 
    --------------------
    -- Set_List_Value --
@@ -155,4 +107,39 @@ package body ZBTest.Commands.Setenv_Command is
       Set_Literal_Value (State, Name, State.Get_String (Parameter));
    end Set_Scalar_Value;
 
-end ZBTest.Commands.Setenv_Command;
+   Set_From_Parameter : Boolean := False;
+   Set_From_List      : Boolean := False;
+   Name_Idx           : Natural := 0;
+   Value_Idx          : Natural := 0;
+
+begin
+   for I in 2 .. Length (Args) loop
+      if Value (Args, I) = "-l" then
+         Set_From_List := True;
+      elsif Value (Args, I) = "-p" then
+         Set_From_Parameter := True;
+      elsif Name_Idx = 0 then
+         Name_Idx := I;
+      elsif Value_Idx = 0 then
+         Value_Idx := I;
+      else
+         raise Command_Usage_Error;
+      end if;
+   end loop;
+   if Name_Idx = 0 then
+      raise Command_Usage_Error;
+   end if;
+   if Value_Idx = 0 then
+      raise Command_Usage_Error;
+   end if;
+   if Set_From_List then
+      Set_List_Value (State, Value (Args, Name_Idx),
+                             Value (Args, Value_Idx));
+   elsif Set_From_Parameter then
+      Set_Scalar_Value (State, Value (Args, Name_Idx),
+                               Value (Args, Value_Idx));
+   else
+      Set_Literal_Value (State, Value (Args, Name_Idx),
+                                Value (Args, Value_Idx));
+   end if;
+end Setenv_Command;
