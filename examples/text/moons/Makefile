@@ -39,8 +39,15 @@
 #
 
 # If run from within the source tree, add the bin directory to the path
-PATH:=../../../bin:$(PATH)
+DEV_BIN_DIR=../../../bin
+DEV_GPR_DIR=../../../src
+INS_BIN_DIR=../../../../../bin
+INS_GPR_DIR=../../../../gpr
+PATH:=$(DEV_BIN_DIR):$(INS_BIN_DIR):$(PATH)
 export PATH
+
+# Projects directory (dev and installed)
+PRJ_DIRS=-aP$(DEV_GPR_DIR) -aP$(INS_GPR_DIR)
 
 RM=rm -f
 ifeq ($(OS),Windows_NT)
@@ -48,17 +55,17 @@ RM=del
 endif
 
 zbx_moons:	messages.stamp $(wildcard *.ad?)
-	gprbuild -q -p -aP../../../src -P zbx_moons.gpr
+	gprbuild $(PRJ_DIRS) -q -p -P zbx_moons.gpr
 
 messages.stamp:	$(wildcard moons*.properties)
 	zbmcompile -O -i -v -S messages.stamp Moons_Messages moons
 
-run:	all
+run:	zbx_moons
 	zbx_moons
 
-run_%:	all
+run_%:	zbx_moons
 	zbx_moons $*
 
 clean::
-	gprclean -aP../../../src -P zbx_moons.gpr
+	gprclean $(PRJ_DIRS) -P zbx_moons.gpr
 	-$(RM) $(wildcard moons_messages.*) messages.stamp

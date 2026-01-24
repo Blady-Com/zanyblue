@@ -1,7 +1,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,25 +33,36 @@
 --
 
 with Ada.Calendar;
+with Ada.Calendar.Time_Zones;
 with ZanyBlue.Text.Locales;
 
 separate (ZanyBlue.Test.Text.Times.Suites)
 procedure T_0017 (T : in out Test_Case'Class) is
 
    use Ada.Calendar;
+   use Ada.Calendar.Time_Zones;
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Times;
 
-   Locale    : constant Locale_Type := Make_Locale ("en_US");
-   V1        : constant Time := Time_Of (1904, 6, 16, Duration (60483));
-   V2        : constant Time := Time_Of (1904, 6, 16, Duration (17283));
-   V3        : constant Time := Time_Of (1904, 6, 16, Duration (40283));
-   Arg1      : constant Time_Argument_Type := Create (V1);
-   Arg2      : constant Time_Argument_Type := Create (V2);
-   Arg3      : constant Time_Argument_Type := Create (V3);
+   procedure Check (Format : Wide_String;
+                    Value  : Wide_String);
+
+   procedure Check (Format : Wide_String;
+                    Value  : Wide_String) is
+
+      Locale    : constant Locale_Type := Make_Locale ("ko_KR");
+      V1        : constant Time := Time_Of (1904, 6, 16, Duration (60483));
+      Arg1      : constant Time_Argument_Type := Create (V1, 9 * 60);
+
+   begin
+      Check_Value (T, Arg1.Format ("", Format, Locale), Value,
+                   """" & Format & """ format");
+   end Check;
 
 begin
-   Check_Value (T, Arg1.Format ("", "H", Locale), "16");
-   Check_Value (T, Arg2.Format ("", "H", Locale), "4");
-   Check_Value (T, Arg3.Format ("", "H", Locale), "11");
+   Check ("",       "04. 6. 16. 오후 4:48");
+   Check ("full",   "1904년 6월 16일 목요일 오후 4시 48분 3초 GMT+09:00");
+   Check ("long",   "1904년 6월 16일 오후 4시 48분 3초 GMT+9");
+   Check ("medium", "1904. 6. 16. 오후 4:48:03");
+   Check ("short",  "04. 6. 16. 오후 4:48");
 end T_0017;

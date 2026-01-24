@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -77,11 +77,13 @@
 
 with Ada.Containers;
 with ZanyBlue.Text.Codecs;
+with ZanyBlue.Utils.DateTimes;
 
 package ZanyBlue.Text.Locales is
 
    use Ada.Containers;
    use ZanyBlue.Text.Codecs;
+   use ZanyBlue.Utils.DateTimes;
 
    Maximum_Level : constant := 4;
    --  Maximum depth for a locale: '' 'lang' 'lang-territory', 'lang-script'
@@ -108,27 +110,11 @@ package ZanyBlue.Text.Locales is
    type Era_Type is (BCE, CE);
    --  Standard year eras.
 
-   subtype Hour_Type is Natural range 0 .. 23;
-   --  Hour numbers for day periods.
-
-   subtype Minute_Type is Natural range 0 .. 59;
-   --  Minute numbers for day periods.
-
-   subtype Second_Type is Natural range 0 .. 59;
-   --  Second numbers for day periods.
-
    type Day_Period_Type is (AM,           Wee_Hours,    Early_Morning,
                             Morning,      Late_Morning, Noon,
                             Midday,       Afternoon,    Evening,
                             Late_Evening, Night,        PM);
    --  Standard day periods.
-
-   type Day_Type is (Sun, Mon, Tue, Wed, Thu, Fri, Sat);
-   --  Days of the week.
-
-   type Month_Type is (Jan, Feb, Mar, Apr, May, Jun,
-                       Jul, Aug, Sep, Oct, Nov, Dec);
-   --  Months of the year.
 
    type Date_Time_Style_Type is (Full, Long, Medium, Short);
    --  Date and time format styles, e.g., medium would use short day names
@@ -153,6 +139,8 @@ package ZanyBlue.Text.Locales is
    --  Number style formats.
 
    type Text_Layout_Type is (Left_To_Right, Right_To_Left);
+
+   type Localized_Width is (Abbreviated, Short, Narrow, Wide);
 
    subtype Language_Type  is Wide_String (1 .. Max_Language_Length);
    --  An ISO language code, e.g., "en ", "zh ".
@@ -213,7 +201,8 @@ package ZanyBlue.Text.Locales is
    --  defined day periods.
 
    function Day_Period_Name (Locale     : Locale_Type;
-                             Day_Period : Day_Period_Type)
+                             Day_Period : Day_Period_Type;
+                             Width      : Localized_Width := Abbreviated)
       return Wide_String;
    --  Localized name of the day period.
 
@@ -238,9 +227,30 @@ package ZanyBlue.Text.Locales is
 
    function Codecs (Locale : Locale_Type) return Codecs_Type;
    --  Return the codecs implementation associated with the argument locale.
+
    function Era_Name (Locale : Locale_Type;
-                      Era    : Era_Type) return Wide_String;
+                      Era    : Era_Type;
+                      Width  : Localized_Width := Abbreviated)
+      return Wide_String;
    --  Localized name of the era.
+
+   function Quarter_Name (Locale  : Locale_Type;
+                          Quarter : Quarter_Type;
+                          Width   : Localized_Width := Abbreviated)
+      return Wide_String;
+   --  Localized name of the quarter.
+
+   function Month_Name (Locale : Locale_Type;
+                        Month  : Month_Type;
+                        Width  : Localized_Width := Abbreviated)
+      return Wide_String;
+   --  Localized name of the month in the given width.
+
+   function Day_Name (Locale : Locale_Type;
+                      Day    : Day_Type;
+                      Width  : Localized_Width := Abbreviated)
+      return Wide_String;
+   --  Localized name of the day in the given width.
 
    function Full_Day_Name (Locale : Locale_Type;
                            Day    : Day_Type) return Wide_String;

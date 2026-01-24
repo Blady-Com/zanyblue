@@ -40,8 +40,15 @@
 #
 
 # If run from within the source tree, add the bin directory to the path
-PATH:=../../../bin:$(PATH)
+DEV_BIN_DIR=../../../bin
+DEV_GPR_DIR=../../../src
+INS_BIN_DIR=../../../../../bin
+INS_GPR_DIR=../../../../gpr
+PATH:=$(DEV_BIN_DIR):$(INS_BIN_DIR):$(PATH)
 export PATH
+
+# Projects directory (dev and installed)
+PRJ_DIRS=-aP$(DEV_GPR_DIR) -aP$(INS_GPR_DIR)
 
 RM=rm -f
 ifeq ($(OS),Windows_NT)
@@ -53,7 +60,7 @@ TC_FACILITIES=authenticator connector core manager realm security servlets\
 FACILITIES=$(TC_FACILITIES) zbtomcat
 
 zbx_tomcat:	apache-tomcat-messages.ads apache-tomcat-messages.adb
-	gprbuild -q -p -aP../../../src -P zbx_tomcat.gpr
+	gprbuild $(PRJ_DIRS) -q -p -P zbx_tomcat.gpr
 
 apache-tomcat-messages.ads apache-tomcat-messages.adb: $(wildcard mesg/*.properties)
 	zbmcompile -O -F -i -v Apache.Tomcat.Messages -d mesg $(FACILITIES)
@@ -65,10 +72,11 @@ run_%:	zbx_tomcat
 	zbx_tomcat -l$*
 
 clean:
-	gprclean -aP../../../src -P zbx_tomcat.gpr
+	gprclean $(PRJ_DIRS) -P zbx_tomcat.gpr
 	-$(RM) $(wildcard apache-tomcat-messages.*)
 
-# Following definitions are used to sync the properties from a Tomcat distribution.
+# Following definitions are used to sync the properties from a Tomcat
+# distribution.
 # Not really part of the example, just needed a good place to keep this.
 TC_VERSION=9.0.0.M8
 TC_TLD=apache-tomcat-$(TC_VERSION)-src

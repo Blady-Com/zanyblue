@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2017, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -198,8 +198,7 @@ procedure Compare_Command (State : in out State_Type;
                           Matched     : out Boolean) is
    begin
       Matched := Ref_Line = Gen_Line
-         or else Regex_Match (Wide_To_UTF8 (Gen_Line),
-                              Wide_To_UTF8 (Ref_Line));
+         or else Regex_Match (To_UTF8 (Gen_Line), To_UTF8 (Ref_Line));
       if not Matched then
          Ada.Wide_Text_IO.Put (Status_File, ">");
          Ada.Wide_Text_IO.Put_Line (Status_File, Ref_Line);

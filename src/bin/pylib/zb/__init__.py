@@ -109,7 +109,13 @@ class ZBDev(object):
         Initial, built-in parameters for the zbdev engine and load the platform
         parameters.
         """
-        os_name, os_version, os_id = platform.dist()
+        os_params = self._load_os_params()
+        os_name = os_params.get("NAME", platform.system())
+        os_version = os_params.get(
+            "VERSION_ID",
+            os_params.get("VERSION", platform.uname().release)
+        )
+        os_id = os_params.get("ID", os_name)
         data_dir = os.path.join(zbdev_dir, "data")
         top_dir = os.path.abspath(
             os.path.join(zbdev_dir, os.pardir, os.pardir)
@@ -135,6 +141,17 @@ class ZBDev(object):
             if not name.startswith("ZBDEV_"):
                 continue
             self.params[name.replace("ZBDEV_", "").lower()] = os.environ[name]
+
+    def _load_os_params(self):
+        result = {}
+        try:
+            with open("/etc/os-release", "r") as ifh:
+                for line in ifh.readlines():
+                    name, value = line.strip().split("=", 1)
+                    result[name] = value.replace('"', '')
+        except IOError:
+            pass
+        return result
 
     def _init_argparser(self):
         self.parser = argparse.ArgumentParser(
@@ -171,9 +188,12 @@ class ZBDev(object):
             #print("HELP: {0}\n".format(impl.__doc__))
 
     def _load_yaml(self, pathname):
+        kwargs = {}
+        if hasattr(yaml, "FullLoader"):
+            kwargs = {'Loader': getattr(yaml, "FullLoader")}
         try:
             with codecs.open(pathname, "r", "utf-8") as src:
-                defs = yaml.load(src)
+                defs = yaml.load(src, **kwargs)
             for name, value in list(defs.items()):
                 self.params[name] = value
         except IOError:

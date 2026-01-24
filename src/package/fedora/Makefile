@@ -47,6 +47,7 @@ CLEAN_DIRS+=$(wildcard BUILDROOT)
 CLEAN_DIRS+=$(wildcard RPMS)
 CLEAN_DIRS+=$(wildcard SOURCES)
 CLEAN_DIRS+=$(wildcard SRPMS)
+CLEAN_DIRS+=$(wildcard SPECS)
 
 # Disable RPM checks
 QA_RPATHS=0x0001
@@ -57,11 +58,9 @@ include $(TOP)/src/mkfile/conf.mk
 all::	clean $(SPECS_FILE)
 	ln -s $(dir $(DISTRIBUTION)) SOURCES
 	$(RPMBUILD) $(RPMDEFINES) -ba $(SPECS_FILE)
+	cp RPMS/*/*.rpm SRPMS/*.rpm $(TOP)
 
-$(SPECS_FILE):	SPECS/zanyblue.spec
-	sed s/@VERSION@/$(VERSION_S)/ SPECS/zanyblue.spec > $(SPECS_FILE)
-
-SPECS/zanyblue.spec:	SPECS zanyblue.spec-in
+$(SPECS_FILE):	SPECS zanyblue.spec-in
 	sed s/@VERSION@/$(VERSION_S)/ zanyblue.spec-in > $(SPECS_FILE)
 
 SPECS:

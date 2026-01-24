@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -38,12 +38,14 @@ with ZanyBlue.Text.Codecs;
 with ZanyBlue.Text.Locales;
 with ZanyBlue.Text.Generic_Modulars;
 with ZanyBlue.Text.Generic_Enumerations;
+with ZanyBlue.Utils.DateTimes;
 
 package ZBInfo is
 
    use Ada.Containers;
    use ZanyBlue.Text.Codecs;
    use ZanyBlue.Text.Locales;
+   use ZanyBlue.Utils.DateTimes;
 
    package Hash_Type_Arguments is
       new ZanyBlue.Text.Generic_Modulars (Hash_Type);

@@ -1,7 +1,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,12 +33,14 @@
 --
 
 with ZanyBlue.Text.Locales;
+with ZanyBlue.Utils.DateTimes;
 
 package body ZanyBlue.Test.Text.Locales.Day_Periods.Suites is
 
    use Ahven.Framework;
    use ZanyBlue.Text;
    use ZanyBlue.Text.Locales;
+   use ZanyBlue.Utils.DateTimes;
 
    procedure Check_Day_Period
       (T      : in out Test_Case'Class;

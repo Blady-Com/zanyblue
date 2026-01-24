@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2017, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -113,9 +113,9 @@ procedure Getenv_Command (State : in out State_Type;
       List_Values : List_Type;
 
    begin  -- Get_List_Value
-      if Exists (Wide_To_UTF8 (Source)) then
+      if Exists (To_UTF8 (Source)) then
          Parse_Values (List_Values,
-                       To_Wide_String (Value (Wide_To_UTF8 (Source))));
+                       To_Wide_String (Value (To_UTF8 (Source))));
          if Append_Values then
             for I in 1 .. Length (List_Values) loop
                State.Append (Target, Value (List_Values, I));
@@ -167,6 +167,6 @@ begin
    else
       State.Set_String (
             Value (Args, Target_Idx),
-            To_Wide_String (Value (Wide_To_UTF8 (Value (Args, Source_Idx)))));
+            To_Wide_String (Value (To_UTF8 (Value (Args, Source_Idx)))));
    end if;
 end Getenv_Command;

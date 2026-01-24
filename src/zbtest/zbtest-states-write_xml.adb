@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2016, 2017, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -55,7 +55,7 @@ begin
       --  No tests executed for the scope, skip the creation of the XML file
       return;
    end if;
-   Create (XML_File, Out_File, "ZBTest-" & Wide_To_UTF8 (Test_Name) & ".xml");
+   Create (XML_File, Out_File, "ZBTest-" & To_UTF8 (Test_Name) & ".xml");
    Print_01001 (XML_File);
    Print_01002 (+N_Fail, +N_Test, +Elapsed, +Test_Name,
       Destination => XML_File);

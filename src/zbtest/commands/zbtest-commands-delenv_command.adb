@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2017, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -71,10 +71,10 @@ procedure Delenv_Command (State : in out State_Type;
    procedure Delenv (State : in out State_Type;
                      Name  : Wide_String) is
    begin
-      if Exists (Wide_To_UTF8 (Name)) then
+      if Exists (To_UTF8 (Name)) then
          State.Add_Undo_Action (Format ("setenv {0} ""{1}""",
-                                        +Name, +Value (Wide_To_UTF8 (Name))));
-         Clear (Wide_To_UTF8 (Name));
+                                        +Name, +Value (To_UTF8 (Name))));
+         Clear (To_UTF8 (Name));
          Print_00040 (+Name);
       else
          Print_00039 (+Name);

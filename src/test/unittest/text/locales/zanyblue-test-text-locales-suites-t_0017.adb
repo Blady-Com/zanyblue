@@ -48,7 +48,7 @@ procedure T_0017 (T : in out Test_Case'Class) is
 
    begin
       Get_Locale_Codes (Locale, Language, Script, Territory);
-      Parent_Codes (Language, Script, Territory, Territory);
+      Parent_Codes (Language, Script, Territory);
       Check_Value (T, Locale_Name (Language, Script, Territory), Parent_Name,
                    "Incorrect parent calculated");
    end Check_Parent;

@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,8 @@ package ZanyBlue.Text.Generic_Buffer is
    --  Utility character value used to indicate no character.
 
    procedure Add (Buffer : in out Buffer_Type;
-                  Data   : Wide_Character);
+                  Data   : Wide_Character;
+                  Count  : Positive := 1);
    --  Append a character to left side of the buffer.
 
    procedure Add (Buffer : in out Buffer_Type;

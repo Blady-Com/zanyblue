@@ -1,7 +1,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -52,9 +52,8 @@ procedure T_0008 (T : in out Test_Case'Class) is
 begin
    Append (List, +V1);
    Append (List, +V2);
-   Debug;
-   Check_Value (T, List.Format (0, "", "time", Locale, False), "4:48 PM",
-           "List.Format time (PM) failed");
-   Check_Value (T, List.Format (1, "", "time", Locale, False), "4:48 AM",
-           "List.Format time (AM) failed");
+   Check_Value (T, List.Format (0, "", "date", Locale, False), "4/17/08",
+           "List.Format date (PM) failed");
+   Check_Value (T, List.Format (1, "", "date", Locale, False), "4/17/08",
+           "List.Format date (AM) failed");
 end T_0008;

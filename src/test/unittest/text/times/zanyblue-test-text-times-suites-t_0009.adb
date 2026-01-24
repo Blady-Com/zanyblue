@@ -1,7 +1,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,22 +33,45 @@
 --
 
 with Ada.Calendar;
+with Ada.Calendar.Time_Zones;
 with ZanyBlue.Text.Locales;
+with ZanyBlue.Text.Arguments;
 
 separate (ZanyBlue.Test.Text.Times.Suites)
 procedure T_0009 (T : in out Test_Case'Class) is
 
    use Ada.Calendar;
-   use ZanyBlue.Text.Locales;
+   use Ada.Calendar.Time_Zones;
    use ZanyBlue.Text.Times;
+   use ZanyBlue.Text.Locales;
+   use ZanyBlue.Text.Arguments;
 
-   Locale    : constant Locale_Type := Make_Locale ("en_US");
-   V1        : constant Time := Time_Of (2008, 4, 17, Duration (60483));
-   V2        : constant Time := Time_Of (2008, 4, 17, Duration (17283));
-   Arg1      : constant Time_Argument_Type := Create (V1);
-   Arg2      : constant Time_Argument_Type := Create (V2);
+   procedure Check (Format : Wide_String;
+                    Value  : Wide_String);
+
+   Locale    : constant Locale_Type := Make_Locale ("zh_CN");
+   V1        : constant Time := Time_Of (1904, 6, 16, Duration (60483));
+   Arg1      : constant Time_Argument_Type := Create (V1, 8 * 60);
+   Args      : Argument_List;
+
+   procedure Check (Format : Wide_String;
+                    Value  : Wide_String) is
+
+   begin
+      Check_Value (T, Args.Format (0, "", Format, Locale, False), Value,
+                   "Format """ & Format & """ style");
+   end Check;
 
 begin
-   Check_Value (T, Arg1.Format ("date", "", Locale), "4/17/08");
-   Check_Value (T, Arg2.Format ("date", "", Locale), "4/17/08");
+   Args.Append (Arg1);
+   Check ("",        "04/6/16 下午4:48");
+   Check ("*",       "6/16/04 4:48 PM");
+   Check ("full",    "1904年6月16日星期四 GMT+08:00下午4:48:03");
+   Check ("full*",   "Thursday, June 16, 1904 4:48:03 PM GMT+08:00");
+   Check ("long",    "1904年6月16日 GMT+8下午4:48:03");
+   Check ("long*",   "June 16, 1904 4:48:03 PM GMT+8");
+   Check ("medium",  "1904年6月16日 下午4:48:03");
+   Check ("medium*", "Jun 16, 1904 4:48:03 PM");
+   Check ("short",   "04/6/16 下午4:48");
+   Check ("short*",  "6/16/04 4:48 PM");
 end T_0009;

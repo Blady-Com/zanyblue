@@ -102,7 +102,7 @@ procedure ZBMCompile.Main is
             Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00001",
                              Argument0 => +Ch);
          end if;
-         return Wide_From_UTF8 (Argument (Index));
+         return From_UTF8 (Argument (Index));
       end Get_Option_Value;
 
       ----------------------
@@ -262,10 +262,10 @@ procedure ZBMCompile.Main is
                Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00020",
                                 Argument0 => +Value);
             elsif not Options.Is_Defined ("package") then
-               Options.Set_String ("package", Wide_From_UTF8 (Value));
+               Options.Set_String ("package", From_UTF8 (Value));
             else
                Options.Append ("mesg_dirs", Options.Get_String ("cur_dir"));
-               Options.Append ("facilities", Wide_From_UTF8 (Value));
+               Options.Append ("facilities", From_UTF8 (Value));
                Options.Increment ("n_facilities");
             end if;
          end;

@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2017, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -580,7 +580,7 @@ begin   -- ZBTest.Commands
    for I in Command_Table'First .. Command_Table'Last - 1 loop
       if Command_Table (I).Name.all > Command_Table (I + 1).Name.all then
          raise Command_Table_Not_Sorted
-            with Wide_To_UTF8 (Command_Table (I + 1).Name.all);
+            with To_UTF8 (Command_Table (I + 1).Name.all);
       end if;
    end loop;
 end ZBTest.Commands;

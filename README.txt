@@ -84,7 +84,6 @@ The build is GNU make based.  To build on Unix, assuming your PATH is
 setup correctly:
 
    $ zanyblue-VERSION
-   $ cd src
    $ make
 
 To run the regression tests, Ahven is needed and is expected to be be installed
@@ -95,6 +94,16 @@ on the build system, use the "check" build target in the src directory:
 All the examples, except the "gtk" example, do not require additional packages
 beyond the ZanyBlue library.  The "gtk" example requires the GtkAda package
 from AdaCore.
+
+Installing
+----------
+
+The "install" target can be used to install the utilities, library and
+supporting Ada code to an installation directory, e.g., /opt/Ada.  The
+installation directory should be defined via the INSTALL_DIR on the
+make command line, e.g.,:
+
+    $ make INSTALL_DIR install
 
 Contact
 -------

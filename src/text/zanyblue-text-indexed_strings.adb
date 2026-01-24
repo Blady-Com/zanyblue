@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2017, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -85,7 +85,7 @@ package body ZanyBlue.Text.Indexed_Strings is
       if Position /= Name_To_Id_Maps.No_Element then
          return Name_To_Id_Maps.Element (Position);
       else
-         Raise_Exception (Id, Message => Wide_To_UTF8 (Name));
+         Raise_Exception (Id, Message => To_UTF8 (Name));
       end if;
    end Get;
 

@@ -50,15 +50,6 @@ class Impl(zb.Handler):
     build with Google analytics code (-G option).
     """
 
-    def add_options(self, name, parser):
-        parser.add_argument(
-            "--new-venv",
-            dest="new_venv",
-            default=False,
-            action="store_true",
-            help="Create a new virtual environment for the build",
-        )
-
     def copy_test_xml_files(self, top_dir):
         """
         Copy the XML Jenkins test files from the system test-area to the
@@ -78,11 +69,8 @@ class Impl(zb.Handler):
         """
         The main command implementation.
         """
-        venvdir = self.get_param('venv_dir')
         top_dir = self.get_param('top_dir')
         self.info("Top dir is \"{0}\"", top_dir)
-        #self.info("Virtual env dir is \"{0}\"", venvdir)
-        #self.setup_virtual_env(options.new_venv, venvdir)
         self.make(["distribution"])
         self.copy_test_xml_files(top_dir)
         self.info("Build of the ZanyBlue system complete")
@@ -97,30 +85,3 @@ class Impl(zb.Handler):
         srcdir = os.path.join(self.get_param('top_dir'), "src")
         for target in targets:
             subprocess.check_call(cmd + [target], cwd=srcdir)
-
-    def setup_virtual_env(self, new_venv, venvdir):
-        """
-        Setup the virtual environment, if not already in place.
-        """
-        cur = os.environ.get("VIRTUAL_ENV", None)
-        if cur is not None:
-            self.info(
-                "Already in virtual environment located at \"{0}\"", cur
-            )
-            return
-        if new_venv and os.path.isdir(venvdir):
-            self.info("Removing existing virtual environment \"{0}\"", venvdir)
-            shutil.rmtree(venvdir)
-        self.info("Setting up the virtual environment \"{0}\"", venvdir)
-        if not os.path.isdir(venvdir):
-            self.info("Creating a new virtual environment in \"{0}\"", venvdir)
-            subprocess.check_call(["virtualenv", venvdir])
-        # Add virtualenv path to PATH ". venv/bin/activate"
-        self.prepend_path(os.path.join(venvdir, "bin"))
-        # Install the ZB requirements
-        subprocess.check_call([
-            "pip",
-            "install",
-            "-r",
-            self.get_param('requirements')
-        ])

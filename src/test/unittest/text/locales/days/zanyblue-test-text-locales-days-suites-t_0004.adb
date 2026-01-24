@@ -1,7 +1,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -32,18 +32,12 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with ZanyBlue.Text.Times;
-
 separate (ZanyBlue.Test.Text.Locales.Days.Suites)
 procedure T_0004 (T : in out Test_Case'Class) is
-
-   use ZanyBlue.Text.Times;
 
    L : constant Locale_Type := Make_Locale ("ja");
 
 begin
-   Check_Value (T, Short_Day_Name (L, Day_In_Week (4, 7, 2010)), "日",
-                "ja short day name");
-   Check_Value (T, Full_Day_Name (L, Day_In_Week (4, 7, 2010)), "日曜日",
-                "ja full day name");
+   Check_Value (T, Short_Day_Name (L, Sun), "日", "ja short day name");
+   Check_Value (T, Full_Day_Name (L, Sun), "日曜日", "ja full day name");
 end T_0004;

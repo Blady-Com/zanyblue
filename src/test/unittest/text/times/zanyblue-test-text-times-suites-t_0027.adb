@@ -1,7 +1,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -42,13 +42,66 @@ procedure T_0027 (T : in out Test_Case'Class) is
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Times;
 
-   Locale    : constant Locale_Type := Make_Locale ("en_US");
-   V1        : constant Time := Time_Of (1904, 6, 16, Duration (60483));
-   V2        : constant Time := Time_Of (1916, 11, 16, Duration (60435));
-   Arg1      : constant Time_Argument_Type := Create (V1);
-   Arg2      : constant Time_Argument_Type := Create (V2);
+   Locale    : constant Locale_Type := Make_Locale ("zh");
+
+   procedure Check (Value : Wide_String;
+                    T_Val : Time);
+
+   procedure Check (Value : Wide_String;
+                    T_Val : Time) is
+      Arg1      : constant Time_Argument_Type := Create (T_Val);
+   begin
+      Check_Value (T, Arg1.Format ("time", "short", Locale), Value,
+                   """time"" format");
+   end Check;
 
 begin
-   Check_Value (T, Arg1.Format ("", "y", Locale), "1904");
-   Check_Value (T, Arg2.Format ("", "y", Locale), "1916");
+   Check ("上午12:00", Time_Of (1904, 6, 16, Duration (0)));
+   Check ("上午12:30", Time_Of (1904, 6, 16, Duration (1800)));
+   Check ("上午1:00", Time_Of (1904, 6, 16, Duration (3600)));
+   Check ("上午1:30", Time_Of (1904, 6, 16, Duration (5400)));
+   Check ("上午2:00", Time_Of (1904, 6, 16, Duration (7200)));
+   Check ("上午2:30", Time_Of (1904, 6, 16, Duration (9000)));
+   Check ("上午3:00", Time_Of (1904, 6, 16, Duration (10800)));
+   Check ("上午3:30", Time_Of (1904, 6, 16, Duration (12600)));
+   Check ("上午4:00", Time_Of (1904, 6, 16, Duration (14400)));
+   Check ("上午4:30", Time_Of (1904, 6, 16, Duration (16200)));
+   Check ("上午5:00", Time_Of (1904, 6, 16, Duration (18000)));
+   Check ("上午5:30", Time_Of (1904, 6, 16, Duration (19800)));
+   Check ("上午6:00", Time_Of (1904, 6, 16, Duration (21600)));
+   Check ("上午6:30", Time_Of (1904, 6, 16, Duration (23400)));
+   Check ("上午7:00", Time_Of (1904, 6, 16, Duration (25200)));
+   Check ("上午7:30", Time_Of (1904, 6, 16, Duration (27000)));
+   Check ("上午8:00", Time_Of (1904, 6, 16, Duration (28800)));
+   Check ("上午8:30", Time_Of (1904, 6, 16, Duration (30600)));
+   Check ("上午9:00", Time_Of (1904, 6, 16, Duration (32400)));
+   Check ("上午9:30", Time_Of (1904, 6, 16, Duration (34200)));
+   Check ("上午10:00", Time_Of (1904, 6, 16, Duration (36000)));
+   Check ("上午10:30", Time_Of (1904, 6, 16, Duration (37800)));
+   Check ("上午11:00", Time_Of (1904, 6, 16, Duration (39600)));
+   Check ("上午11:30", Time_Of (1904, 6, 16, Duration (41400)));
+   Check ("下午12:00", Time_Of (1904, 6, 16, Duration (43200)));
+   Check ("下午12:30", Time_Of (1904, 6, 16, Duration (45000)));
+   Check ("下午1:00", Time_Of (1904, 6, 16, Duration (46800)));
+   Check ("下午1:30", Time_Of (1904, 6, 16, Duration (48600)));
+   Check ("下午2:00", Time_Of (1904, 6, 16, Duration (50400)));
+   Check ("下午2:30", Time_Of (1904, 6, 16, Duration (52200)));
+   Check ("下午3:00", Time_Of (1904, 6, 16, Duration (54000)));
+   Check ("下午3:30", Time_Of (1904, 6, 16, Duration (55800)));
+   Check ("下午4:00", Time_Of (1904, 6, 16, Duration (57600)));
+   Check ("下午4:30", Time_Of (1904, 6, 16, Duration (59400)));
+   Check ("下午5:00", Time_Of (1904, 6, 16, Duration (61200)));
+   Check ("下午5:30", Time_Of (1904, 6, 16, Duration (63000)));
+   Check ("下午6:00", Time_Of (1904, 6, 16, Duration (64800)));
+   Check ("下午6:30", Time_Of (1904, 6, 16, Duration (66600)));
+   Check ("下午7:00", Time_Of (1904, 6, 16, Duration (68400)));
+   Check ("下午7:30", Time_Of (1904, 6, 16, Duration (70200)));
+   Check ("下午8:00", Time_Of (1904, 6, 16, Duration (72000)));
+   Check ("下午8:30", Time_Of (1904, 6, 16, Duration (73800)));
+   Check ("下午9:00", Time_Of (1904, 6, 16, Duration (75600)));
+   Check ("下午9:30", Time_Of (1904, 6, 16, Duration (77400)));
+   Check ("下午10:00", Time_Of (1904, 6, 16, Duration (79200)));
+   Check ("下午10:30", Time_Of (1904, 6, 16, Duration (81000)));
+   Check ("下午11:00", Time_Of (1904, 6, 16, Duration (82800)));
+   Check ("下午11:30", Time_Of (1904, 6, 16, Duration (84600)));
 end T_0027;

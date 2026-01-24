@@ -38,8 +38,15 @@
 #
 
 # If run from within the source tree, add the bin directory to the path
-PATH:=../../../bin:$(PATH)
+DEV_BIN_DIR=../../../bin
+DEV_GPR_DIR=../../../src
+INS_BIN_DIR=../../../../../bin
+INS_GPR_DIR=../../../../gpr
+PATH:=$(DEV_BIN_DIR):$(INS_BIN_DIR):$(PATH)
 export PATH
+
+# Projects directory (dev and installed)
+PRJ_DIRS=-aP$(DEV_GPR_DIR) -aP$(INS_GPR_DIR)
 
 RM=rm -f
 ifeq ($(OS),Windows_NT)
@@ -47,7 +54,7 @@ RM=del
 endif
 
 zbx_filtering:	messages.stamp $(wildcard *.ad?)
-	gprbuild -q -p -aP../../../src -P zbx_filtering.gpr
+	gprbuild $(PRJ_DIRS) -q -p -P zbx_filtering.gpr
 
 messages.stamp:	$(wildcard Xmpl*.properties)
 	zbmcompile -G prints -i -S messages.stamp -v Messages Xmpl
@@ -59,5 +66,5 @@ run_v:	zbx_filtering
 	zbx_filtering -v
 
 clean:
-	gprclean -aP../../../src -P zbx_filtering.gpr
+	gprclean $(PRJ_DIRS) -P zbx_filtering.gpr
 	-$(RM) $(wildcard messages*.*)

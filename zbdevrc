@@ -38,12 +38,14 @@
 #
 
 # gnatdoc needs libiconv which is available in the gps directory
-if [ -r "$GNATDIR/lib/gps/libiconv.so" ]
-then
-    if [ -z "$LD_LIBRARY_PATH" ]
-    then
-        export LD_LIBRARY_PATH="$GNATDIR/lib/gps"
-    else
-        export LD_LIBRARY_PATH="$GNATDIR/lib/gps:$LD_LIBRARY_PATH"
-    fi
-fi
+#if [ -r "$GNATDIR/lib/gps/libiconv.so" ]
+#then
+#    if [ -z "$LD_LIBRARY_PATH" ]
+#    then
+#        export LD_LIBRARY_PATH="$GNATDIR/lib/gps"
+#    else
+#        export LD_LIBRARY_PATH="$GNATDIR/lib/gps:$LD_LIBRARY_PATH"
+#    fi
+#fi
+
+PS1="(ZB:`basename \"$ZBDEV_WSDIR\"`) $PS1"

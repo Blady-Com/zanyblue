@@ -39,8 +39,15 @@
 #
 
 # If run from within the source tree, add the bin directory to the path
-PATH:=../../../bin:$(PATH)
+DEV_BIN_DIR=../../../bin
+DEV_GPR_DIR=../../../src
+INS_BIN_DIR=../../../../../bin
+INS_GPR_DIR=../../../../gpr
+PATH:=$(DEV_BIN_DIR):$(INS_BIN_DIR):$(PATH)
 export PATH
+
+# Projects directory (dev and installed)
+PRJ_DIRS=-aP$(DEV_GPR_DIR) -aP$(INS_GPR_DIR)
 
 RM=rm -f
 ifeq ($(OS),Windows_NT)
@@ -49,7 +56,7 @@ endif
 
 zbx_formatting:	zbx_formatting.adb definitions.ads $(wildcard *.properties)
 	zbmcompile -i -v XFormatting_Messages xformatting
-	gprbuild -q -p -aP../../../src -P zbx_formatting.gpr
+	gprbuild $(PRJ_DIRS) -q -p -P zbx_formatting.gpr
 
 run:	zbx_formatting
 	zbx_formatting
@@ -58,5 +65,5 @@ run_%:	zbx_formatting
 	zbx_formatting -l$*
 
 clean::
-	gprclean -aP../../../src -P zbx_formatting.gpr
+	gprclean $(PRJ_DIRS) -P zbx_formatting.gpr
 	-$(RM) $(wildcard xformatting_*.*)

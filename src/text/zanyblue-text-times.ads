@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -64,12 +64,6 @@ package ZanyBlue.Text.Times is
                     Template  : Wide_String;
                     Locale    : Locale_Type) return Wide_String;
    --  Format a time value according to the Template.
-
-   function Day_In_Week (Day   : Day_Number;
-                         Month : Month_Number;
-                         Year  : Year_Number) return Day_Type;
-   --  Return the day of the week given a particular date.  This is
-   --  a utility routine exposed here mainly for testing purposes.
 
 private
 

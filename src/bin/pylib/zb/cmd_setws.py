@@ -77,16 +77,11 @@ class Impl(zb.Handler):
                 ws_name
             ))
             return
-        venv = self.locate_venv(ws_location)
-        if venv is None:
-            self.error("Error: Could not locate a virtual environment")
-            return
         self.info("Setting ZanyBlue workspace to \"{0}\" at \"{1}\"".format(
             ws_name,
             ws_location
         ))
         os.environ['ZBDEV_WS'] = ws_name
-        os.environ['ZBDEV_VENV'] = venv
         os.environ['ZBDEV_HOME'] = os.environ['HOME']
         os.environ["ZBDEV_WSDIR"] = ws_location
         os.environ['HOME'] = self.get_param("setws_home")
@@ -100,16 +95,3 @@ class Impl(zb.Handler):
             self.info("Prepending the PATH \"{0}\"".format(path))
             self.prepend_path(path)
         subprocess.call("/bin/bash", cwd=ws_location)
-
-    def locate_venv(self, ws_location):
-        venv_dirname = self.get_param("venv_name")
-        curpath = ws_location
-        while True:
-            venv_path = os.path.join(curpath, venv_dirname)
-            if os.path.exists(venv_path):
-                return venv_path
-            next_path = os.path.dirname(curpath)
-            if curpath == next_path:
-                return None
-            curpath = next_path
-        return None

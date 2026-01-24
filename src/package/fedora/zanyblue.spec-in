@@ -47,9 +47,7 @@ License:        BSD
 URL:            http://www.zanyblue.com/
 Source:         zanyblue-%{version}.tar.gz
 
-BuildRequires:  gcc-gnat make fedora-gnat-project-common gprbuild
-BuildRequires:  ahven-devel
-BuildRequires:  python-sphinx python-sphinxcontrib-programoutput
+BuildRequires:  gcc-gnat make fedora-gnat-project-common gprbuild ahven-devel
 # Build only on architectures where gcc-gnat is available:
 ExclusiveArch:  %{GNAT_arches}
 
@@ -58,6 +56,8 @@ ZanyBlue provided a library and set of tools to support \
 internationalized Ada applications using a model similar to Java.  Localized \
 messages are externalized into properties files which are compiled by the \
 ZanyBlue utilities into Ada for use by Ada applications.
+
+%global debug_package %{nil}
 
 %description %{common_description}
 
@@ -76,13 +76,16 @@ developing applications that use ZanyBlue.
 %setup -q
 
 %build
+export HARDWARE_PLATFORM=%{_arch}
 make -C src
 
 %install
+export HARDWARE_PLATFORM=%{_arch}
 rm -rf $RPM_BUILD_ROOT
 make -C src INSTALL_DIR=$RPM_BUILD_ROOT/usr install
 
 %check
+export HARDWARE_PLATFORM=%{_arch}
 export LANG=en_US
 make -C src/test check
 

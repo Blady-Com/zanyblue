@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2017, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -188,7 +188,7 @@ package body ZBTest.States is
                    All_Scopes  : Boolean) is
       File : File_Type;
    begin
-      Create (File, Mode => Out_File, Name => Wide_To_UTF8 (File_Name));
+      Create (File, Mode => Out_File, Name => To_UTF8 (File_Name));
       State.Dump (File, All_Scopes);
       Close (File);
    end Dump;
@@ -631,7 +631,7 @@ package body ZBTest.States is
             Print_00033 (+State.Get_String ("prompt"), With_NL => False);
          end if;
          State.Increment ("_lineno", Deep => False);
-         State.Execute_Line (Wide_From_UTF8 (Get_Line (Input)), Interactive);
+         State.Execute_Line (From_UTF8 (Get_Line (Input)), Interactive);
       end loop;
    exception
    when End_Error =>
@@ -646,7 +646,7 @@ package body ZBTest.States is
 
       use Ada.Directories;
 
-      File_Name_S : constant String := Wide_To_UTF8 (File_Name);
+      File_Name_S : constant String := To_UTF8 (File_Name);
       File_Size : constant Natural := Natural (Size (File_Name_S));
       subtype Element_Type is String (1 .. File_Size);
       package File_IO is new Ada.Direct_IO (Element_Type);

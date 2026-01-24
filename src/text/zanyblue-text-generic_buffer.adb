@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -91,9 +91,13 @@ package body ZanyBlue.Text.Generic_Buffer is
    -- Add --
    ---------
 
-   procedure Add (Buffer : in out Buffer_Type; Data : Wide_Character) is
+   procedure Add (Buffer : in out Buffer_Type;
+                  Data : Wide_Character;
+                  Count : Positive := 1) is
    begin
-      Append (Buffer.Data, Data);
+      for I in 1 .. Count loop
+         Append (Buffer.Data, Data);
+      end loop;
    end Add;
 
    ---------

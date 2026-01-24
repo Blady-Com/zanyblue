@@ -40,8 +40,15 @@
 #
 
 # If run from within the source tree, add the bin directory to the path
-PATH:=../../../bin:$(PATH)
+DEV_BIN_DIR=../../../bin
+DEV_GPR_DIR=../../../src
+INS_BIN_DIR=../../../../../bin
+INS_GPR_DIR=../../../../gpr
+PATH:=$(DEV_BIN_DIR):$(INS_BIN_DIR):$(PATH)
 export PATH
+
+# Projects directory (dev and installed)
+PRJ_DIRS=-aP$(DEV_GPR_DIR) -aP$(INS_GPR_DIR)
 
 RM=rm -f
 ifeq ($(OS),Windows_NT)
@@ -49,7 +56,7 @@ RM=del
 endif
 
 zbx_jenkins:	$(wildcard *.ad?) jenkins-messages.ads jenkins-messages.adb
-	gprbuild -q -p -aP../../../src -P zbx_jenkins.gpr
+	gprbuild $(PRJ_DIRS) -q -p -P zbx_jenkins.gpr
 
 jenkins-messages.ads jenkins-messages.adb: $(wildcard mesg/*.properties)
 	zbmcompile -O -v Jenkins.Messages -d mesg App Jenkins
@@ -61,7 +68,7 @@ run_%:	zbx_jenkins
 	zbx_jenkins -l$*
 
 clean:
-	gprclean -aP../../../src -P zbx_jenkins.gpr
+	gprclean $(PRJ_DIRS) -P zbx_jenkins.gpr
 	-$(RM) $(wildcard jenkins-messages.*)
 
 # Following definitions are used to sync the properties from a Git clone of the

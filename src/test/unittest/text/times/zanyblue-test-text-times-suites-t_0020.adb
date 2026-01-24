@@ -1,7 +1,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,22 +33,38 @@
 --
 
 with Ada.Calendar;
+with Ada.Calendar.Time_Zones;
 with ZanyBlue.Text.Locales;
 
 separate (ZanyBlue.Test.Text.Times.Suites)
 procedure T_0020 (T : in out Test_Case'Class) is
 
    use Ada.Calendar;
+   use Ada.Calendar.Time_Zones;
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Times;
 
-   Locale    : constant Locale_Type := Make_Locale ("en_US");
-   V1        : constant Time := Time_Of (1904, 6, 16, Duration (60483));
-   V2        : constant Time := Time_Of (1904, 11, 16, Duration (306));
-   Arg1      : constant Time_Argument_Type := Create (V1);
-   Arg2      : constant Time_Argument_Type := Create (V2);
+   procedure Check (Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Value     : Wide_String);
+
+   procedure Check (Type_Name : Wide_String;
+                    Template  : Wide_String;
+                    Value     : Wide_String) is
+
+      Locale    : constant Locale_Type := Make_Locale ("en_IE");
+      V1        : constant Time := Time_Of (1904, 6, 16, Duration (60483));
+      Arg1      : constant Time_Argument_Type := Create (V1, -60);
+
+   begin
+      Check_Value (T, Arg1.Format (Type_Name, Template, Locale), Value,
+                   """" & Type_Name & "/" & Template & """ format");
+   end Check;
 
 begin
-   Check_Value (T, Arg1.Format ("", "mm", Locale), "48");
-   Check_Value (T, Arg2.Format ("", "mm", Locale), "05");
+   Check ("date", "",       "6/16/04");
+   Check ("date", "full",   "Thursday 16 June 1904");
+   Check ("date", "long",   "June 16, 1904");
+   Check ("date", "medium", "Jun 16, 1904");
+   Check ("date", "short",  "6/16/04");
 end T_0020;

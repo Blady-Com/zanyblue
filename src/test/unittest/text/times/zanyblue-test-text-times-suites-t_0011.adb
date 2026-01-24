@@ -1,7 +1,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2018, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,25 +33,36 @@
 --
 
 with Ada.Calendar;
+with Ada.Calendar.Time_Zones;
 with ZanyBlue.Text.Locales;
 
 separate (ZanyBlue.Test.Text.Times.Suites)
 procedure T_0011 (T : in out Test_Case'Class) is
 
    use Ada.Calendar;
+   use Ada.Calendar.Time_Zones;
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Times;
 
-   Locale    : constant Locale_Type := Make_Locale ("en_US");
-   V1        : constant Time := Time_Of (1904, 6, 16, Duration (60483));
-   V2        : constant Time := Time_Of (1904, 6, 16, Duration (17283));
-   V3        : constant Time := Time_Of (1904, 6, 16, Duration (43200));
-   Arg1      : constant Time_Argument_Type := Create (V1);
-   Arg2      : constant Time_Argument_Type := Create (V2);
-   Arg3      : constant Time_Argument_Type := Create (V3);
+   procedure Check (Format : Wide_String;
+                    Value  : Wide_String);
+
+   procedure Check (Format : Wide_String;
+                    Value  : Wide_String) is
+
+      Locale    : constant Locale_Type := Make_Locale ("fr_FR");
+      V1        : constant Time := Time_Of (1904, 6, 16, Duration (60483));
+      Arg1      : constant Time_Argument_Type := Create (V1, -60);
+
+   begin
+      Check_Value (T, Arg1.Format ("", Format, Locale), Value,
+                   "Format """ & Format & """ style");
+   end Check;
 
 begin
-   Check_Value (T, Arg1.Format ("", "a", Locale), "PM");
-   Check_Value (T, Arg2.Format ("", "a", Locale), "AM");
-   Check_Value (T, Arg3.Format ("", "a", Locale), "noon");
+   Check ("",       "16/06/1904 16:48");
+   Check ("full",   "jeudi 16 juin 1904 16:48:03 GMT-01:00");
+   Check ("long",   "16 juin 1904 16:48:03 GMT-1");
+   Check ("medium", "16 juin 1904 16:48:03");
+   Check ("short",  "16/06/1904 16:48");
 end T_0011;

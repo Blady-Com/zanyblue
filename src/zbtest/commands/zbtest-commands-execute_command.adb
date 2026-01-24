@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2017, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -132,16 +132,16 @@ procedure Execute_Command (State : in out State_Type;
       Print_00029 (+Command);
       for I in Args_Index .. Args_Index + N_Args - 1 loop
          Arguments (I - Args_Index + 1) :=
-                                   new String'(Wide_To_UTF8 (Value (Args, I)));
+                                     new String'(To_UTF8 (Value (Args, I)));
          Append (Command_Line, Value (Args, I));
          Append (Command_Line, " ");
       end loop;
       if Output_Name'Length > 0 then
-         GNAT.OS_Lib.Spawn (Wide_To_UTF8 (Command), Arguments,
-                            Wide_To_UTF8 (Output_Name),
+         GNAT.OS_Lib.Spawn (To_UTF8 (Command), Arguments,
+                            To_UTF8 (Output_Name),
                             Success, Return_Code);
       else
-         Return_Code := GNAT.OS_Lib.Spawn (Wide_To_UTF8 (Command), Arguments);
+         Return_Code := GNAT.OS_Lib.Spawn (To_UTF8 (Command), Arguments);
       end if;
       if not (Expect_Failure xor Return_Code = 0) then
          Register_Execute_Failure (State, To_Wide_String (Command_Line),

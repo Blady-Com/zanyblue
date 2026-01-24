@@ -83,6 +83,15 @@ your ``ADA_PROJECT_PATH`` should allow the use of the ZanyBlue
 library with ``gprbuild`` projects.  See the text examples and
 the GPS build instructions.
 
+Installing
+----------
+
+To install, using ``gprinstall``, the ``install`` target can be
+used.  The target requires an installation directory be defined
+on the command line via the ``INSTALL_DIR`` macro, e.g.,::
+
+    $ make INSTALL_DIR=/opt/adatools install
+
 .. _zb-intro-testing:
 
 Testing

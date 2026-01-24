@@ -227,6 +227,30 @@ package body ZanyBlue.Text.Locales is
       return To_String (Locale_Data (Index).Date_Time_Formats (Style));
    end Date_Time_Format;
 
+   --------------
+   -- Day_Name --
+   --------------
+
+   function Day_Name (Locale : Locale_Type;
+                      Day    : Day_Type;
+                      Width  : Localized_Width := Abbreviated)
+      return Wide_String
+   is
+   begin
+      case Width is
+      when Abbreviated =>
+         return Short_Day_Name (Locale, Day);
+      when Short =>
+         --  TODO: Implement Short!
+         return Short_Day_Name (Locale, Day);
+      when Narrow =>
+         --  TODO: Implement Narrow!
+         return Short_Day_Name (Locale, Day);
+      when Wide =>
+         return Full_Day_Name (Locale, Day);
+      end case;
+   end Day_Name;
+
    -------------------------
    -- Day_Period_For_Time --
    -------------------------
@@ -249,11 +273,16 @@ package body ZanyBlue.Text.Locales is
    ---------------------
    -- Day_Period_Name --
    ---------------------
+   --
+   --  TODO: Implement Width for Day_Period_Name
+   --
 
    function Day_Period_Name (Locale     : Locale_Type;
-                             Day_Period : Day_Period_Type)
+                             Day_Period : Day_Period_Type;
+                             Width      : Localized_Width := Abbreviated)
       return Wide_String
    is
+      pragma Unreferenced (Width);
       Index : constant Trait_Index_Type := Locale.Traits_Index;
    begin
       return To_String (Locale_Data (Index).Day_Period_Names (Day_Period));
@@ -402,8 +431,13 @@ package body ZanyBlue.Text.Locales is
    --------------
 
    function Era_Name (Locale : Locale_Type;
-                      Era    : Era_Type) return Wide_String
+                      Era    : Era_Type;
+                      Width  : Localized_Width := Abbreviated)
+      return Wide_String
    is
+
+      pragma Unreferenced (Width);
+
       Index : constant Trait_Index_Type := Locale.Traits_Index;
    begin
       return To_String (Locale_Data (Index).Era_Names (Era));
@@ -785,6 +819,28 @@ package body ZanyBlue.Text.Locales is
       return Make_Locale (To_Wide_String (Locale_String));
    end Make_Locale_Narrow;
 
+   ----------------
+   -- Month_Name --
+   ----------------
+   --
+   --
+
+   function Month_Name (Locale : Locale_Type;
+                        Month  : Month_Type;
+                        Width  : Localized_Width := Abbreviated)
+      return Wide_String is
+   begin
+      case Width is
+      when Abbreviated =>
+         return Short_Month_Name (Locale, Month);
+      when Narrow | Short =>
+         --  TODO: Implement Narrow and Short!
+         return Short_Month_Name (Locale, Month);
+      when Wide =>
+         return Full_Month_Name (Locale, Month);
+      end case;
+   end Month_Name;
+
    -------------------------------
    -- Number_Of_Defined_Locales --
    -------------------------------
@@ -883,6 +939,24 @@ package body ZanyBlue.Text.Locales is
 
    function Pool return Wide_String is
       separate;
+
+   ------------------
+   -- Quarter_Name --
+   ------------------
+   --
+   --  TODO: Implement, extend text/times/lower_q tests
+   --
+
+   function Quarter_Name (Locale  : Locale_Type;
+                          Quarter : Quarter_Type;
+                          Width   : Localized_Width := Abbreviated)
+      return Wide_String is
+      pragma Unreferenced (Locale);
+      pragma Unreferenced (Quarter);
+      pragma Unreferenced (Width);
+   begin
+      return "Quarter_Name";
+   end Quarter_Name;
 
    ------------
    -- Script --
