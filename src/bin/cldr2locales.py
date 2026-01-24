@@ -21,7 +21,12 @@ def add_root_locale(locales):
     index = locales.add_locale("")
     locales.set_root_values(index)
 
+def unicode_setup():
+    sys.stdout = codecs.lookup('utf-8')[-1](sys.stdout)
+    sys.stderr = codecs.lookup('utf-8')[-1](sys.stderr)
+
 def main():
+    unicode_setup()
     parser = OptionParser(usage = __doc__)
     parser.add_option("-v", "--verbose",
                       action="store_true",
@@ -45,26 +50,18 @@ def main():
                       default="en",
                       help="Base locale for properties files")
     (options, args) = parser.parse_args()
-    if options.embed is None and options.props_dir is None:
-        print "Error: require either '-e' or '-p' be specified"
-        return 1
-    if options.embed is not None and options.props_dir is not None:
-        print "Error: cannot use both '-e' or '-p' options"
+    if options.embed is None or options.props_dir is None:
+        print "Error: require both '-e' and '-p' be specified"
         return 1
     verbose = options.verbose
-    locales = LocaleList(options.cldr_dir, options.embed is not None)
-    if options.embed is not None:
-        add_root_locale(locales)
+    locales = LocaleList(options.cldr_dir)
+    add_root_locale(locales)
     for name in args:
         index = locales.load_locale(name, verbose)
-    if options.embed is not None:
-        locales.resolve_locale_aliases(verbose)
-        locales.resolve_locales(verbose)
-        locales.sort_strings()
-        locales.embed(options.embed)
-    else:
-        locales.resolve_properties_aliases(verbose)
-        locales.write_properties(options.props_dir, options.base)
+    locales.resolve_locale_aliases(verbose)
+    locales.resolve_locales(verbose)
+    locales.write_properties(options.props_dir, options.base)
+    locales.embed(options.embed)
 
 if __name__ == "__main__":
     sys.exit(main())

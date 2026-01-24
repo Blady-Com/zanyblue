@@ -1,56 +1,104 @@
 #
-# Copyright (C) 2008, Michael Rohan
+#  ZanyBlue, an Ada library and framework for finite element analysis.
 #
-# ZanyBlue is free software;  you can  redistribute it and/or modify it
-# under terms of the  GNU General Public License as published  by the Free
-# Software  Foundation;  either version 2,  or (at your option) any later
-# version.  ZanyBlue is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY;  without even the  implied warranty of MERCHANTABILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for  more details.  You should have  received  a copy of the GNU General
-# Public License  distributed with ZanyBlue;  see file COPYING.  If not, write
-# to  the  Free Software Foundation,  51  Franklin  Street,  Fifth  Floor,
-# Boston, MA 02110-1301, USA.
+#  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+#  All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#
+#    * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#    * Redistributions in binary form must reproduce the above copyright
+#      notice, this list of conditions and the following disclaimer in the
+#      documentation and/or other materials provided with the distribution.
+#
+#    * Neither the name of ZanyBlue nor the names of its contributors may
+#      be used to endorse or promote products derived from this software
+#      without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+#  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+#  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+#  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+#  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+#  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+#  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+#  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+#  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+#  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
 #
 # Makefile for the ZanyBlue documentation
 #
 
 TOP=../..
-DOCDIR=$(TOP)/doc
-HTMLDIR=$(DOCDIR)/html
+GNATHTML=$(SRCDIR)/bin/gnathtml.pl
+DOCSUBST=$(SRCDIR)/bin/docsubst.py
+MKNOTICES=$(SRCDIR)/bin/mknotices.py
+MKDEFSHTI=$(SRCDIR)/bin/mkdefshti.pl
+DEFSHTI=$(SRCDIR)/doc/website/defs.hti
+GNATHTMLFLAGS+=-I$(INCDIR)
+GNATHTMLFLAGS+=-I$(LIBDIR)
+GNATHTMLFLAGS+=-o $(HTMLREFDIR)
+GNATHTMLFLAGS+=-ext html
+GNATHTMLFLAGS+=-l 5
+LABELSPL=$(TOP)/doc/zanyblue/labels.pl
+DOCSUBSTFLAGS+=ZB_VERSION=$(VERSION)
+DOCSUBSTFLAGS+=ZB_STATUS=$(V_STATUS)
+DOCSUBSTFLAGS+=SVN_VERSION=$(SVN_VERSION)
+ZBFILES+=$(patsubst $(INCDIR)/%,%,$(wildcard $(INCDIR)/*.ads))
 CLEAN_FILES+=$(wildcard *.aux)
 CLEAN_FILES+=$(wildcard *.log)
 CLEAN_FILES+=$(wildcard *.dvi)
 CLEAN_FILES+=$(wildcard *.toc)
-CLEAN_FILES+=zbdefs.tex
+CLEAN_FILES+=$(wildcard *.idx)
+CLEAN_FILES+=$(wildcard *.ind)
+CLEAN_FILES+=$(wildcard *.bbl)
+CLEAN_FILES+=$(wildcard *.blg)
+CLEAN_FILES+=$(wildcard *.ilg)
+CLEAN_FILES+=$(wildcard *.out)
+CLEAN_FILES+=$(wildcard *.pdf)
+CLEAN_FILES+=$(wildcard zbdefs.tex)
+CLEAN_FILES+=$(wildcard $(TOP)/NOTICES.txt)
+CLEAN_FILES+=$(wildcard $(TOP)/src/doc/website/notices.htp)
+CLEAN_FILES+=$(wildcard $(DEFSHTI))
 
-all::	dvifile
+all::	pdffile html notices $(DEFSHTI)
+	cp zanyblue.pdf $(DOCDIR)/zanyblue.pdf
 
-dvifile:	zanyblue.dvi
+$(DEFSHTI):	$(LABELSPL)
+	$(MKDEFSHTI) $(DEFSHTI) $(LABELSPL) $(VERSION) $(V_STATUS) $(SVN_VERSION)
 
-zanyblue.dvi:	zbdefs.tex force
-	latex zanyblue.tex
-
-install:	zbdefs.tex pdffile html
-
-pdffile:
+pdffile:	zbdefs.tex
 	pdflatex zanyblue.tex
-	makeindex zanyblue.idx
+	bibtex zanyblue.aux
 	pdflatex zanyblue.tex
-	makeindex zanyblue.idx
 	pdflatex zanyblue.tex
-	makeindex zanyblue.idx
-	mv zanyblue.pdf $(DOCDIR)/zanyblue.pdf
 
-html:
+html:	zbdefs.tex $(HTMLREFDIR)
+	rm -rf $(HTMLDIR)
+	mkdir $(HTMLDIR)
 	latex2html -local_icons -dir $(HTMLDIR) zanyblue.tex 
+	$(GNATHTML) $(GNATHTMLFLAGS) $(ZBFILES)
 
-clean::
-	rm -f $(CLEAN_FILES)
+notices:
+	$(MKNOTICES)
+
+$(HTMLREFDIR):
+	mkdir -p $@
 
 force:
 
-include $(TOP)/src/zanyblue-version.mk
+include $(TOP)/src/mkfile/conf.mk
 
 zbdefs.tex:
-	sed -e s/VERSION/$(VERSION)/ -e s/V_STATUS/$(V_STATUS)/ -e s/SVN_VERSION/$(SVN_VERSION)/ zbdefs.tex-in > zbdefs.tex
+	$(DOCSUBST) $(DOCSUBSTFLAGS) zbdefs.tex-in zbdefs.tex
+
+# Include general rules.
+include $(TOP)/src/mkfile/rules.mk
+

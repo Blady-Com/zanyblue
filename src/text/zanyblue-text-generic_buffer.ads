@@ -1,22 +1,38 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
---  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
 --
---  This program is free software; you can redistribute it and/or modify
---  it under the terms of the GNU General Public License as published by
---  the Free Software Foundation; either version 2 of the License, or
---  (at your option) any later version.
+--  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  All rights reserved.
 --
---  This program is distributed in the hope that it will be useful,
---  but WITHOUT ANY WARRANTY; without even the implied warranty of
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
---  GNU General Public License for more details.
+--  Redistribution and use in source and binary forms, with or without
+--  modification, are permitted provided that the following conditions
+--  are met:
 --
---  You should have received a copy of the GNU General Public License
---  along with this program; if not, write to the Free Software
---  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+--    * Redistributions of source code must retain the above copyright
+--      notice, this list of conditions and the following disclaimer.
+--
+--    * Redistributions in binary form must reproduce the above copyright
+--      notice, this list of conditions and the following disclaimer in the
+--      documentation and/or other materials provided with the distribution.
+--
+--    * Neither the name of ZanyBlue nor the names of its contributors may
+--      be used to endorse or promote products derived from this software
+--      without specific prior written permission.
+--
+--  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+--  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+--  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+--  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+--  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+--  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+--  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+--  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+--  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+--  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+--  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Ada.Strings.Wide_Unbounded;
 with ZanyBlue.Text.Locales;
 
 generic
@@ -25,60 +41,41 @@ package ZanyBlue.Text.Generic_Buffer is
 
    use ZanyBlue.Text.Locales;
 
-   type Buffer_Type (Size : Positive) is
-      private;
+   type Buffer_Type is private;
 
    Null_Character : constant Wide_Character := Wide_Character'Val (0);
    --  Utility character value used to indicate no character.
 
-   Overflow : exception;
-   --  Buffer overflow.
-
-   procedure Add_Left (Buffer : in out Buffer_Type;
-                       Data   : Wide_Character);
+   procedure Add (Buffer : in out Buffer_Type;
+                  Data   : in Wide_Character);
    --  Append a character to left side of the buffer.
 
-   procedure Add_Left (Buffer : in out Buffer_Type;
-                       Data   : Wide_String);
+   procedure Add (Buffer : in out Buffer_Type;
+                  Data   : in Wide_String);
    --  Append a string to left side of the buffer.
 
-   procedure Add_Right (Buffer : in out Buffer_Type;
-                        Data   : Wide_Character);
-   --  Prepend a character to right side of the buffer.
-
-   procedure Add_Right (Buffer : in out Buffer_Type;
-                        Data   : Wide_String);
-   --  Prepend a string to right side of the buffer.
-
-   procedure Accumulate_Right (Buffer     : in out Buffer_Type;
-                               Value      : in out Integer_Type;
-                               Locale     : Locale_Type;
-                               Width      : Natural := 0;
-                               Scale      : Natural := 0;
-                               Prefix     : Wide_Character := Null_Character;
-                               Base       : Positive := 10;
-                               Lowercase  : Boolean := True);
-   --  Add (accumulate) a numeric value to the right side of the buffer.
-
-   procedure Accumulate_Left (Buffer     : in out Buffer_Type;
-                              Value      : Integer_Type;
-                              Locale     : Locale_Type;
-                              Width      : Natural := 1);
+   procedure Accumulate (Buffer     : in out Buffer_Type;
+                         Value      : in Integer_Type;
+                         Locale     : in Locale_Type;
+                         Width      : in Natural := 1;
+                         Fill       : in Wide_String := "";
+                         Base       : in Positive := 10;
+                         Lowercase  : in Boolean := True);
    --  Add (accumulate a numeric value to the left side of the buffer.
+   --  The number is formatted with a field width of "Width" character
+   --  filled to the left with the first character of the fill string
+   --  or the locale "0" character if the fill string is empty.
 
-   function Left (Buffer : Buffer_Type) return Wide_String;
+   function To_String (Buffer : in Buffer_Type) return Wide_String;
    --  Return the value generated on the left.
-
-   function Right (Buffer : Buffer_Type) return Wide_String;
-   --  Return the value generated on the right.
 
 private
 
-   type Buffer_Type (Size : Positive) is
+   use Ada.Strings.Wide_Unbounded;
+
+   type Buffer_Type is
       record
-          Data         : Wide_String (1 .. Size);
-          Left_Index   : Positive := 1;
-          Right_Index  : Natural := Size;
+         Data : Unbounded_Wide_String;
       end record;
 
 end ZanyBlue.Text.Generic_Buffer;

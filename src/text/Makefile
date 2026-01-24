@@ -1,20 +1,35 @@
 #
 #  ZanyBlue, an Ada library and framework for finite element analysis.
-#  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
 #
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
+#  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+#  All rights reserved.
 #
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
 #
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#    * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#    * Redistributions in binary form must reproduce the above copyright
+#      notice, this list of conditions and the following disclaimer in the
+#      documentation and/or other materials provided with the distribution.
+#
+#    * Neither the name of ZanyBlue nor the names of its contributors may
+#      be used to endorse or promote products derived from this software
+#      without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+#  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+#  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+#  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+#  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+#  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+#  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+#  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+#  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+#  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
 # Regeneration of the CLDR data
@@ -24,12 +39,11 @@ CLDR2LOCALES=$(TOP)/src/bin/cldr2locales.py
 CLDR_PACKAGE=ZanyBlue.Text.CLDR_Data
 LOCALES_SOURCE=zanyblue-text-locales.adb
 MESGDIR=mesg
-CLDR_DIR=$(TOP)/src/libs3rd/cldr/common/main
+CLDR_DIR=$(TOP)/libs3rd/cldr
 FACILTIES=l s t
 BASE_LOCALE=en
-LOCALES=ar cs da de el en en_AU en_IE en_GB es fi fr iw he \
-	hu it ja ko nl no pl pt ro ru sk sv th tr zh zh_Hant
-LOCALE_OPTS=$(patsubst %,-L %,$(LOCALES))
+LOCALES=ar cs da de el en en_AU en_CA en_IE en_GB en_NZ en_ZA es fi fr ga he \
+	hu it ja ko nb nl pl pt ro ru sk sv th tr zh zh_Hant
 # The following CLDR locales were excluding
 #    en_Dsrt_US
 #    en_Dsrt
@@ -59,7 +73,7 @@ ALL_LOCALES=aa_DJ aa_ER aa_ET aa af_NA af af_ZA ak_GH ak am_ET am ar_AE \
 	ha_Latn_GH ha_Latn_NE ha_Latn_NG ha_Latn ha_NE ha_NG ha_SD \
 	haw_US haw ha he_IL he hi_IN hi hr_HR hr hu_HU hu hy_AM hy \
 	ia id_ID id ig_NG ig ii_CN ii in is_IS is it_CH it_IT it iu\
-	iw ja_JP ja jmc_TZ jmc kab_DZ kab ka_GE kaj_NG kaj kam_KE kam \
+	ja_JP ja jmc_TZ jmc kab_DZ kab ka_GE kaj_NG kaj kam_KE kam \
 	ka kcg_NG kcg kde_TZ kde kea_CV kea kfo_CI kfo khq_ML khq ki_KE \
 	ki kk_Cyrl_KZ kk_Cyrl kk_KZ kk kl_GL kln_KE kln kl km_KH km \
 	kn_IN kn kok_IN ko_KR kok ko kpe_GN kpe_LR kpe ksb_TZ ksb ksh_DE \
@@ -70,7 +84,7 @@ ALL_LOCALES=aa_DJ aa_ER aa_ET aa af_NA af af_ZA ak_GH ak am_ET am ar_AE \
 	mg mi_NZ mi mk_MK mk ml_IN ml mn_CN mn_Cyrl_MN mn_Cyrl mn_MN \
 	mn_Mong_CN mn_Mong mn mo mr_IN mr ms_BN ms_MY ms mt_MT mt my_MM \
 	my naq_NA naq nb_NO nb nds_DE nds nd nd_ZW ne_IN ne_NP ne nl_BE \
-	nl_NL nl nn_NO nn no nr nr_ZA nso nso_ZA ny_MW nyn_UG nyn ny oc_FR \
+	nl_NL nl nn_NO nn nr nr_ZA nso nso_ZA ny_MW nyn_UG nyn ny oc_FR \
 	oc om_ET om_KE om or_IN or pa_Arab_PK pa_Arab pa_Guru_IN pa_Guru \
 	pa_IN pa_PK pa pl_PL pl ps_AF ps pt_BR pt_GW pt_MZ pt_PT pt rm_CH \
 	rm rof_TZ rof ro_MD root ro_RO ro ru_MD ru_RU ru_UA ru rwk_TZ rwk \
@@ -93,28 +107,26 @@ ALL_LOCALES=aa_DJ aa_ER aa_ET aa af_NA af af_ZA ak_GH ak am_ET am ar_AE \
 
 # Include configuration definitions
 include $(TOP)/src/mkfile/conf.mk
+include $(TOP)/src/mkfile/rules.mk
 
 all:
-	@echo
-	@echo "This Makefile is only used to regenerate the compiled"
-	@echo "locale data file.  Use"
-	@echo
-	@echo "    make regenerate"
-	@echo
-	@echo "to perform this regeneration after a build (the zbmcompile"
-	@echo "utility is needed)."
-	@echo
+	$(warning )
+	$(warning This Makefile is only used to regenerate the compiled)
+	$(warning locale data file.  Use)
+	$(warning )
+	$(warning     make regenerate)
+	$(warning )
+	$(warning to perform this regeneration after a build, the zbmcompile)
+	$(warning utility is needed.)
+	$(warning )
 
-regenerate:	zbmcompile cldr locales
+regenerate:	zbmcompile cldr
 
 cldr:	properties
-	$(ZBMCOMPILE) -v -i $(CLDR_PACKAGE) -B $(LOCALE_OPTS) -d $(MESGDIR) $(FACILTIES)
+	$(ZBMCOMPILE) -O -m -v $(CLDR_PACKAGE) -d $(MESGDIR) $(FACILTIES)
 
 properties:
-	$(PYTHON) $(CLDR2LOCALES) -v -d $(CLDR_DIR) -B $(BASE_LOCALE) -p $(MESGDIR) $(LOCALES)
-
-locales:
-	$(PYTHON) $(CLDR2LOCALES) -v -d $(CLDR_DIR) -e $(LOCALES_SOURCE) $(LOCALES)
+	$(PYTHON) $(CLDR2LOCALES) -v -d $(CLDR_DIR) -B $(BASE_LOCALE) -p $(MESGDIR) -e $(LOCALES_SOURCE) $(LOCALES)
 
 fullset:
 	$(MAKE) LOCALES="$(ALL_LOCALES)" regenerate
@@ -122,6 +134,6 @@ fullset:
 zbmcompile: $(ZBMCOMPILE)
 
 $(ZBMCOMPILE):
-	@echo "Error: The executable '$(ZBMCOMPILE)' is not present"
-	@echo "Error: Need to perform a build before regenerating locale data"
-	exit 1
+	$(warning The executable '$(ZBMCOMPILE)' is not present)
+	$(warning Need to perform a build before regenerating locale data)
+	$(error Please rebuild)

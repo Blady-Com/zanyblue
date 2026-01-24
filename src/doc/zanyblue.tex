@@ -1,9 +1,45 @@
+%
+%  ZanyBlue, an Ada library and framework for finite element analysis.
+%
+%  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+%  All rights reserved.
+%
+%  Redistribution and use in source and binary forms, with or without
+%  modification, are permitted provided that the following conditions
+%  are met:
+%
+%    * Redistributions of source code must retain the above copyright
+%      notice, this list of conditions and the following disclaimer.
+%
+%    * Redistributions in binary form must reproduce the above copyright
+%      notice, this list of conditions and the following disclaimer in the
+%      documentation and/or other materials provided with the distribution.
+%
+%    * Neither the name of ZanyBlue nor the names of its contributors may
+%      be used to endorse or promote products derived from this software
+%      without specific prior written permission.
+%
+%  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+%  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+%  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+%  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+%  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+%  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+%  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+%  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+%  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+%  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+%  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+%
 \documentclass[11pt,titlepage]{report}
 
 \input{zbdefs}
+\usepackage{graphicx}
+\usepackage{html}
+\usepackage[utf8]{inputenc}
 \usepackage{makeidx}
 
-\title{ZanyBlue}
+\title{ZanyBlue Ada Libraries and Applications}
 \date{Version: \Version}
 \author{Michael Rohan}
 
@@ -16,20 +52,38 @@
 \maketitle
 \clearpage
 \begin{titlepage}
-Copyright \copyright{} 2009-2010, Michael Rohan.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+\begin{itemize}
+\item Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
 
-This document may be copied, in whole or in part, in any form or by any
-means, as is or with alterations, provided that (1) alterations are clearly
-marked as alterations and (2) this copyright notice is included
-unmodified in any copy.
+\item Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
 
-Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
-any later version published by the Free Software Foundation; with the
-Invariant Sections being ``GNU Free Documentation License'', with the
-Front-Cover Texts being ``ZanyBlue Manual'', and with no Back-Cover Texts.
-A copy of the license is included in the section entitled ``GNU Free
-Documentation License''.
+\item Neither the name of ZanyBlue nor the names of its contributors may
+      be used to endorse or promote products derived from this software
+      without specific prior written permission.
+\end{itemize}
+
+\begin{em}
+This software is provided by the copyright holders and contributors
+"as is" and any express or implied warranties, including, but not
+limited to, the implied warranties of merchantability and fitness for
+a particular purpose are disclaimed. In no event shall the copyright
+holder or contributors be liable for any direct, indirect, incidental,
+special, exemplary, or consequential damages (including, but not limited
+to, procurement of substitute goods or services; loss of use, data, or
+profits; or business interruption) however caused and on any theory of
+liability, whether in contract, strict liability, or tort (including
+negligence or otherwise) arising in any way out of the use of this
+software, even if advised of the possibility of such damage.
+\end{em}
+\vfill
+\noindent Copyright \copyright{} 2009-\the\year, Michael Rohan.\\
+\noindent All rights reserved.
 \end{titlepage}
 
 \tableofcontents
@@ -37,8 +91,12 @@ Documentation License''.
 \pagenumbering{arabic}
 
 \input{introduction}
+\input{root}
 \input{text}
-\input{gfdl}
+%\input{zbtest}
 
-\printindex
+\bibliographystyle{plain}
+\bibliography{zanyblue}
+
+%\printindex
 \end{document}

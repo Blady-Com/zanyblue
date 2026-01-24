@@ -1,0 +1,60 @@
+<file include="defs.hti">
+<file include="header.hti" name="Home">
+
+<file include="title.hti">
+
+<div id="contents">
+
+<p>
+ZanyBlue is a project to implementing a finite element based solution of the
+Maxwell field equations.  En route to that goal, supporting libraries and
+applications are being implemented.
+</p>
+
+<h1>Localization Support</h1>
+
+The initial functionality covers localization support for Ada.  This allows
+Ada applications to externalize application messages to properties files, e.g.,
+<pre>
+    Hello=Hello World, I am {0}
+</pre>
+and print the message from within an Ada application using
+<pre>
+    Name : constant String := "Michael";
+    ...
+    Print_Hello (+Name);
+</pre>
+See the <a href="${chp:text:url}">text package</a> documentation and the
+<a href="${sec:zbmcompile:url}">zbmcompile</a> application.
+
+<h1>Parameter Handling</h1>
+
+To support command line handling and user defined parameters and scopes
+in the <tt>zbtest</tt> application, the <tt>Parameters</tt> packages is
+available, e.g.,
+<pre>
+    Parameters : Parameter_Set_Type;
+    ...
+    Parameters.Set_Boolean ("verbose", True);
+    if Parameters.Get_Boolean ("verbose") then
+        Print_Debug_Banner;
+    end if;
+</pre>
+
+<h1>Testing Application</h1>
+
+The stability of the code based is improved via a large set of tests.  These
+tests are split between AUnit based unit-tests and a set of tests designed to
+exercise the ZanyBlue utilities, more black-box style testing.  These tests
+use the <tt>zbtest</tt> utility.  There is no formal documentation on this
+at this time other than the built-in help and the example test scripts in
+the <tt>tests</tt> directory.
+
+<h1>License</h1>
+
+ZanyBlue is distributed under the terms of a BSD-style license.  See the
+<a href="license.html">license</a> page for details.
+
+</div>
+
+<file include="trailer.hti">

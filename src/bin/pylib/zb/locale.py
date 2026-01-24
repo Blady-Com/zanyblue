@@ -23,15 +23,15 @@ Unicode.org:
      sun       1           am     0          decimal
      mon       2         noon     1            group
      tue       3           pm                   list
-     wed       4                     nativezerodigit
-     thu       5                            plussign
-     fri       6                           minussign
+     wed       4                     nativeZeroDigit
+     thu       5                            plusSign
+     fri       6                           minusSign
      sat       7                         exponential
-               8                         percentsign
-               9                            permille
+               8                         percentSign
+               9                            perMille
               10                            infinity
               11                                 nan
-              12                        patterndigit
+              12                        patternDigit
 
 Intermediate dictionaries for days and months support "wide" and "abbreviated".
 
@@ -45,86 +45,435 @@ Formatting information is stored in the "formats" dictionary with keys
 """
 
 import os
+import sys
+
+from copy import deepcopy
 
 from .zbmsg import *
+from .zbxmlsupp import parse_element
+
+#
+# Data structure used to store the locale data parsed from the CLDR XML
+# files.  Each new locale copies this empty data structure on construction.
+_EMPTY_LOCALE_DATA = {
+    'naming': {
+        'alias': None,
+        'day': {
+            'wide': {
+                'sun': None,
+                'mon': None,
+                'tue': None,
+                'wed': None,
+                'thu': None,
+                'fri': None,
+                'sat': None },
+            'abbreviated': {
+                'sun': None,
+                'mon': None,
+                'tue': None,
+                'wed': None,
+                'thu': None,
+                'fri': None,
+                'sat': None } },
+        'month': {
+            'wide': {
+                '1':  None,
+                '2':  None,
+                '3':  None,
+                '4':  None,
+                '5':  None,
+                '6':  None,
+                '7':  None,
+                '8':  None,
+                '9':  None,
+                '10': None,
+                '11': None,
+                '12': None },
+            'narrow': {        # Not used
+                '1':  None,
+                '2':  None,
+                '3':  None,
+                '4':  None,
+                '5':  None,
+                '6':  None,
+                '7':  None,
+                '8':  None,
+                '9':  None,
+                '10': None,
+                '11': None,
+                '12': None },
+            'abbreviated': {
+                '1':  None,
+                '2':  None,
+                '3':  None,
+                '4':  None,
+                '5':  None,
+                '6':  None,
+                '7':  None,
+                '8':  None,
+                '9':  None,
+                '10': None,
+                '11': None,
+                '12': None } },
+        'day_period': {
+            'values': {
+                'am':           None,
+                'weeHours':     None,
+                'earlyMorning': None,
+                'morning':      None,
+                'lateMorning':  None,
+                'noon':         None,
+                'midDay':       None,
+                'afternoon':    None,
+                'evening':      None,
+                'lateEvening':  None,
+                'night':        None,
+                'pm':           None },
+            'rules': {
+                'exact': {
+                    '0':  None,
+                    '1':  None,
+                    '2':  None,
+                    '3':  None,
+                    '4':  None,
+                    '5':  None,
+                    '6':  None,
+                    '7':  None,
+                    '8':  None,
+                    '9':  None,
+                    '10': None,
+                    '11': None,
+                    '12': None,
+                    '13': None,
+                    '14': None,
+                    '15': None,
+                    '16': None,
+                    '17': None,
+                    '18': None,
+                    '19': None,
+                    '20': None,
+                    '21': None,
+                    '22': None,
+                    '23': None },
+                'within': {
+                    '0':  None,
+                    '1':  None,
+                    '2':  None,
+                    '3':  None,
+                    '4':  None,
+                    '5':  None,
+                    '6':  None,
+                    '7':  None,
+                    '8':  None,
+                    '9':  None,
+                    '10': None,
+                    '11': None,
+                    '12': None,
+                    '13': None,
+                    '14': None,
+                    '15': None,
+                    '16': None,
+                    '17': None,
+                    '18': None,
+                    '19': None,
+                    '20': None,
+                    '21': None,
+                    '22': None,
+                    '23': None } } },
+        'era': {
+            '0': None,
+            '1': None },
+        'numeric': {
+            'decimal':         None,
+            'group':           None,
+            'list':            None,
+            'infinity':        None,
+            'plusSign':        None,
+            'minusSign':       None,
+            'exponential':     None,
+            'percentSign':     None,
+            'perMille':        None,
+            'nativeZeroDigit': None,
+            'nan':             None,
+            'patternDigit':    None,
+            'numericDigits':   None } },
+    'formats': {
+        'date': {
+            'full':   None,
+            'long':   None,
+            'medium': None,
+            'short':  None },
+        'time': {
+            'full':   None,
+            'long':   None,
+            'medium': None,
+            'short':  None },
+        'date_time': {
+            'full':   None,
+            'long':   None,
+            'medium': None,
+            'short':  None },
+        'numeric': {
+            'decimal':    None,
+            'scientific': None,
+            'percent':    None,
+            'currency':   None } },
+    '*languages': {},
+    '*scripts': {},
+    '*territories': {},
+    '*alias': None,
+    '*numberingSystem': None,
+    '*layout': 'left-to-right',
+    '*dayperiod': { 'exact': {}, 'within': {} }
+}
+
+#
+# Version of the locale data structure initialized for the base (root) locale.
+
+_ROOT_LOCALE_DATA = {
+    'naming': {
+        'alias': None,
+        'day': {
+            'wide': {
+                'sun': u"Sunday",
+                'mon': u"Monday",
+                'tue': u"Tuesday",
+                'wed': u"Wednesday",
+                'thu': u"Thursday",
+                'fri': u"Friday",
+                'sat': u"Saturday" },
+            'abbreviated': {
+                'sun': u"Sun",
+                'mon': u"Mon",
+                'tue': u"Tue",
+                'wed': u"Wed",
+                'thu': u"Thu",
+                'fri': u"Fri",
+                'sat': u"Sat" } },
+        'month': {
+            'wide': {
+                '1':  u"January",
+                '2':  u"February",
+                '3':  u"March",
+                '4':  u"April",
+                '5':  u"May",
+                '6':  u"June",
+                '7':  u"July",
+                '8':  u"August",
+                '9':  u"September",
+                '10': u"October",
+                '11': u"November",
+                '12': u"December" },
+            'narrow': {        # Not used
+                '1':  u"",
+                '2':  u"",
+                '3':  u"",
+                '4':  u"",
+                '5':  u"",
+                '6':  u"",
+                '7':  u"",
+                '8':  u"",
+                '9':  u"",
+                '10': u"",
+                '11': u"",
+                '12': u"" },
+            'abbreviated': {
+                '1':  u"Jan",
+                '2':  u"Feb",
+                '3':  u"Mar",
+                '4':  u"Apr",
+                '5':  u"May",
+                '6':  u"Jun",
+                '7':  u"Jul",
+                '8':  u"Aug",
+                '9':  u"Sep",
+                '10': u"Oct",
+                '11': u"Nov",
+                '12': u"Dec" } },
+        'day_period': {
+            'values': {
+                'am':           u"AM",
+                'weeHours':     u"",
+                'earlyMorning': u"",
+                'morning':      u"",
+                'lateMorning':  u"",
+                'noon':         u"noon",
+                'midDay':       u"",
+                'afternoon':    u"",
+                'evening':      u"",
+                'lateEvening':  u"",
+                'night':        u"",
+                'pm':           u"PM" },
+            'rules': {
+                'exact': {
+                    '0':  u'am',
+                    '1':  u'am',
+                    '2':  u'am',
+                    '3':  u'am',
+                    '4':  u'am',
+                    '5':  u'am',
+                    '6':  u'am',
+                    '7':  u'am',
+                    '8':  u'am',
+                    '9':  u'am',
+                    '10': u'am',
+                    '11': u'am',
+                    '12': u'pm',
+                    '13': u'pm',
+                    '14': u'pm',
+                    '15': u'pm',
+                    '16': u'pm',
+                    '17': u'pm',
+                    '18': u'pm',
+                    '19': u'pm',
+                    '20': u'pm',
+                    '21': u'pm',
+                    '22': u'pm',
+                    '23': u'pm' },
+                'within': {
+                    '0':  u'am',
+                    '1':  u'am',
+                    '2':  u'am',
+                    '3':  u'am',
+                    '4':  u'am',
+                    '5':  u'am',
+                    '6':  u'am',
+                    '7':  u'am',
+                    '8':  u'am',
+                    '9':  u'am',
+                    '10': u'am',
+                    '11': u'am',
+                    '12': u'pm',
+                    '13': u'pm',
+                    '14': u'pm',
+                    '15': u'pm',
+                    '16': u'pm',
+                    '17': u'pm',
+                    '18': u'pm',
+                    '19': u'pm',
+                    '20': u'pm',
+                    '21': u'pm',
+                    '22': u'pm',
+                    '23': u'pm' } } },
+        'era': {
+            '0': u"BCE",
+            '1': u"CE" },
+        'numeric': {
+            'decimal':         u".",
+            'group':           u",",
+            'list':            u";",
+            'infinity':        u"Inf",
+            'plusSign':        u"+",
+            'minusSign':       u"-",
+            'exponential':     u"E",
+            'percentSign':     u"%",
+            'perMille':        u"‰",
+            'nativeZeroDigit': u"0",
+            'nan':             u"NaN",
+            'patternDigit':    u"#",
+            'numericDigits':   u"0123456789" } },
+    'formats': {
+        'date': {
+            'full':   u"EEEE, MMMM d, y",
+            'long':   u"MMMM d, y",
+            'medium': u"MMM d, y",
+            'short':  u"M/d/yy" },
+        'time': {
+            'full':   u"h:mm:ss a zzzz",
+            'long':   u"h:mm:ss a z",
+            'medium': u"h:mm:ss a",
+            'short':  u"h:mm a" },
+        'date_time': {
+            'full':   u"{1} {0}",
+            'long':   u"{1} {0}",
+            'medium': u"{1} {0}",
+            'short':  u"{1} {0}" },
+        'numeric': {
+            'decimal':    u"#,##0.###",
+            'scientific': u"#E0",
+            'percent':    u"#,##0%",
+            'currency':   u"¤#,##0.00;(¤#,##0.00)" } },
+    '*languages': {},
+    '*scripts': {},
+    '*territories': {},
+    '*alias': None,
+    '*numberingSystem': 'latn',
+    '*layout': 'left-to-right',
+    '*dayperiod': { 'exact': {}, 'within': {} }
+}
 
 class InvalidPathError(Exception):
     """
+    Exception raised with accessing a parameter not already defined.  The
+    Locale initialization routine predefines the expected parameters.  This
+    exception is not raised for parameters with paths starting with '*'.
     """
     def __init__(self, path):
+        """
+        Constructor, just take note of the invalid path.
+        """
         self.path = path
 
     def __str__(self):
-        return "Invalid path {0}".format(self.path)
+        """
+        Exception message.
+        """
+        return "Invalid path \"{0}\"".format(self.path)
 
 
 class Locale(object):
-    def __init__(self, name, strpool, mklocales):
-        self.strpool = strpool
-        self.mklocales = mklocales
-        self.name = self.strpool.index(name)
+    """
+    Representation of the data defined by the CLDR data for an individual
+    locale, day names, numeric formats, etc.
+    """
+
+    def __init__(self, name):
+        """
+        Constructor, take note of the name and assign the 10 character tag
+        value.  The set of parameters is also initailized to the empty values
+        (CLDR parsing will fill them out later).
+        """
+        self.name = name
         self.set_tag_and_level(name)
         self.n_set = 0
-        self.props_data = { "alias": None,
-                            "languages": {},
-                            "scripts": {},
-                            "territories": {} }
-        self.locale_data = { 'naming': {
-                        'alias': None,
-                        'day': {
-                          'wide': {
-                            'sun': None, 'mon': None, 'tue': None, 'wed': None,
-                            'thu': None, 'fri': None, 'sat': None },
-                          'abbreviated': {
-                            'sun': None, 'mon': None, 'tue': None, 'wed': None,
-                            'thu': None, 'fri': None, 'sat': None } },
-                        'month': {
-                          'wide': {
-                             '1': None, '2': None, '3': None, '4': None,
-                             '5': None, '6': None, '7': None, '8': None,
-                             '9': None, '10': None, '11': None, '12': None },
-                           'abbreviated': {
-                             '1': None, '2': None, '3': None, '4': None,
-                             '5': None, '6': None, '7': None, '8': None,
-                             '9': None, '10': None, '11': None, '12': None } },
-                        'day_period': {
-                           'am': None, 'noon': None, 'pm': None },
-                        'era': {
-                           '0': None, '1': None },
-                        'numeric': {
-                           'decimal': None, 'group': None,
-                           'list': None, 'infinity': None,
-                           'plussign': None, 'minussign': None,
-                           'exponential': None, 'percentsign': None,
-                           'permille': None, 'nativezerodigit': None,
-                           'nan': None, 'patterndigit': None } },
-                      'formats': {
-                        'date': {
-                          'full': None, 'long': None,
-                          'medium': None, 'short': None },
-                        'time': {
-                          'full': None, 'long': None,
-                          'medium': None, 'short': None },
-                        'date_time': {
-                          'full': None, 'long': None,
-                          'medium': None, 'short': None },
-                        'numeric': {
-                          'decimal': None, 'scientific': None,
-                          'percent': None, 'currency': None } } }
+        self.locale_data = deepcopy(_EMPTY_LOCALE_DATA);
 
-    def apply_renumbering(self, mapping):
-        self.name = mapping[self.name - 1]
-        self.renumber_data(self.locale_data, mapping)
+    def accumulate_strings(self, strpool):
+        """
+        Accumulate strings from the locale into the string pool object.
+        Indexes are not assigned in this pass as the string storage is
+        optimized then assigned via the apply_string_indexes routine.
+        """
 
-    def renumber_data(self, dataset, mapping):
-        for key in dataset.keys():
-            value = dataset[key]
+    def apply_locale_fn(self, function):
+        """
+        Apply string transformation function to the main (non-language,
+        ternitory, script names data), i.e., to index via a string pool object.
+        The core locale data is stored as a long Wide_String with locale
+        objects referring to the strings by an index into a table giving the
+        start and end of of the string in the long Wide_String pool value.
+        """
+        self.name = function(self.name)
+        self._apply_locale_fn(function, self.locale_data)
+
+    def _apply_locale_fn(self, function, data_set):
+        """
+        Helper routine to recursively traverse the locale_data structure.
+        """
+        for key in data_set.keys():
+            value = data_set[key]
             if type(value).__name__ == 'dict':
-                self.renumber_data(value, mapping)
+                if key[0] != '*':
+                    self._apply_locale_fn(function, value)
             elif value is not None:
-                dataset[key] = mapping[value - 1]
-   
+                data_set[key] = function(value)
+
     def set_tag_and_level(self, name):
+        """
+        Set the tag value associated with a locale name.  This is the 10
+        character string giving the language, script and territory, e.g.,
+        "en_Latn_US" => "EN LATNUS ".
+        """
         components = name.split("_")
         self.level = 0
         if len(components) == 1:
@@ -148,120 +497,102 @@ class Locale(object):
             script = components[1][:4]
             territory = components[2][:3]
             self.level = 4
-        self.tag = "{0:<3}{1:<4}{2:<3}".format(language.upper(),
-                                               script.upper(),
-                                               territory.upper())
+        self.tag = "{0:<3}{1:<4}{2:<3}".format(language,
+                                               script,
+                                               territory).upper ()
 
-    def set_root_values(self):
-        self.set_value ("naming/day/wide/sun", "Sunday")
-        self.set_value ("naming/day/wide/mon", "Monday")
-        self.set_value ("naming/day/wide/tue", "Tuesday")
-        self.set_value ("naming/day/wide/wed", "Wednesday")
-        self.set_value ("naming/day/wide/thu", "Thursday")
-        self.set_value ("naming/day/wide/fri", "Friday")
-        self.set_value ("naming/day/wide/sat", "Saturday")
+    def set_root_values(self, dayperiod_dom):
+        """
+        Initialize the root (base) locale value.  In a sense this corresponds
+        to the pseudo locale "Ada".  It should, however, really be parsed from
+        the root.xml file, however.  Maybe later.
+        """
+        self.locale_data = deepcopy(_ROOT_LOCALE_DATA)
+        # The root locale stores the day period info, load it.
+        parse_element(self, dayperiod_dom,
+                           "*dayperiod/{0}/exact/{1}",
+                           [ { "name": "dayPeriodRule", "type": "*",
+                                                        "at": "#1" },
+                             { "name": "dayPeriodRules", "locales": "#0" },
+                             { "name": "dayPeriodRuleSet" },
+                             { "name": "supplementalData" } ])
+        parse_element(self, dayperiod_dom,
+                           "*dayperiod/{0}/within/{1}",
+                           [ { "name": "dayPeriodRule", "type": "*",
+                                                        "before": "#1" },
+                             { "name": "dayPeriodRules", "locales": "#0" },
+                             { "name": "dayPeriodRuleSet" },
+                             { "name": "supplementalData" } ])
+        locale_sets = self.locale_data['*dayperiod']
+        for locales in locale_sets.keys():
+            if not ' ' in locales:
+                continue
+            for locale in locales.split(' '):
+                print "Copying day period information for \"{0}\" from \"{1}\"".format(
+                      locale, locales)
+                locale_sets[locale] = deepcopy(locale_sets[locales])
+            del locale_sets[locales]
+        for locale in locale_sets.keys():
+            for hour_rule in locale_sets[locale].keys():
+                for rule in locale_sets[locale][hour_rule].keys():
+                    if not rule.endswith(":00"):
+                        print "Non-hour rule \"{0}\" for locale \"{1}\"".format(
+                                  rule, locale)
+                        sys.exit(1)
+                    plain_rule = int(rule.replace(":00", ""))
+                    cur_rules = locale_sets[locale][hour_rule][rule]
+                    locale_sets[locale][hour_rule][plain_rule] = cur_rules
+                    del locale_sets[locale][hour_rule][rule]
 
-        self.set_value ("naming/day/abbreviated/sun", "Sun")
-        self.set_value ("naming/day/abbreviated/mon", "Mon")
-        self.set_value ("naming/day/abbreviated/tue", "Tue")
-        self.set_value ("naming/day/abbreviated/wed", "Wed")
-        self.set_value ("naming/day/abbreviated/thu", "Thu")
-        self.set_value ("naming/day/abbreviated/fri", "Fri")
-        self.set_value ("naming/day/abbreviated/sat", "Sat")
-
-        self.set_value ("naming/month/wide/1", "January")
-        self.set_value ("naming/month/wide/2", "February")
-        self.set_value ("naming/month/wide/3", "March")
-        self.set_value ("naming/month/wide/4", "April")
-        self.set_value ("naming/month/wide/5", "May")
-        self.set_value ("naming/month/wide/6", "June")
-        self.set_value ("naming/month/wide/7", "July")
-        self.set_value ("naming/month/wide/8", "August")
-        self.set_value ("naming/month/wide/9", "September")
-        self.set_value ("naming/month/wide/10", "October")
-        self.set_value ("naming/month/wide/11", "November")
-        self.set_value ("naming/month/wide/12", "December")
-
-        self.set_value("naming/month/abbreviated/1", "Jan")
-        self.set_value("naming/month/abbreviated/2", "Feb")
-        self.set_value("naming/month/abbreviated/3", "Mar")
-        self.set_value("naming/month/abbreviated/4", "Apr")
-        self.set_value("naming/month/abbreviated/5", "May")
-        self.set_value("naming/month/abbreviated/6", "Jun")
-        self.set_value("naming/month/abbreviated/7", "Jul")
-        self.set_value("naming/month/abbreviated/8", "Aug")
-        self.set_value("naming/month/abbreviated/9", "Sep")
-        self.set_value("naming/month/abbreviated/10", "Oct")
-        self.set_value("naming/month/abbreviated/11", "Nov")
-        self.set_value("naming/month/abbreviated/12", "Dec")
-
-        self.set_value("naming/day_period/am", "AM")
-        self.set_value("naming/day_period/noon", "noon")
-        self.set_value("naming/day_period/pm", "PM")
-
-        self.set_value("naming/era/0", "BCE")
-        self.set_value("naming/era/1", "CE")
-
-        self.set_value("naming/numeric/decimal", ".")
-        self.set_value("naming/numeric/group", ",")
-        self.set_value("naming/numeric/list", ";")
-        self.set_value("naming/numeric/nativezerodigit", "0")
-        self.set_value("naming/numeric/plussign", "+")
-        self.set_value("naming/numeric/minussign", "-")
-        self.set_value("naming/numeric/exponential", "E")
-        self.set_value("naming/numeric/percentsign", "%")
-        self.set_value("naming/numeric/permille", u"‰")
-        self.set_value("naming/numeric/infinity", u"∞")
-        self.set_value("naming/numeric/nan", "NaN")
-        self.set_value("naming/numeric/patterndigit", "#")
-
-        self.set_value("formats/date/full", "EEEE, MMMM d, y")
-        self.set_value("formats/date/long", "MMMM d, y")
-        self.set_value("formats/date/medium", "MMM d, y")
-        self.set_value("formats/date/short", "M/d/yy")
-
-        self.set_value("formats/time/full", "h:mm:ss a zzzz")
-        self.set_value("formats/time/long", "h:mm:ss a z")
-        self.set_value("formats/time/medium", "h:mm:ss a")
-        self.set_value("formats/time/short", "h:mm a")
-
-        self.set_value("formats/date_time/full", "{1} {0}")
-        self.set_value("formats/date_time/long", "{1} {0}")
-        self.set_value("formats/date_time/medium", "{1} {0}")
-        self.set_value("formats/date_time/short", "{1} {0}")
-
-        self.set_value("formats/numeric/decimal", u"#,##0.###")
-        self.set_value("formats/numeric/scientific", u"#E0")
-        self.set_value("formats/numeric/percent", u"#,##0%")
-        self.set_value("formats/numeric/currency", u"¤#,##0.00;(¤#,##0.00)")
+    def apply_day_period_rules(self, rules):
+        print "Applying day period definitions for \"{0}\"".format(self.name)
+        # Apply the day period ranges
+        hour = 0
+        for switch_hour in sorted(rules['within'].keys()):
+            while hour < switch_hour:
+                param = "naming/day_period/rules/within/{0}".format(hour)
+                value = rules['within'][switch_hour]
+                self.set_value(param, value)
+                hour += 1
+        # Apply the day period exact values
+        if rules.has_key('exact'):
+            for hour in sorted(rules['exact'].keys()):
+                param = "naming/day_period/rules/exact/{0}".format(hour)
+                value = rules['exact'][hour]
+                self.set_value(param, value)
+        # Apply range values to exact if not already defined
+        for hour in range(24):
+            wparam = "naming/day_period/rules/within/{0}".format(hour)
+            eparam = "naming/day_period/rules/exact/{0}".format(hour)
+            if self.get_value(eparam) is None:
+                self.set_value(eparam, self.get_value(wparam))
 
     def _get_container_key(self, path):
         components = path.split("/")
         key = components[-1]
-        if self.mklocales:
-            container = self.locale_data
-        else:
-            container = self.props_data
+        createp = path[0] == '*'
+        container = self.locale_data
         for component in components[:-1]:
-            if container.has_key(component):
-                container = container[component]
-            else:
-                raise InvalidPathError(path)
-        if self.mklocales and not container.has_key(key):
+            if not container.has_key(component):
+                if createp:
+                    container[component] = {}
+                else:
+                    raise InvalidPathError(path)
+            container = container[component]
+        if (not container.has_key(key)) and (not createp):
             raise InvalidPathError(path)
         return container, key
 
+    def __setitem__(self, name, value):
+        return self.set_value(name, value)
+
     def set_value(self, path, value):
-        if self.mklocales:
-            path = path.lower()
         container, key = self._get_container_key(path)
-        container[key] = self.strpool.index(value)
+        container[key] = value
         self.n_set += 1
         return container[key]
 
     def get_value(self, path):
-        if self.mklocales:
-            path = path.lower()
         container, key = self._get_container_key(path)
         return container[key]
 
@@ -285,76 +616,30 @@ class Locale(object):
                      parent.tag)
         return n_resolutions
 
-    def add_value(self, args, index, value):
-        args.extend([ None for i in range(index + 1 - len(args))])
-        args[index] = value
-
-    def qualifiers_match(self, element, args, qualifiers):
-        result = True
-        if element.getAttribute("alt") != '':
-            return False
-        for qualifier in qualifiers:
-            for attribute in qualifier.keys():
-                match_value = qualifier[attribute]
-                if attribute == "name":
-                    value = element.nodeName
-                else:
-                    value = element.getAttribute(attribute)
-                if match_value[0] == '#':
-                    self.add_value(args, int(match_value[1:]), value)
-                elif match_value[0] == "*":
-                    result = value
-                elif match_value != value:
-                    return False
-            element = element.parentNode
-        return result
-
-    def element_value(self, element):
-        result = ""
-        for node in element.childNodes:
-            if node.nodeType == node.TEXT_NODE:
-                result += node.data
-        return result
-
-    def parse_element(self, dom, dest_name, qualifiers):
-        for element in dom.getElementsByTagName(qualifiers[0]["name"]):
-            args = []
-            match = self.qualifiers_match(element, args, qualifiers)
-            if match:
-                parameter = dest_name.format(*args)
-                if type(match).__name__ == 'bool':
-                    value = self.element_value(element)
-                else:
-                    value = match
-                try:
-                    self.set_value(parameter, value)
-                except InvalidPathError:
-                    pass
-
     def parse_locales(self, dom):
         n_set = self.n_set
-        self.parse_element(dom,
+        parse_element(self, dom,
                            "naming/day/{1}/{0}",
                            [ { "name": "day", "type": "#0" },
                              { "name": "dayWidth", "type": "#1" },
                              { "name": "dayContext", "type": "format" },
                              { "name": "days" },
                              { "name": "calendar", "type": "gregorian" } ])
-        self.parse_element(dom,
+        parse_element(self, dom,
                            "naming/month/{1}/{0}",
                            [ { "name": "month", "type": "#0" },
                              { "name": "monthWidth", "type": "#1" },
                              { "name": "monthContext", "type": "format" },
                              { "name": "months" },
                              { "name": "calendar", "type": "gregorian" } ])
-        self.parse_element(dom,
-                           "naming/day_period/{0}",
+        parse_element(self, dom,
+                           "naming/day_period/values/{0}",
                            [ { "name": "dayPeriod", "type": "#0" },
                              { "name": "dayPeriodWidth", "type": "wide" },
                              { "name": "dayPeriodContext", "type": "format" },
                              { "name": "dayPeriods" },
                              { "name": "calendar", "type": "gregorian" } ])
-        self.parse_element(dom,
+        parse_element(self, dom,
                            "naming/era/{0}",
                            [ { "name": "era", "type": "#0" },
                              { "name": "eraAbbr" },
@@ -364,80 +649,90 @@ class Locale(object):
                         "nativeZeroDigit", "patternDigit", "plusSign",
 			"minusSign", "exponential", "perMille", "infinity",
 			"nan" ]:
-            self.parse_element(dom,
+            parse_element(self, dom,
                                "naming/numeric/{0}".format(symbol),
                                [ { "name": symbol, },
                                  { "name": "symbols" },
                                  { "name": "numbers" } ])
         for formatType in [ "decimal", "scientific", "percent", "currency" ]:
-            self.parse_element(dom,
+            parse_element(self, dom,
                                "formats/numeric/{0}".format(formatType),
                                [ { "name": "pattern", },
                                  { "name": "{0}Format".format(formatType), },
-                                 { "name": "{0}FormatLength".format(formatType), },
+                                 { "name": "{0}FormatLength".format(formatType),
+                                   "type": "~"  },
                                  { "name": "{0}Formats".format(formatType), } ])
-        self.parse_element(dom,
+        parse_element(self, dom,
                            "formats/date/{0}",
                            [ { "name": "pattern" },
                              { "name": "dateFormat" },
                              { "name": "dateFormatLength", "type": "#0" },
                              { "name": "dateFormats" },
                              { "name": "calendar", "type": "gregorian" } ])
-        self.parse_element(dom,
+        parse_element(self, dom,
                            "formats/time/{0}",
                            [ { "name": "pattern" },
                              { "name": "timeFormat" },
                              { "name": "timeFormatLength", "type": "#0" },
                              { "name": "timeFormats" },
                              { "name": "calendar", "type": "gregorian" } ])
-        self.parse_element(dom,
+        parse_element(self, dom,
                            "formats/date_time/{0}",
                            [ { "name": "pattern" },
                              { "name": "dateTimeFormat" },
                              { "name": "dateTimeFormatLength", "type": "#0" },
                              { "name": "dateTimeFormats" },
                              { "name": "calendar", "type": "gregorian" } ])
-        self.parse_element(dom,
+        parse_element(self, dom,
                            "naming/alias",
                            [ { "name": "alias", "source": "*" },
+                             { "name": "ldml" } ])
+        parse_element(self, dom,
+                           "*numberingSystem",
+                           [ { "name": "defaultNumberingSystem" },
+                             { "name": "numbers" },
                              { "name": "ldml" } ])
         return self.n_set - n_set
 
     def parse_properties(self, dom):
         n_set = self.n_set
-        self.parse_element(dom,
-                           "languages/{0}",
+        parse_element(self, dom,
+                           "*languages/{0}",
                            [ { "name": "language", "type": "#0" },
 			     { "name": "languages" } ])
-        self.parse_element(dom,
-                           "scripts/{0}",
+        parse_element(self, dom,
+                           "*scripts/{0}",
                            [ { "name": "script", "type": "#0" },
 			     { "name": "scripts" } ])
-        self.parse_element(dom,
-                           "territories/{0}",
+        parse_element(self, dom,
+                           "*territories/{0}",
                            [ { "name": "territory", "type": "#0" },
 			     { "name": "territories" } ])
-        self.parse_element(dom,
-                           "alias",
+        parse_element(self, dom,
+                           "*alias",
                            [ { "name": "alias", "source": "*" },
+                             { "name": "ldml" } ])
+        parse_element(self, dom,
+                           "*layout",
+                           [ { "name": "orientation", "characters": "*" },
+                             { "name": "layout" },
                              { "name": "ldml" } ])
         return self.n_set - n_set
 
     def parse(self, dom):
-        if self.mklocales:
-            return self.parse_locales(dom)
-        else:
-            return self.parse_properties(dom)
+        result = self.parse_locales(dom)
+        result += self.parse_properties(dom)
+        return result
 
     def write_properties(self, index, props_dir, base):
-        name = self.strpool.value(self.name)
-        for category in ["languages", "scripts", "territories"]:
-            facility = category[0]
+        name = self.name
+        for category in ["*languages", "*scripts", "*territories"]:
+            facility = category[1]
             filename = os.path.join(props_dir, "{0}_{1}.properties".format(facility, name))
-            self.write_property_file(filename, name, self.props_data[category])
+            self.write_property_file(filename, name, self.locale_data[category])
             if name == base:
                 filename = os.path.join(props_dir, "{0}.properties".format(facility))
-                self.write_property_file(filename, name, self.props_data[category])
+                self.write_property_file(filename, name, self.locale_data[category])
 
     def write_property_file(self, filename, name, values):
         print "Creating properties file \"{0}\" for locale \"{1}\"".format(
@@ -448,7 +743,7 @@ class Locale(object):
         fp.write("# This is generated ZanyBlue CLDR data based on Unicode.org's CLDR data\n")
         fp.write("# DO NOT EDIT\n\n")
         for code in sorted(values.keys()):
-            value = self.java_string(self.strpool.value(values[code]))
+            value = self.java_string(values[code])
             fp.write("{0}={1}\n".format(code, value))
         fp.close()
 
@@ -462,15 +757,20 @@ class Locale(object):
                 result += "\\u{0:04x}".format(ic)
         return result
 
-    def write(self, fp, lastp):
-        zbm_write(fp, ZBMSG0008, self.tag)
+    def write(self, fp, index, strpool, lastp):
+        zbm_write(fp, ZBMSG0008, index, self.tag)
         zbm_write(fp, ZBMSG0009, self.level)
         zbm_write(fp, ZBMSG0053, self.name)
+        if strpool.value(self.get_value("*layout")) == "left-to-right":
+            zbm_write(fp, ZBMSG0042, "Left_To_Right")
+        else:
+            zbm_write(fp, ZBMSG0042, "Right_To_Left")
         self.write_days(fp, "Short_Day_Names", "abbreviated")
         self.write_days(fp, "Full_Day_Names", "wide")
         self.write_months(fp, "Short_Month_Names", "abbreviated")
         self.write_months(fp, "Full_Month_Names", "wide")
         self.write_day_periods(fp)
+        self.write_day_periods_rules(fp, strpool)
         self.write_eras(fp)
         self.write_date_time_formats(fp, "Date")
         self.write_date_time_formats(fp, "Time")
@@ -513,9 +813,57 @@ class Locale(object):
     def write_day_periods(self, fp):
         zbm_write(fp, ZBMSG0010, "Day_Period_Names")
         zbm_write(fp, ZBMSG0018,
-                      self.get_value("naming/day_period/am"),
-                      self.get_value("naming/day_period/noon"),
-                      self.get_value("naming/day_period/pm"))
+                      self.get_value("naming/day_period/values/am"),
+                      self.get_value("naming/day_period/values/weeHours"),
+                      self.get_value("naming/day_period/values/earlyMorning"))
+        zbm_write(fp, ZBMSG0055,
+                      self.get_value("naming/day_period/values/morning"),
+                      self.get_value("naming/day_period/values/lateMorning"),
+                      self.get_value("naming/day_period/values/noon"))
+        zbm_write(fp, ZBMSG0056,
+                      self.get_value("naming/day_period/values/midDay"),
+                      self.get_value("naming/day_period/values/afternoon"),
+                      self.get_value("naming/day_period/values/evening"))
+        zbm_write(fp, ZBMSG0057,
+                      self.get_value("naming/day_period/values/lateEvening"),
+                      self.get_value("naming/day_period/values/night"),
+                      self.get_value("naming/day_period/values/pm"))
+
+    def get_day_period(self, strpool, param):
+        cdlr2zb = { "am":           "AM",
+                    "weeHours":     "Wee_Hours",
+                    "earlyMorning": "Early_Morning",
+                    "morning":      "Morning",
+                    "lateMorning":  "Late_Morning",
+                    "noon":         "Noon",
+                    "midDay":       "Midday",
+                    "afternoon":    "Afternoon",
+                    "evening":      "Evening",
+                    "lateEvening":  "Late_Evening",
+                    "night":        "Night",
+                    "pm":           "PM" }
+        index = self.get_value("naming/day_period/rules/" + param)
+        return cdlr2zb[strpool.value(index)]
+
+    def write_day_periods_rules(self, fp, strpool):
+        self.write_day_period_rule_set(fp, strpool, "exact")
+        self.write_day_period_rule_set(fp, strpool, "within")
+
+    def write_day_period_rule_set(self, fp, strpool, name):
+        zbm_write(fp, ZBMSG0010, "{0}_Day_Periods".format(name.capitalize ()))
+        zbm_write(fp, ZBMSG0059,
+                      self.get_day_period(strpool, name + "/0"),
+                      self.get_day_period(strpool, name + "/1"),
+                      self.get_day_period(strpool, name + "/2"))
+        for n in [3, 6, 9, 12, 15, 18]:
+            zbm_write(fp, ZBMSG0060,
+                          n, self.get_day_period(strpool, "{0}/{1}".format(name, n)),
+                          n+1, self.get_day_period(strpool, "{0}/{1}".format(name, n+1)),
+                          n+2, self.get_day_period(strpool, "{0}/{1}".format(name, n+2)))
+        zbm_write(fp, ZBMSG0061,
+                      self.get_day_period(strpool, name + "/21"),
+                      self.get_day_period(strpool, name + "/22"),
+                      self.get_day_period(strpool, name + "/23"))
 
     def write_eras(self, fp):
         zbm_write(fp, ZBMSG0010, "Era_Names")
@@ -538,19 +886,21 @@ class Locale(object):
                       self.get_value("naming/numeric/group"))
         zbm_write(fp, ZBMSG0032,
                       self.get_value("naming/numeric/list"),
-                      self.get_value("naming/numeric/nativezerodigit"))
+                      self.get_value("naming/numeric/nativeZeroDigit"))
         zbm_write(fp, ZBMSG0033,
-                      self.get_value("naming/numeric/plussign"),
-                      self.get_value("naming/numeric/minussign"))
+                      self.get_value("naming/numeric/plusSign"),
+                      self.get_value("naming/numeric/minusSign"))
         zbm_write(fp, ZBMSG0034,
                       self.get_value("naming/numeric/exponential"),
-                      self.get_value("naming/numeric/percentsign"))
+                      self.get_value("naming/numeric/percentSign"))
         zbm_write(fp, ZBMSG0035,
-                      self.get_value("naming/numeric/permille"),
+                      self.get_value("naming/numeric/perMille"),
                       self.get_value("naming/numeric/infinity"))
         zbm_write(fp, ZBMSG0036,
                       self.get_value("naming/numeric/nan"),
-                      self.get_value("naming/numeric/patterndigit"))
+                      self.get_value("naming/numeric/patternDigit"))
+        zbm_write(fp, ZBMSG0058,
+                      self.get_value("naming/numeric/numericDigits"))
 
     def write_numeric_formats(self, fp, lastp):
         zbm_write(fp, ZBMSG0010, "Numeric_Formats")

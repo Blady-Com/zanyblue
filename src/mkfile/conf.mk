@@ -1,20 +1,35 @@
 #
 #  ZanyBlue, an Ada library and framework for finite element analysis.
-#  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
 #
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
+#  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+#  All rights reserved.
 #
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
 #
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#    * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#    * Redistributions in binary form must reproduce the above copyright
+#      notice, this list of conditions and the following disclaimer in the
+#      documentation and/or other materials provided with the distribution.
+#
+#    * Neither the name of ZanyBlue nor the names of its contributors may
+#      be used to endorse or promote products derived from this software
+#      without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+#  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+#  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+#  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+#  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+#  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+#  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+#  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+#  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+#  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
 #
@@ -43,17 +58,21 @@ TYPE=static
 #BUILD=Production
 BUILD=Debug
 
-# The choices are "gnat" for the GNAT compiler system and "template" for the
-# generic compiler definitions.
-COMPILER=gnat
-
 # ---------------------------------------------------------------------------
 # Macros derived from the configuration macros.
-GPRFLAGS+=-XOS=$(OS)
-GPRFLAGS+=-XTYPE=$(TYPE)
-GPRFLAGS+=-XBUILD=$(BUILD)
-GPRFLAGS+=-aP$(TOP)/lib
-GPRFLAGS+=-aP$(TOP)/src
+GNATFLAGS+=-XOS=$(OS)
+GNATFLAGS+=-XTYPE=$(TYPE)
+GNATFLAGS+=-XBUILD=$(BUILD)
+GNATFLAGS+=-aP$(TOP)/lib/gnat
+GNATFLAGS+=-aP$(TOP)/src
+
+GNATMAKE=gnatmake
+GNATCHECK=gnat check
+GNATCLEAN=gnat clean
+
+# HTML Preprocessor
+HTP=htp
+TAR=tar
 
 include $(TOP)/src/mkfile/$(OS).mk
 
@@ -61,10 +80,7 @@ include $(TOP)/src/mkfile/$(OS).mk
 # Makefile definitions for the ZanyBlue version macros
 #
 
-V_MAJOR=0
-V_MINOR=1
-V_PATCH=1
-V_STATUS=Beta
+include $(TOP)/src/mkfile/version.mk
 PREPFLAGS+=-DV_MAJOR=$(V_MAJOR)
 PREPFLAGS+=-DV_MINOR=$(V_MINOR)
 PREPFLAGS+=-DV_PATCH=$(V_PATCH)
@@ -83,14 +99,28 @@ SVN_VERSION=$(shell svnversion $(TOP))
 COPYRIGHT_YEAR=$(CURRENT_YEAR)
 endif
 
+# Macro covers for the various directories
+BINDIR=$(TOP)/bin
+DOCDIR=$(TOP)/doc
+HTMLDIR=$(DOCDIR)/zanyblue
+HTMLREFDIR=$(HTMLDIR)/ref
+INCDIR=$(TOP)/include/zanyblue
+LIBDIR=$(TOP)/lib/zanyblue
+GPRDIR=$(TOP)/lib/gnat
+SRCDIR=$(TOP)/src
+
 # Add coverage generated files to the clean list
-CLEAN_FILES+=$(wildcard obj/*.gcno)
-CLEAN_FILES+=$(wildcard obj/*.gcda)
-CLEAN_FILES+=$(wildcard obj/*.gcov)
-CLEAN_FILES+=$(wildcard *.gcno)
-CLEAN_FILES+=$(wildcard *.gcda)
-CLEAN_FILES+=$(wildcard *.gcov)
-CLEAN_FILES+=$(wildcard *~)
+CLEAN_FILES+=$(wildcard $(TOP)/src/obj/*.gcno)
+CLEAN_FILES+=$(wildcard $(TOP)/src/obj/*.gcda)
+CLEAN_FILES+=$(wildcard $(TOP)/src/auto.cgpr)
+CLEAN_FILES+=$(wildcard $(TOP)/src/b~*)
+CLEAN_FILES+=$(wildcard $(TOP)/src/root/*.gcov)
+CLEAN_FILES+=$(wildcard $(TOP)/src/os/*.gcov)
+CLEAN_FILES+=$(wildcard $(TOP)/src/os/unix/*.gcov)
+CLEAN_FILES+=$(wildcard $(TOP)/src/os/Windows_NT/*.gcov)
+CLEAN_FILES+=$(wildcard $(TOP)/src/parameters/*.gcov)
+CLEAN_FILES+=$(wildcard $(TOP)/src/text/*.gcov)
+CLEAN_FILES+=$(wildcard $(TOP)/src/utils/*.gcov)
 
 #
 # Remove editor backup files
@@ -102,4 +132,5 @@ CLEAN_FILES+=$(foreach i,$(GENERATED),$(wildcard $i))
 
 #
 # General cleaning rules
-CLEAN_TARGS=$(patsubst %,%.rmfile,$(CLEAN_FILES))
+CLEAN_TARGS+=$(patsubst %,%.rmfile,$(CLEAN_FILES))
+CLEAN_TARGS+=$(patsubst %,%.rmdir,$(CLEAN_DIRS))

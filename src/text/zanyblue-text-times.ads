@@ -1,23 +1,36 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
---  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
 --
---  This program is free software; you can redistribute it and/or modify
---  it under the terms of the GNU General Public License as published by
---  the Free Software Foundation; either version 2 of the License, or
---  (at your option) any later version.
+--  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  All rights reserved.
 --
---  This program is distributed in the hope that it will be useful,
---  but WITHOUT ANY WARRANTY; without even the implied warranty of
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
---  GNU General Public License for more details.
+--  Redistribution and use in source and binary forms, with or without
+--  modification, are permitted provided that the following conditions
+--  are met:
 --
---  You should have received a copy of the GNU General Public License
---  along with this program; if not, write to the Free Software
---  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+--    * Redistributions of source code must retain the above copyright
+--      notice, this list of conditions and the following disclaimer.
 --
-
-pragma License (Modified_GPL);
+--    * Redistributions in binary form must reproduce the above copyright
+--      notice, this list of conditions and the following disclaimer in the
+--      documentation and/or other materials provided with the distribution.
+--
+--    * Neither the name of ZanyBlue nor the names of its contributors may
+--      be used to endorse or promote products derived from this software
+--      without specific prior written permission.
+--
+--  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+--  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+--  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+--  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+--  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+--  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+--  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+--  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+--  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+--  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+--  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--
 
 with Ada.Calendar;
 with Ada.Calendar.Time_Zones;
@@ -31,28 +44,36 @@ package ZanyBlue.Text.Times is
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Arguments;
 
-   type Time_Argument is new Argument_Type with private;
+   type Time_Argument_Type is new Calendar_Category_Type with private;
 
-   function Create (Time_Value : Time) return Time_Argument;
+   function Create (Time_Value : in Time) return Time_Argument_Type;
    --  Create a "boxed" instance of a time type.
 
-   function Create (Time_Value : Time;
-                    TZ_Offset  : Time_Offset) return Time_Argument;
+   function Create (Time_Value : in Time;
+                    TZ_Offset  : in Time_Offset) return Time_Argument_Type;
    --  Create a "boxed" instance of a time type with time zone offset.
 
-   function "+" (Time_Value : Time) return Time_Argument
+   function "+" (Time_Value : in Time) return Time_Argument_Type
       renames Create;
    --  Utility renaming of the "Create" function.
 
    overriding
-   function Format (Value    : Time_Argument;
-                    Template : Wide_String;
-                    Locale   : Locale_Type) return Wide_String;
+   function Format (Value     : in Time_Argument_Type;
+                    Type_Name : in Wide_String;
+                    Template  : in Wide_String;
+                    Locale    : in Locale_Type) return Wide_String;
    --  Format a time value according to the Template.
+
+   function Day_In_Week (Day   : in Day_Number;
+                         Month : in Month_Number;
+                         Year  : in Year_Number) return Day_Type;
+   --  Return the day of the week given a particular date.  This is
+   --  a utility routine exposed here mainly for testing purposes.
 
 private
 
-   type Time_Argument is new Argument_Type with record
+   type Time_Argument_Type is new Calendar_Category_Type with
+   record
       Data      : Ada.Calendar.Time;
       TZ_Offset : Time_Offset;
    end record;

@@ -1,44 +1,63 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
---  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
 --
---  This program is free software; you can redistribute it and/or modify
---  it under the terms of the GNU General Public License as published by
---  the Free Software Foundation; either version 2 of the License, or
---  (at your option) any later version.
+--  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  All rights reserved.
 --
---  This program is distributed in the hope that it will be useful,
---  but WITHOUT ANY WARRANTY; without even the implied warranty of
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
---  GNU General Public License for more details.
+--  Redistribution and use in source and binary forms, with or without
+--  modification, are permitted provided that the following conditions
+--  are met:
 --
---  You should have received a copy of the GNU General Public License
---  along with this program; if not, write to the Free Software
---  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+--    * Redistributions of source code must retain the above copyright
+--      notice, this list of conditions and the following disclaimer.
+--
+--    * Redistributions in binary form must reproduce the above copyright
+--      notice, this list of conditions and the following disclaimer in the
+--      documentation and/or other materials provided with the distribution.
+--
+--    * Neither the name of ZanyBlue nor the names of its contributors may
+--      be used to endorse or promote products derived from this software
+--      without specific prior written permission.
+--
+--  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+--  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+--  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+--  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+--  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+--  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+--  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+--  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+--  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+--  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+--  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 with Ada.Strings.Wide_Unbounded;
 with Ada.Wide_Characters.Unicode;
 with Ada.Containers.Indefinite_Vectors;
-with ZanyBlue.Text.Formatting;
 
 ----------------------------------
 -- ZanyBlue.Text.Format_Message --
 ----------------------------------
 
 function ZanyBlue.Text.Format_Message
-            (Message      : Wide_String;
-             Arguments    : ZanyBlue.Text.Arguments.Argument_List;
-             Mapping      : ZanyBlue.Text.Pseudo.Pseudo_Map_Access;
-             Locale       : ZanyBlue.Text.Locales.Locale_Type;
-             Raise_Errors : Boolean) return Wide_String is
+            (Message        : in Wide_String;
+             Arguments      : in ZanyBlue.Text.Arguments.Argument_List;
+             Mapping        : in ZanyBlue.Text.Pseudo.Pseudo_Map_Access;
+             Locale         : in ZanyBlue.Text.Locales.Locale_Type;
+             Raise_Errors   : in Boolean := True;
+             Mark_Messages  : in Boolean := True;
+             Mark_Arguments : in Boolean := True;
+             Error_Handler  : access Error_Handler_Type'Class
+                                 := Standard_Error_Handler'Access)
+   return Wide_String
+is
 
    use Ada.Strings.Wide_Unbounded;
    use Ada.Wide_Characters.Unicode;
    use ZanyBlue.Text.Pseudo;
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Arguments;
-   use ZanyBlue.Text.Formatting;
 
    Done     : exception;
    --  End of input is signaled by raising the Done exception.
@@ -69,15 +88,15 @@ function ZanyBlue.Text.Format_Message
    --  Offset value when converting a string of decimal digits to an integer.
 
    procedure Add_Argument (Buffer : in out Unbounded_Wide_String;
-                           Value  : Wide_String);
+                           Value  : in Wide_String);
    --  Add a formatted argument value to the output buffer.
 
-   function Buffered_Next (Last_Buffer : Natural) return Wide_Character;
+   function Buffered_Next (Last_Buffer : in Natural) return Wide_Character;
    --  Get the next character.  There are recursive references to
    --  formatted values so a stack is in use to manage them.  This routine
    --  accesses the stack to get the character.
 
-   function Character_Mapping (Ch : Wide_Character) return Wide_Character;
+   function Character_Mapping (Ch : in Wide_Character) return Wide_Character;
    --  Return the pseudo translation mapping for a given character.  The
    --  same character is returned if pseudo translation is not enabled.
 
@@ -86,16 +105,17 @@ function ZanyBlue.Text.Format_Message
    --  Buffered_Next procedure if the stack of sources is in use, i.e.,
    --  recursive references to arguments, e.g., "{0:{1}}"
 
-   function Parse_Argument (Level : Natural := 0) return Wide_String;
+   function Parse_Argument (Level : in Natural := 0) return Wide_String;
    --  Parse the an argument reference: argument number and format
    --  template.
 
-   procedure Pseudo_Append (Buffer : in out Unbounded_Wide_String;
-                            Ch     : Wide_Character);
+   procedure Pseudo_Append (Buffer  : in out Unbounded_Wide_String;
+                            Ch      : in Wide_Character;
+                            Enabled : in Boolean);
    --  Append a character to the output buffer if pseudo translation
    --  is enabled, otherwise do nothing.
 
-   procedure Push_Source (Data : Wide_String);
+   procedure Push_Source (Data : in Wide_String);
    --  Add a new format character source used to handle recursive format
    --  references, e.g., "{0:{1}}"
 
@@ -109,18 +129,20 @@ function ZanyBlue.Text.Format_Message
    ------------------
 
    procedure Add_Argument (Buffer : in out Unbounded_Wide_String;
-                           Value  : Wide_String) is
+                           Value  : in Wide_String)
+   is
    begin
-      Pseudo_Append (Buffer, Format_Start);
+      Pseudo_Append (Buffer, Format_Start, Mark_Arguments);
       Append (Buffer, Value);
-      Pseudo_Append (Buffer, Format_End);
+      Pseudo_Append (Buffer, Format_End, Mark_Arguments);
    end Add_Argument;
 
    -------------------
    -- Buffered_Next --
    -------------------
 
-   function Buffered_Next (Last_Buffer : Natural) return Wide_Character is
+   function Buffered_Next (Last_Buffer : in Natural) return Wide_Character
+   is
 
       Found  : Boolean := False;
       Result : Wide_Character;
@@ -132,7 +154,8 @@ function ZanyBlue.Text.Format_Message
       -- Get_Character --
       -------------------
 
-      procedure Get_Character (Buffer : in out Source_Buffer) is
+      procedure Get_Character (Buffer : in out Source_Buffer)
+      is
       begin
          if Buffer.Position <= Buffer.Buffer'Last then
             Result := Buffer.Buffer (Buffer.Position);
@@ -154,7 +177,8 @@ function ZanyBlue.Text.Format_Message
    -- Character_Mapping --
    -----------------------
 
-   function Character_Mapping (Ch : Wide_Character) return Wide_Character is
+   function Character_Mapping (Ch : in Wide_Character) return Wide_Character
+   is
    begin
       if Mapping /= null then
          return Mapping.Map (Ch);
@@ -167,7 +191,8 @@ function ZanyBlue.Text.Format_Message
    -- Next --
    ----------
 
-   function Next return Wide_Character is
+   function Next return Wide_Character
+   is
       Last_Buffer : constant Natural := Natural (Length (Source_Stack));
       Result : Wide_Character;
    begin
@@ -187,7 +212,8 @@ function ZanyBlue.Text.Format_Message
    -- Parse_Argument --
    --------------------
 
-   function Parse_Argument (Level : Natural := 0) return Wide_String is
+   function Parse_Argument (Level : in Natural := 0) return Wide_String
+   is
 
       function Next_Character return Wide_Character;
       --  Return the next format character.  If the character is '{' then
@@ -198,11 +224,12 @@ function ZanyBlue.Text.Format_Message
       -- Next_Character --
       --------------------
 
-      function Next_Character return Wide_Character is
+      function Next_Character return Wide_Character
+      is
          Result : Wide_Character := Next;
       begin
          while Result = '{' loop
-            Push_Source (Parse_Argument (Level + 1));
+            Push_Source (Parse_Argument (Level => Level + 1));
             Result := Next;
          end loop;
          return Result;
@@ -215,54 +242,55 @@ function ZanyBlue.Text.Format_Message
    begin
       Template := Null_Unbounded_Wide_String;
       Ch := Next_Character;
-      if not Is_Digit (Ch) and Raise_Errors then
-         Raise_Exception (Invalid_Format_Error'Identity,
-                          "ILLCHAR:{0}", +Ch);
+      if not Is_Digit (Ch) then
+         Error_Handler.Illegal_Character (Message, I - Message'First + 1, Ch,
+                                          Natural (Length (Source_Stack)),
+                                          Raise_Errors);
+         --  If an exception was not raised, skip to next closing brace
+         while Ch /= '}' loop
+            Ch := Next_Character;
+         end loop;
       end if;
       while Is_Digit (Ch) loop
          Index := Index * 10 + Wide_Character'Pos (Ch) - Zero;
          Ch := Next_Character;
       end loop;
-      if Ch = ',' or Ch = ':' then
+      if Ch = ',' or else Ch = ':' then
          Ch := Next_Character;
          while Ch /= '}' loop
             Append (Template, Ch);
             Ch := Next_Character;
          end loop;
       else
-         if Ch /= '}' and Raise_Errors then
-            Raise_Exception (Invalid_Format_Error'Identity,
-                             "NOTCLOSED:{0}", +Index);
+         if Ch /= '}' then
+            Error_Handler.Format_Not_Closed (Message, I - Message'First + 1,
+                                             Natural (Length (Source_Stack)),
+                                             Raise_Errors);
          end if;
-         while Ch /= '}' loop
-            Ch := Next_Character;
-         end loop;
       end if;
-      declare
-         Result : constant Wide_String := Arguments.Format (Index,
-                                                    To_Wide_String (Template),
-                                                    Locale, Raise_Errors);
-      begin
-         return Result;
-      end;
+      return Arguments.Format (Index, Message, To_Wide_String (Template),
+                               Locale, Raise_Errors,
+                               Error_Handler => Error_Handler);
    exception
    when Done =>
-      if Raise_Errors then
-         Raise_Exception (Invalid_Format_Error'Identity,
-                          "NOTCLOSED:{0}", +Index);
-      else
-         raise;
-      end if;
+      Error_Handler.Format_Not_Closed (Message, I - Message'First + 1,
+                                       Natural (Length (Source_Stack)),
+                                       Raise_Errors);
+      --  If the handler decided not to raise an exception, re-raise the Done
+      --  exception
+      raise Done;
    end Parse_Argument;
 
    -------------------
    -- Pseudo_Append --
    -------------------
 
-   procedure Pseudo_Append (Buffer : in out Unbounded_Wide_String;
-                            Ch     : Wide_Character) is
+   procedure Pseudo_Append (Buffer  : in out Unbounded_Wide_String;
+                            Ch      : in Wide_Character;
+                            Enabled : in Boolean)
+   is
    begin
-      if Mapping /= null then
+      if Enabled and then Mapping /= null then
          Append (Buffer, Ch);
       end if;
    end Pseudo_Append;
@@ -271,7 +299,8 @@ function ZanyBlue.Text.Format_Message
    -- Push_Source --
    -----------------
 
-   procedure Push_Source (Data : Wide_String) is
+   procedure Push_Source (Data : in Wide_String)
+   is
       New_Buffer : Source_Buffer (Data'Length);
    begin
       New_Buffer.Buffer := Data;
@@ -279,9 +308,7 @@ function ZanyBlue.Text.Format_Message
    end Push_Source;
 
 begin
-   if Mapping /= null then
-      Append (Buffer, Pseudo_Start);
-   end if;
+   Pseudo_Append (Buffer, Pseudo_Start, Mark_Messages);
 <<String>>
    Ch := Next;
    case Ch is
@@ -317,8 +344,6 @@ begin
    goto String;
 exception
 when Done =>
-   if Mapping /= null then
-      Append (Buffer, Pseudo_End);
-   end if;
+   Pseudo_Append (Buffer, Pseudo_End, Mark_Messages);
    return To_Wide_String (Buffer);
 end ZanyBlue.Text.Format_Message;

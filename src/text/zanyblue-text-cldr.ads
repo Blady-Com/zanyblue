@@ -1,23 +1,36 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
---  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
 --
---  This program is free software; you can redistribute it and/or modify
---  it under the terms of the GNU General Public License as published by
---  the Free Software Foundation; either version 2 of the License, or
---  (at your option) any later version.
+--  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  All rights reserved.
 --
---  This program is distributed in the hope that it will be useful,
---  but WITHOUT ANY WARRANTY; without even the implied warranty of
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
---  GNU General Public License for more details.
+--  Redistribution and use in source and binary forms, with or without
+--  modification, are permitted provided that the following conditions
+--  are met:
 --
---  You should have received a copy of the GNU General Public License
---  along with this program; if not, write to the Free Software
---  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+--    * Redistributions of source code must retain the above copyright
+--      notice, this list of conditions and the following disclaimer.
 --
-
-pragma License (Modified_GPL);
+--    * Redistributions in binary form must reproduce the above copyright
+--      notice, this list of conditions and the following disclaimer in the
+--      documentation and/or other materials provided with the distribution.
+--
+--    * Neither the name of ZanyBlue nor the names of its contributors may
+--      be used to endorse or promote products derived from this software
+--      without specific prior written permission.
+--
+--  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+--  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+--  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+--  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+--  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+--  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+--  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+--  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+--  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+--  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+--  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--
 
 with ZanyBlue.Text.Locales;
 
@@ -25,9 +38,13 @@ package ZanyBlue.Text.CLDR is
 
    use ZanyBlue.Text.Locales;
 
-   function Language_Name (Code    : Wide_String;
-                           Unknown : Wide_String := "";
-                           Locale  : Locale_Type := Current_Locale)
+   procedure Initialize;
+   --  Initialize the CLDR database.  This routine must be called prior to
+   --  using any of the other rountines defined in here.
+
+   function Language_Name (Code    : in Wide_String;
+                           Unknown : in Wide_String := "";
+                           Locale  : in Locale_Type := Current_Locale)
       return Wide_String;
    --
    --  Return the language name associated with an ISO language code, e.g.,
@@ -40,9 +57,9 @@ package ZanyBlue.Text.CLDR is
    --     Language_Name ("xx", "UNKNOWN") = "UNKNOWN"
    --
 
-   function Script_Name (Code : Wide_String;
-                         Unknown : Wide_String := "";
-                         Locale  : Locale_Type := Current_Locale)
+   function Script_Name (Code    : in Wide_String;
+                         Unknown : in Wide_String := "";
+                         Locale  : in Locale_Type := Current_Locale)
       return Wide_String;
    --
    --  Return the  name associated with an ISO script code, e.g.,
@@ -55,9 +72,9 @@ package ZanyBlue.Text.CLDR is
    --     Script_Name ("xx", "UNKNOWN") = "UNKNOWN"
    --
 
-   function Territory_Name (Code : Wide_String;
-                            Unknown : Wide_String := "";
-                            Locale  : Locale_Type := Current_Locale)
+   function Territory_Name (Code    : in Wide_String;
+                            Unknown : in Wide_String := "";
+                            Locale  : in Locale_Type := Current_Locale)
       return Wide_String;
    --
    --  Return the territory name associated with an ISO two letter territory
@@ -70,8 +87,8 @@ package ZanyBlue.Text.CLDR is
    --     Territory_Name ("xx", "UNKNOWN") = "UNKNOWN"
    --
 
-   function Full_Locale_Name (Value  : Locale_Type;
-                              Locale : Locale_Type := Current_Locale)
+   function Full_Locale_Name (Value  : in Locale_Type;
+                              Locale : in Locale_Type := Current_Locale)
       return Wide_String;
    --
    --  Return the full locale name, language and territory

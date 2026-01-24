@@ -1,20 +1,37 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
---  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
 --
---  This program is free software; you can redistribute it and/or modify
---  it under the terms of the GNU General Public License as published by
---  the Free Software Foundation; either version 2 of the License, or
---  (at your option) any later version.
+--  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  All rights reserved.
 --
---  This program is distributed in the hope that it will be useful,
---  but WITHOUT ANY WARRANTY; without even the implied warranty of
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
---  GNU General Public License for more details.
+--  Redistribution and use in source and binary forms, with or without
+--  modification, are permitted provided that the following conditions
+--  are met:
 --
---  You should have received a copy of the GNU General Public License
---  along with this program; if not, write to the Free Software
---  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+--    * Redistributions of source code must retain the above copyright
+--      notice, this list of conditions and the following disclaimer.
+--
+--    * Redistributions in binary form must reproduce the above copyright
+--      notice, this list of conditions and the following disclaimer in the
+--      documentation and/or other materials provided with the distribution.
+--
+--    * Neither the name of ZanyBlue nor the names of its contributors may
+--      be used to endorse or promote products derived from this software
+--      without specific prior written permission.
+--
+--  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+--  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+--  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+--  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+--  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+--  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+--  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+--  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+--  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+--  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+--  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+--
+
 --
 --  Language 2-letter codes and names defined by Library of Congress:
 --
@@ -35,15 +52,15 @@ package body ZanyBlue.Text.Utils is
    use Ada.Strings.Unbounded;
    use Ada.Strings.Wide_Unbounded;
 
-   function Escape_Character (C : Wide_Character) return String;
+   function Escape_Character (C : in Wide_Character) return String;
    --  Return the String value for a Wide Character, either the character
    --  itself if within Character range or the Unicode_Escape string for
    --  the character.
 
-   function Requires_Unicode_Escape (C : Wide_Character) return Boolean;
+   function Requires_Unicode_Escape (C : in Wide_Character) return Boolean;
    --  Determine if a Wide character requires Unicode escaping for strings.
 
-   function Unicode_Escape (C : Wide_Character) return String;
+   function Unicode_Escape (C : in Wide_Character) return String;
    --  Return Unicode escape sequence for a wide character, e.g., "\u009e".
 
    -----------------------
@@ -73,11 +90,11 @@ package body ZanyBlue.Text.Utils is
    -- ASCII_Lowercase --
    ---------------------
 
-   function ASCII_Lowercase (C : Wide_Character) return Wide_Character is
+   function ASCII_Lowercase (C : in Wide_Character) return Wide_Character is
 
       use Ada.Characters.Handling;
 
-      N_C : constant Character := To_Character (C, ' ');
+      N_C : constant Character := To_Character (C);
 
    begin
       if Is_Letter (N_C) and then Is_Upper (N_C) then
@@ -102,11 +119,11 @@ package body ZanyBlue.Text.Utils is
    -- ASCII_Uppercase --
    ---------------------
 
-   function ASCII_Uppercase (C : Wide_Character) return Wide_Character is
+   function ASCII_Uppercase (C : in Wide_Character) return Wide_Character is
 
       use Ada.Characters.Handling;
 
-      N_C : constant Character := To_Character (C, ' ');
+      N_C : constant Character := To_Character (C);
 
    begin
       if Is_Letter (N_C) and then Is_Lower (N_C) then
@@ -116,86 +133,11 @@ package body ZanyBlue.Text.Utils is
       end if;
    end ASCII_Uppercase;
 
-   -----------------
-   -- Day_In_Week --
-   -----------------
-
-   function Day_In_Week (Day   : Day_Number;
-                         Month : Month_Number;
-                         Year  : Year_Number) return Day_Type is
-
-      subtype Month_Length_Range is Integer range 28 .. 31;
-
-      function Is_Leap (Year : Year_Number) return Boolean;
-      --  Determine if a Year is a leap year.
-
-      function Month_Length (Month : Month_Number;
-                             Year  : Year_Number) return Month_Length_Range;
-      --  Return the number of days in a month for particular year.
-
-      function New_Years_Day (Year : Year_Number) return Day_Type;
-      --  Return the day of the week new year's falls on
-
-      -------------
-      -- Is_Leap --
-      -------------
-
-      function Is_Leap (Year : Year_Number) return Boolean is
-      begin
-         return (Year rem 4 = 0 and Year rem 100 /= 0) or Year rem 400 = 0;
-      end Is_Leap;
-
-      ------------------
-      -- Month_Length --
-      ------------------
-
-      function Month_Length (Month : Month_Number;
-                             Year  : Year_Number) return Month_Length_Range is
-      begin
-         case Month is
-         when 1 | 3 | 5 | 7 | 8 | 10 | 12 =>
-            return 31;
-         when 4 | 6 | 9 | 11 =>
-            return 30;
-         when 2 =>
-            if Is_Leap (Year) then
-               return 29;
-            else
-               return 28;
-            end if;
-         end case;
-      end Month_Length;
-
-      -------------------
-      -- New_Years_Day --
-      -------------------
-
-      function New_Years_Day (Year : Year_Number) return Day_Type is
-         Interval  : Integer;
-         NumLeaps  : Integer;
-         PosInWeek : Integer;
-      begin
-         Interval := Integer (Year) - 1601;
-         NumLeaps := Interval / 4 - Interval / 100 + Interval / 400;
-         PosInWeek := Day_Type'Pos (Mon) + Interval + NumLeaps;
-         return Day_Type'Val (PosInWeek rem 7);
-      end New_Years_Day;
-
-      DayNum : Integer := Day_Type'Pos (New_Years_Day (Year));
-
-   begin
-      for M in 1 .. Month - 1 loop
-         DayNum := DayNum + Month_Length (M, Year);
-      end loop;
-      DayNum := DayNum + Day - 1;
-      return Day_Type'Val (DayNum rem 7);
-   end Day_In_Week;
-
    ----------------------
    -- Escape_Character --
    ----------------------
 
-   function Escape_Character (C : Wide_Character) return String is
+   function Escape_Character (C : in Wide_Character) return String is
    begin
       if Requires_Unicode_Escape (C) then
          return Unicode_Escape (C);
@@ -208,7 +150,7 @@ package body ZanyBlue.Text.Utils is
    -- Escape_String --
    -------------------
 
-   function Escape_String (Source : Wide_String) return String is
+   function Escape_String (Source : in Wide_String) return String is
       Result : Unbounded_String;
    begin
       for I in Source'Range loop
@@ -221,7 +163,7 @@ package body ZanyBlue.Text.Utils is
    -- Non_Blank_Prefix --
    ----------------------
 
-   function Non_Blank_Prefix (S : Wide_String) return Wide_String is
+   function Non_Blank_Prefix (S : in Wide_String) return Wide_String is
    begin
       for I in S'Range loop
          if S (I) = ' ' then
@@ -235,7 +177,7 @@ package body ZanyBlue.Text.Utils is
    -- Requires_Unicode_Escape --
    -----------------------------
 
-   function Requires_Unicode_Escape (C : Wide_Character) return Boolean is
+   function Requires_Unicode_Escape (C : in Wide_Character) return Boolean is
       Pos : constant Natural := Wide_Character'Pos (C);
       Ch : Character;
    begin
@@ -243,16 +185,16 @@ package body ZanyBlue.Text.Utils is
          return True;
       end if;
       Ch := Character'Val (Pos);
-      return Ch = '"' or not Ada.Characters.Handling.Is_Graphic (Ch);
+      return Ch = '"' or else not Ada.Characters.Handling.Is_Graphic (Ch);
    end Requires_Unicode_Escape;
 
    -----------------
    -- Starts_With --
    -----------------
 
-   function Starts_With (S      : Wide_String;
-                         Start  : Positive;
-                         Prefix : Wide_String) return Boolean is
+   function Starts_With (S      : in Wide_String;
+                         Start  : in Positive;
+                         Prefix : in Wide_String) return Boolean is
       use Ada.Strings.Wide_Fixed;
    begin
       return Head (S (Start .. S'Last), Prefix'Length) = Prefix;
@@ -262,7 +204,7 @@ package body ZanyBlue.Text.Utils is
    -- Unescape_String --
    ---------------------
 
-   function Unescape_String (Source : String) return Wide_String is
+   function Unescape_String (Source : in String) return Wide_String is
 
       use Ada.Characters.Conversions;
 
@@ -278,13 +220,10 @@ package body ZanyBlue.Text.Utils is
       I      : Positive := Source'First;
       Done   : Boolean;
 
-      procedure Get
-        (Ch : out Character; Done : out Boolean);
-      procedure Get
-        (X : out Natural; Done : out Boolean);
+      procedure Get (Ch : out Character; Done : out Boolean);
+      procedure Get (X : out Natural; Done : out Boolean);
 
-      procedure Get
-        (Ch : out Character; Done : out Boolean) is
+      procedure Get (Ch : out Character; Done : out Boolean) is
       begin
          Ch := 'x';
          Done := I > Source'Last;
@@ -294,21 +233,20 @@ package body ZanyBlue.Text.Utils is
          end if;
       end Get;
 
-      procedure Get
-        (X : out Natural; Done : out Boolean) is
+      procedure Get (X : out Natural; Done : out Boolean) is
          Offset : Natural;
          Base   : Natural;
          Ch : Character;
       begin
          Get (Ch, Done);
          case Ch is
-         when '0' .. '9' =>
+         when '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' =>
             Offset := Character'Pos ('0');
             Base := 0;
-         when 'a' .. 'f' =>
+         when 'a' | 'b' | 'c' | 'd' | 'e' | 'f' =>
             Offset := Character'Pos ('a');
             Base := 10;
-         when 'A' .. 'F' =>
+         when 'A' | 'B' | 'C' | 'D' | 'E' | 'F' =>
             Offset := Character'Pos ('A');
             Base := 10;
          when others =>
@@ -317,13 +255,16 @@ package body ZanyBlue.Text.Utils is
          X := Base + Character'Pos (Ch) - Offset;
       end Get;
 
+      Digit : Natural;
+      Value : Natural;
+
    begin
-      loop
+      Character_Loop : loop
          Get (Ch, Done);
-         exit when Done;
+         exit Character_Loop when Done;
          if Ch = '\' then
             Get (Ch, Done);
-            exit when Done;
+            exit Character_Loop when Done;
             case Ch is
 
             when 'b' =>               -- \b, backspace
@@ -342,16 +283,12 @@ package body ZanyBlue.Text.Utils is
                WCh := Wide_HT;
 
             when 'u' =>               -- Unicode escape
-               declare
-                  Digit : Natural;
-                  Value : Natural := 0;
-               begin
-                  for I in 1 .. 4 loop
-                     Get (Digit, Done);
-                     Value := Value * 16 + Digit;
-                  end loop;
-                  WCh := Wide_Character'Val (Value);
-               end;
+               Value := 0;
+               Unicode_Character_Loop : for I in 1 .. 4 loop
+                  Get (Digit, Done);
+                  Value := Value * 16 + Digit;
+               end loop Unicode_Character_Loop;
+               WCh := Wide_Character'Val (Value);
 
             when others =>
                WCh := Wide_Character'Val (Character'Pos (Ch));
@@ -361,7 +298,7 @@ package body ZanyBlue.Text.Utils is
             WCh := Wide_Character'Val (Character'Pos (Ch));
          end if;
          Append (Buffer, WCh);
-      end loop;
+      end loop Character_Loop;
       return To_Wide_String (Buffer);
    end Unescape_String;
 
@@ -369,7 +306,7 @@ package body ZanyBlue.Text.Utils is
    -- Unicode_Escape --
    --------------------
 
-   function Unicode_Escape (C : Wide_Character) return String is
+   function Unicode_Escape (C : in Wide_Character) return String is
       Hex_Map : constant String (1 .. 16) := "0123456789abcdef";
       Result : String (1 .. 4);
       Pos : Natural := Wide_Character'Pos (C);

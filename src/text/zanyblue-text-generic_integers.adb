@@ -1,20 +1,35 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
---  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
 --
---  This program is free software; you can redistribute it and/or modify
---  it under the terms of the GNU General Public License as published by
---  the Free Software Foundation; either version 2 of the License, or
---  (at your option) any later version.
+--  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  All rights reserved.
 --
---  This program is distributed in the hope that it will be useful,
---  but WITHOUT ANY WARRANTY; without even the implied warranty of
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
---  GNU General Public License for more details.
+--  Redistribution and use in source and binary forms, with or without
+--  modification, are permitted provided that the following conditions
+--  are met:
 --
---  You should have received a copy of the GNU General Public License
---  along with this program; if not, write to the Free Software
---  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+--    * Redistributions of source code must retain the above copyright
+--      notice, this list of conditions and the following disclaimer.
+--
+--    * Redistributions in binary form must reproduce the above copyright
+--      notice, this list of conditions and the following disclaimer in the
+--      documentation and/or other materials provided with the distribution.
+--
+--    * Neither the name of ZanyBlue nor the names of its contributors may
+--      be used to endorse or promote products derived from this software
+--      without specific prior written permission.
+--
+--  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+--  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+--  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+--  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+--  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+--  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+--  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+--  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+--  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+--  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+--  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 with ZanyBlue.Text.Format_Parser;
@@ -23,7 +38,8 @@ with ZanyBlue.Text.Generic_Buffer;
 package body ZanyBlue.Text.Generic_Integers is
 
    package Integer_Buffer is
-      new ZanyBlue.Text.Generic_Buffer (Integer_Type);
+      new ZanyBlue.Text.Generic_Buffer (
+             Integer_Type => Integer_Type);
 
    use Ada.Characters.Conversions;
    use ZanyBlue.Text.Format_Parser;
@@ -33,62 +49,92 @@ package body ZanyBlue.Text.Generic_Integers is
    -- Create --
    ------------
 
-   function Create (Value : Integer_Type) return Integer_Argument is
+   function Create (Value : in Integer_Type) return Integer_Argument_Type is
    begin
-      return Integer_Argument'(Data => Value);
+      return Integer_Argument_Type'(Data => Value);
    end Create;
 
    ------------
    -- Format --
    ------------
 
-   function Format (Value    : Integer_Argument;
-                    Template : Wide_String;
-                    Locale   : Locale_Type) return Wide_String is
+   function Format (Value     : in Integer_Argument_Type;
+                    Type_Name : in Wide_String;
+                    Template  : in Wide_String;
+                    Locale    : in Locale_Type) return Wide_String is
+      pragma Unreferenced (Type_Name);
 
       Formatting : constant Format_Type := Parse (Template, Locale);
-      Buffer     : Buffer_Type (4 * Integer_Type'Width + 5);
+      Width      : Integer := Formatting.Width;
+      Buffer     : Buffer_Type;
       Lowercase  : Boolean := True;
       Base       : Positive range 2 .. 16;
-      X          : Integer_Type := Value.Data;
+      X          : constant Integer_Type := Value.Data;
 
    begin
       --  Use the data type to determine the base to use
       case Formatting.Data is
-         when 'b' =>       Base := 2;
-         when 'o' =>       Base := 8;
-         when 'x' | 'X' => Base := 16;
-                           Lowercase := Formatting.Data = 'x';
-         when others =>    Base := 10;
+         when 'b' =>
+            Base := 2;
+         when 'o' =>
+            Base := 8;
+         when 'x' | 'X' =>
+            Base := 16;
+            Lowercase := Formatting.Data = 'x';
+         when others =>
+            Base := 10;
       end case;
       if X < 0 then
          --  Negative add '-' to the left buffer
-         Add_Left (Buffer, '-');
+         Add (Buffer, Numeric_Item (Locale, Minus_Character));
+         Width := Width - 1;
       else
          --  Positive add '+' or ' ', if user requested
          case Formatting.Sign is
-            when None | Minus => null;
-            when Plus =>         Add_Left (Buffer, '+');
-            when Space =>        Add_Left (Buffer, ' ');
+            when None | Minus =>
+               null;
+            when Plus =>
+               Add (Buffer, Numeric_Item (Locale, Plus_Character));
+               Width := Width - 1;
+            when Space =>
+               Add (Buffer, ' ');
+               Width := Width - 1;
          end case;
       end if;
-      if Base /= 10 and Formatting.Include_Base then
+      if Formatting.Include_Base and then Base /= 10 then
          --  Decorator with base information if base /= 10 and user requested
          case Base is
-            when 2 =>      Add_Left (Buffer, "2#");
-            when 8 =>      Add_Left (Buffer, "8#");
-            when 16 =>     Add_Left (Buffer, "16#");
+            when 2 =>      Add (Buffer, "2#");
+                           Width := Width - 3;
+            when 8 =>      Add (Buffer, "8#");
+                           Width := Width - 3;
+            when 16 =>     Add (Buffer, "16#");
+                           Width := Width - 4;
             when others => null;
          end case;
-         --  Last character in the number buffer (right) should be '#'
-         Add_Right (Buffer, '#');
       end if;
-      Accumulate_Right (Buffer, X, Locale,
+      if Formatting.Align = Numeric then
+         if Formatting.Fill_Defined then
+            Accumulate (Buffer, X, Locale,
+                        Width => Natural'Max (Width, 1),
+                        Fill => "" & Formatting.Fill,
                         Base => Base, Lowercase => Lowercase);
+         else
+            Accumulate (Buffer, X, Locale,
+                        Width => Natural'Max (Width, 1),
+                        Fill => "",
+                        Base => Base, Lowercase => Lowercase);
+         end if;
+      else
+         Accumulate (Buffer, X, Locale,
+                     Base => Base, Lowercase => Lowercase);
+      end if;
+      if Formatting.Include_Base and then Base /= 10 then
+         Add (Buffer, '#');
+      end if;
       --  Apply alignment and return
-      return Align (Right (Buffer),
-                    Formatting.Fill, Formatting.Width, Formatting.Align,
-                    Left (Buffer));
+      return Align (To_String (Buffer),
+                    Formatting.Fill, Formatting.Width, Formatting.Align);
    end Format;
 
 end ZanyBlue.Text.Generic_Integers;

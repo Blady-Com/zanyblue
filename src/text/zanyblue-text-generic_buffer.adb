@@ -1,172 +1,118 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
---  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
 --
---  This program is free software; you can redistribute it and/or modify
---  it under the terms of the GNU General Public License as published by
---  the Free Software Foundation; either version 2 of the License, or
---  (at your option) any later version.
+--  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  All rights reserved.
 --
---  This program is distributed in the hope that it will be useful,
---  but WITHOUT ANY WARRANTY; without even the implied warranty of
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
---  GNU General Public License for more details.
+--  Redistribution and use in source and binary forms, with or without
+--  modification, are permitted provided that the following conditions
+--  are met:
 --
---  You should have received a copy of the GNU General Public License
---  along with this program; if not, write to the Free Software
---  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+--    * Redistributions of source code must retain the above copyright
+--      notice, this list of conditions and the following disclaimer.
+--
+--    * Redistributions in binary form must reproduce the above copyright
+--      notice, this list of conditions and the following disclaimer in the
+--      documentation and/or other materials provided with the distribution.
+--
+--    * Neither the name of ZanyBlue nor the names of its contributors may
+--      be used to endorse or promote products derived from this software
+--      without specific prior written permission.
+--
+--  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+--  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+--  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+--  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+--  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+--  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+--  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+--  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+--  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+--  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+--  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 package body ZanyBlue.Text.Generic_Buffer is
 
-   procedure Accumulate_Left_Base (Buffer     : in out Buffer_Type;
-                                   Value      : Integer_Type'Base;
-                                   Locale     : Locale_Type;
-                                   Width      : Natural);
-   --  Add (accumulate) a numeric value to the left side of the buffer with
-   --  given base.
+   ----------------
+   -- Accumulate --
+   ----------------
 
-   ---------------------
-   -- Accumulate_Left --
-   ---------------------
+   procedure Accumulate (Buffer     : in out Buffer_Type;
+                         Value      : in Integer_Type;
+                         Locale     : in Locale_Type;
+                         Width      : in Natural := 1;
+                         Fill       : in Wide_String := "";
+                         Base       : in Positive := 10;
+                         Lowercase  : in Boolean := True) is
 
-   procedure Accumulate_Left (Buffer     : in out Buffer_Type;
-                              Value      : Integer_Type;
-                              Locale     : Locale_Type;
-                              Width      : Natural := 1) is
-   begin
-      Accumulate_Left_Base (Buffer, Integer_Type'Base (Value), Locale, Width);
-   end Accumulate_Left;
+      Digit_Map : constant Wide_String := Locale_Digits (Locale, Lowercase);
+      Base_Value  : constant Integer_Type'Base := Integer_Type'Base (Base);
 
-   --------------------------
-   -- Accumulate_Left_Base --
-   --------------------------
+      function Number_Width return Positive;
 
-   procedure Accumulate_Left_Base (Buffer     : in out Buffer_Type;
-                                   Value      : Integer_Type'Base;
-                                   Locale     : Locale_Type;
-                                   Width      : Natural) is
+      function Fill_Ch return Wide_Character;
 
-      Digit_Map : constant Wide_String := Locale_Digits (Locale, True);
-      Decrement : constant array (Boolean) of Natural :=
-                     (True => 1, False => 0);
-      Index     : Positive;
+      function Fill_Ch return Wide_Character is
+      begin
+         if Fill'Length > 0 then
+            return Fill (Fill'First);
+         else
+            return Digit_Map (Digit_Map'First);
+         end if;
+      end Fill_Ch;
 
-   begin
-      if Value > 0 or Width > 0 then
-         Accumulate_Left_Base (Buffer, Value / 10, Locale,
-                               Width - Decrement (Width > 0));
-         Index := Positive (Value rem 10 + 1);
-         Add_Left (Buffer, Digit_Map (Index));
-      end if;
-   end Accumulate_Left_Base;
+      function Number_Width return Positive is
+         Result : Natural := 0;
+         X      : Integer_Type'Base := Value;
+      begin
+         while X /= 0 loop
+            X := X / Base_Value;
+            Result := Result + 1;
+         end loop;
+         return Positive'Max (Result, 1);
+      end Number_Width;
 
-   ----------------------
-   -- Accumulate_Right --
-   ----------------------
-
-   procedure Accumulate_Right (Buffer     : in out Buffer_Type;
-                               Value      : in out Integer_Type;
-                               Locale     : Locale_Type;
-                               Width      : Natural := 0;
-                               Scale      : Natural := 0;
-                               Prefix     : Wide_Character := Null_Character;
-                               Base       : Positive := 10;
-                               Lowercase  : Boolean := True) is
-
-      Digit_Map       : constant Wide_String := Locale_Digits (Locale,
-                                                               Lowercase);
-      Amount          : Integer_Type'Base := Value;
-      Index           : Positive;
-      Width_Remaining : Integer := Width;
+      Num_Size    : constant Positive := Number_Width;
+      Buffer_Size : constant Positive := Positive'Max (Num_Size, Width);
+      Formatted   : Wide_String (1 .. Buffer_Size) := (others => Fill_Ch);
+      X           : Integer_Type'Base := Value;
 
    begin
-      if Scale /= 0 then
-         Amount := Amount rem Integer_Type'Base (Scale);
-      end if;
-      if Prefix /= Null_Character then
-         Add_Right (Buffer, Prefix);
-      end if;
-      loop
-         Index := Positive (abs (Amount rem Integer_Type'Base (Base)) + 1);
-         Add_Right (Buffer, Digit_Map (Index));
-         Amount := Amount / Integer_Type'Base (Base);
-         Width_Remaining := Width_Remaining - 1;
-         exit when Amount = 0 and Width_Remaining <= 0;
+      for I in reverse Buffer_Size - Num_Size + 1 .. Buffer_Size loop
+         Formatted (I) := Digit_Map (Positive (abs (X rem Base_Value) + 1));
+         X := X / Base_Value;
       end loop;
-      if Scale /= 0 then
-         Value := Value / Integer_Type'Base (Scale);
-      end if;
-   end Accumulate_Right;
+      Add (Buffer, Formatted);
+   end Accumulate;
 
-   --------------
-   -- Add_Left --
-   --------------
+   ---------
+   -- Add --
+   ---------
 
-   procedure Add_Left (Buffer : in out Buffer_Type;
-                       Data   : Wide_Character) is
+   procedure Add (Buffer : in out Buffer_Type; Data : in Wide_Character) is
    begin
-      if Buffer.Left_Index > Buffer.Right_Index then
-         raise Overflow;
-      end if;
-      Buffer.Data (Buffer.Left_Index) := Data;
-      Buffer.Left_Index := Buffer.Left_Index + 1;
-   end Add_Left;
+      Append (Buffer.Data, Data);
+   end Add;
 
-   --------------
-   -- Add_Left --
-   --------------
+   ---------
+   -- Add --
+   ---------
 
-   procedure Add_Left (Buffer : in out Buffer_Type;
-                       Data   : Wide_String) is
+   procedure Add (Buffer : in out Buffer_Type; Data : in Wide_String) is
    begin
       for I in Data'Range loop
-         Add_Left (Buffer, Data (I));
+         Add (Buffer, Data (I));
       end loop;
-   end Add_Left;
+   end Add;
 
    ---------------
-   -- Add_Right --
+   -- To_String --
    ---------------
 
-   procedure Add_Right (Buffer : in out Buffer_Type;
-                        Data   : Wide_Character) is
+   function To_String (Buffer : in Buffer_Type) return Wide_String is
    begin
-      if Buffer.Right_Index < Buffer.Left_Index then
-         raise Overflow;
-      end if;
-      Buffer.Data (Buffer.Right_Index) := Data;
-      Buffer.Right_Index := Buffer.Right_Index - 1;
-   end Add_Right;
-
-   ---------------
-   -- Add_Right --
-   ---------------
-
-   procedure Add_Right (Buffer : in out Buffer_Type;
-                        Data   : Wide_String) is
-   begin
-      for I in reverse Data'Range loop
-         Add_Right (Buffer, Data (I));
-      end loop;
-   end Add_Right;
-
-   ----------
-   -- Left --
-   ----------
-
-   function Left (Buffer : Buffer_Type) return Wide_String is
-   begin
-      return Buffer.Data (1 .. Buffer.Left_Index - 1);
-   end Left;
-
-   -----------
-   -- Right --
-   -----------
-
-   function Right (Buffer : Buffer_Type) return Wide_String is
-   begin
-      return Buffer.Data (Buffer.Right_Index + 1 .. Buffer.Size);
-   end Right;
+      return To_Wide_String (Buffer.Data);
+   end To_String;
 
 end ZanyBlue.Text.Generic_Buffer;

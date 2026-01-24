@@ -1,15 +1,9 @@
+* Add ability to disable built-in locales, e.g., if an app support en and fr
+  disable any non-en, non-fr locales to prevent mixed language outputs.
 * Investigate BiDi issues, e.g., "make run_ar" or "make run_he" for
   the examples/text/gtk directory.
-* Handle .properties definitions like
-
-    name=\
-    a value
-* The line numbers reported by Properties_Parser are out of sync?
-* Add autoconf support to detect AUnit, XMLAda, etc.
-* Fixup the documentation: the texi => html generates errors but
-  works, to a degree.
-* Should CLDR defined defaults be applied to locales?  E.g., the set
-  currently defined by the CLDR data is
+* Should CLDR defined defaults be applied to locales?  E.g., the set currently
+  defined by the CLDR data (see cldr/common/supplemental/likelySubtags.xml) is
       az_AZ=az_Latn_AZ
       az_IR=az_Arab_IR
       ha_GH=ha_Latn_GH
@@ -42,7 +36,3 @@
       zh_SG=zh_Hans_SG
       zh_TW=zh_Hant_TW
   Maybe via an "normalize locale" routine?
-* The handling of the CLDR XML data defines the zero character for Arabic to
-  be "٠".  This is correct but it's definition is an accident of the ordering
-  of elements in the ar.xml file.  The zb compilation process should be better
-  defined.

@@ -1,20 +1,35 @@
 #
 #  ZanyBlue, an Ada library and framework for finite element analysis.
-#  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
 #
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
+#  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+#  All rights reserved.
 #
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
 #
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#    * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#    * Redistributions in binary form must reproduce the above copyright
+#      notice, this list of conditions and the following disclaimer in the
+#      documentation and/or other materials provided with the distribution.
+#
+#    * Neither the name of ZanyBlue nor the names of its contributors may
+#      be used to endorse or promote products derived from this software
+#      without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+#  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+#  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+#  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+#  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+#  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+#  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+#  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+#  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+#  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
 #
@@ -23,22 +38,23 @@
 
 TOP=..
 
-GPRFLAGS+=-p
-ZANYBLUEADB=$(TOP)/src/root/zanyblue.adb
-SLOCDIRS=root os compiler text utils zbmcompile
-INCDIR=$(TOP)/include
-INCLUDE_SRC_DIRS=root compiler compiler/$(COMPILER) os os/$(OS) text utils
+GNATFLAGS+=-p
+ZANYBLUEADB=$(SRCDIR)/root/zanyblue.adb
+INCLUDE_SRC_DIRS=root os os/$(OS) parameters text utils
 INCLUDE_SRCS=$(foreach d,$(INCLUDE_SRC_DIRS),\
-                 $(patsubst $(TOP)/src/$d/%,%,\
-                     $(wildcard $(TOP)/src/$d/*.ads) \
-                     $(wildcard $(TOP)/src/$d/*generic*.adb)))
-INCLUDE_FILES=$(patsubst %,$(TOP)/include/%,$(INCLUDE_SRCS))
+                 $(patsubst $(SRCDIR)/$d/%,%,\
+                     $(wildcard $(SRCDIR)/$d/*.ads) \
+                     $(wildcard $(SRCDIR)/$d/*generic*.adb)))
+INCLUDE_FILES=$(patsubst %,$(INCDIR)/%,$(INCLUDE_SRCS))
 GENERATED=$(INCLUDE_FILES)
-APPDIRS=zbmcompile
+APPDIRS=zbmcompile zbtest
 APPTARGETS=$(patsubst %,%.app,$(APPDIRS))
 CLEAN_DEPS=$(patsubst %,%.clean,$(APPDIRS) root test)
 CLEAN_FILES+=$(wildcard bin/pylib/*.pyc)
 CLEAN_FILES+=$(wildcard bin/pylib/zb/*.pyc)
+CLEAN_FILES+=$(wildcard gnatcheck.out)
+CLEAN_FILES+=$(wildcard obj/*)
+CLEAN_FILES+=$(wildcard ../lib/b~*)
 
 # Include configuration definitions
 include $(TOP)/src/mkfile/conf.mk
@@ -48,15 +64,21 @@ all: setup library applications
 setup: $(ZANYBLUEADB) $(INCDIR) $(INCLUDE_FILES)
 
 library:
-	gprbuild $(GPRFLAGS) -P zanyblue_library.gpr
+	$(GNATMAKE) $(GNATFLAGS) -P zblib.gpr
 
 applications:	$(APPTARGETS)
+
+docs:
+	$(MAKE) -C doc install
+
+changelog:
+	$(SRCDIR)/bin/mkchangelog
 
 %.app:
 	$(MAKE) -C $*
 
 clean::
-	gprclean -P zanyblue_library.gpr
+	$(GNATCLEAN) -P zblib.gpr
 
 clean::	$(CLEAN_DEPS)
 
@@ -69,43 +91,50 @@ check:
 xcheck:
 	$(MAKE) -C test xcheck
 
+gcheck:
+	$(info Expect 'use of equality operation for float values' in zanyblue-text-generic_floats.adb)
+	$(GNATCHECK) -rules -from=admin/gnatcheck.rules -P zblib.gpr
+
 force:
 
 $(ZANYBLUEADB):
-	$(MAKE) -C $(TOP)/src/root
+	$(MAKE) -C $(SRCDIR)/root
 
 $(INCDIR):
 	$(call MKDIR,$(INCDIR))
 
-$(TOP)/include/%:	$(TOP)/src/root/%
-	$(call COPY,$(TOP)/src/root/$*,$(TOP)/include/$*)
+$(INCDIR)/%:	$(SRCDIR)/root/%
+	$(call COPY,$(SRCDIR)/root/$*,$(INCDIR)/$*)
 
-$(TOP)/include/%:	$(TOP)/src/compiler/%
-	$(call COPY,$(TOP)/src/compiler/$*,$(TOP)/include/$*)
+$(INCDIR)/%:	$(SRCDIR)/os/%
+	$(call COPY,$(SRCDIR)/os/$*,$(INCDIR)/$*)
 
-$(TOP)/include/%:	$(TOP)/src/compiler/$(COMPILER)/%
-	$(call COPY,$(TOP)/src/compiler/$(COMPILER)/$*,$(TOP)/include/$*)
+$(INCDIR)/%:	$(SRCDIR)/os/$(OS)/%
+	$(call COPY,$(SRCDIR)/os/$(OS)/$*,$(INCDIR)/$*)
 
-$(TOP)/include/%:	$(TOP)/src/os/%
-	$(call COPY,$(TOP)/src/os/$*,$(TOP)/include/$*)
+$(INCDIR)/%:	$(SRCDIR)/parameters/%
+	$(call COPY,$(SRCDIR)/parameters/$*,$(INCDIR)/$*)
 
-$(TOP)/include/%:	$(TOP)/src/os/$(OS)/%
-	$(call COPY,$(TOP)/src/os/$(OS)/$*,$(TOP)/include/$*)
+$(INCDIR)/%:	$(SRCDIR)/text/%
+	$(call COPY,$(SRCDIR)/text/$*,$(INCDIR)/$*)
 
-$(TOP)/include/%:	$(TOP)/src/text/%
-	$(call COPY,$(TOP)/src/text/$*,$(TOP)/include/$*)
-
-$(TOP)/include/%:	$(TOP)/src/utils/%
-	$(call COPY,$(TOP)/src/utils/$*,$(TOP)/include/$*)
+$(INCDIR)/%:	$(SRCDIR)/utils/%
+	$(call COPY,$(SRCDIR)/utils/$*,$(INCDIR)/$*)
 
 # Include general rules.
 include $(TOP)/src/mkfile/rules.mk
 
-# Generation of "source lines of code" data for Hudson trending
+# Generation of "source lines of code" data for Hudson trending.
 include $(TOP)/src/mkfile/sloccount.mk
 
-# Include the "gcov" target to build for coverage runs
+# Include the "gcov" target to build for coverage runs.
 include $(TOP)/src/mkfile/gcov.mk
+
+# Include the "gprof" target to build for profile runs.
+include $(TOP)/src/mkfile/gprof.mk
 
 # Include the "dist-bundles" target and support macros.
 include $(TOP)/src/mkfile/bundles.mk
+
+# Include the "install" target and support macros.
+include $(TOP)/src/mkfile/install.mk

@@ -30,6 +30,8 @@ class StringPool(object):
         """
         self.string_mapping = {}
         self.index_addresses = []
+        self.n_saved = 0
+        self.string_set = set()
         self.pool = u""
         self.index(u"")
 
@@ -40,13 +42,26 @@ class StringPool(object):
         """
         if not self.string_mapping.has_key(val):
             index = len(self.index_addresses) + 1
-            start = len(self.pool) + 1
+            start = self.pool.find(val)
+            if start == -1:
+                start = len(self.pool) + 1
+                self.pool += val
+            else:
+                self.n_saved += len(val)
+                start = start + 1
             end = start + len(val) - 1
             self.string_mapping[val] = index
             self.index_addresses.append((start, end, index))
-            self.pool += val
         result = self.string_mapping[val]
         return result
+
+    def accumulate(self, val):
+        self.string_set.add(val)
+        return val
+
+    def resolve_strings(self):
+        for val in sorted(self.string_set, reverse=True):
+            self.index(val)
 
     def value(self, index):
         start, end, index = self.index_addresses[index - 1]
@@ -70,6 +85,9 @@ class StringPool(object):
             mapping[value[2] - 1] = address + 1
         return mapping
 
+    def stats(self):
+        return len(self.pool), self.n_saved
+
     def write(self, fp):
         """
         Generate the Ada code corresponding the the accumulated string data.
@@ -85,5 +103,5 @@ class StringPool(object):
             code = ZBMSG0005 if index < last_index else ZBMSG0006
             text = self.pool[address[0]-1:address[1]]
             zbm_write(fp, ZBMSG0054, index + 1, text)
-            zbm_write(fp, code, *address)
+            zbm_write(fp, code, index + 1, *address)
         zbm_new_line(fp)

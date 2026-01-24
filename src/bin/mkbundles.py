@@ -25,27 +25,50 @@ _0002 = "Copyright (c) {0}, Michael Rohan.  All rights reserved."
 _0003 = "Scanning the ZanyBlue directory \"{0}\" ..."
 _0004 = "Generating bundles for V{0}, r{2} ({1})"
 _0005 = "Generating the bundle \"{0}\" ({1} entries) ..."
+_0006 = "No output file types specified via the -t option"
+_0007 = "The output file type \"{0}\" is not known"
 
 _DEFAULT_TYPE = ("zip" if os.sys.platform.startswith("win") else "tar.gz")
 _DEFS_FILE = "src/mkfile/defs.mk"
 _DEFS_CONTENTS = '''#
-# Note, this file was generated to capture the copyright year and SVN version
-# number at the time of tar ball packaging.
+#  Note, this file was generated to capture the copyright year and SVN version
+#  number at the time of tar ball packaging.
 #
-# Copyright (C) %(COPYRIGHT_YEAR)s, Michael Rohan
+#  ZanyBlue, an Ada library and framework for finite element analysis.
 #
-# ZanyBlue is free software;  you can  redistribute it and/or modify it
-# under terms of the  GNU General Public License as published  by the Free
-# Software  Foundation;  either version 2,  or (at your option) any later
-# version.  ZanyBlue is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY;  without even the  implied warranty of MERCHANTABILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for  more details.  You should have  received  a copy of the GNU General
-# Public License  distributed with ZanyBlue;  see file COPYING.  If not, write
-# to  the  Free Software Foundation,  51  Franklin  Street,  Fifth  Floor,
-# Boston, MA 02110-1301, USA.
+#  Copyright (c) %(COPYRIGHT_YEAR)s, Michael Rohan <mrohan@zanyblue.com>
+#  All rights reserved.
 #
-# Makefile definitions for the ZanyBlue version macros
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#
+#    * Redistributions of source code must retain the above copyright
+#      notice, this list of conditions and the following disclaimer.
+#
+#    * Redistributions in binary form must reproduce the above copyright
+#      notice, this list of conditions and the following disclaimer in the
+#      documentation and/or other materials provided with the distribution.
+#
+#    * Neither the name of ZanyBlue nor the names of its contributors may
+#      be used to endorse or promote products derived from this software
+#      without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+#  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+#  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+#  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+#  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+#  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+#  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+#  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+#  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+#  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+#
+#  Makefile definitions for the ZanyBlue version macros
 #
 
 VERSION=%(VERSION)s
@@ -53,6 +76,8 @@ STATUS=%(STATUS)s
 SVN_VERSION=%(REVISION)sX
 COPYRIGHT_YEAR=%(COPYRIGHT_YEAR)s
 '''
+
+_FILE_TYPES = set(['tar', 'tar.bz2', 'tar.gz', 'zip'])
 
 def locate_top(args):
     """
@@ -88,23 +113,24 @@ def mk_defs_file(name, top, version, revision, status, copyright_year):
        'COPYRIGHT_YEAR': copyright_year }
     return  _DEFS_CONTENTS % params
 
-def mk_bundle_filenames(top, filetype, version, revision, status):
+def mk_bundle_filenames(top, version, revision, status):
     """
     Return the prefix (top level directory in the genreated bundle)
     and the two bundle file names (src and third party dependencies).
     """
-    args = [ version, status[0].lower(), revision.lower(), filetype ]
+    args = [ version, status[0].lower(), revision.lower() ]
     prefix = "zanyblue-{0}{1}".format(*args)
-    src_bundle = "zanyblue-{0}{1}-r{2}.{3}".format(*args)
-    libs3rd_bundle = "zanyblue-{0}{1}-r{2}-libs3rd.{3}".format(*args)
+    src_bundle = "zanyblue-{0}{1}-r{2}.".format(*args)
+    libs3rd_bundle = "zanyblue-{0}{1}-r{2}-libs3rd.".format(*args)
     return prefix, src_bundle, libs3rd_bundle
 
-def open_bundle(top, prefix, name, verbose, files, manifest="MANIFEST.txt"):
+def open_bundle(top, prefix, name, filetype, verbose, files,
+                manifest="MANIFEST.txt"):
     """
     Create the bundle for writing.  Simply dispatch on the file type.
     """
-    filename = os.path.join(top, name)
-    if filename.endswith("zip"):
+    filename = os.path.join(top, name) + filetype
+    if filetype == "zip":
         result = ZipDestination(not verbose, prefix, filename, manifest)
     else:
         result = TarDestination(not verbose, prefix, filename, manifest)
@@ -126,8 +152,8 @@ def main():
                       default=False,
                       help="Increase the amount of generated status output")
     parser.add_option("-t", "--type",
-                      dest="filetype",
-                      default=_DEFAULT_TYPE,
+                      dest="filetypes",
+                      action="append",
                       help="Package file type, e.g., tar, tar.bz2, zip, etc")
     parser.add_option("-V", "--version",
                       dest="version",
@@ -152,7 +178,15 @@ def main():
     top = os.path.abspath(locate_top(args))
     make = options.make
     verbose = options.verbose
-    filetype = options.filetype
+    filetypes = options.filetypes
+    if len(filetypes) == 0:
+        print _0006
+        return 1
+    unknown_types = set(filetypes) - _FILE_TYPES
+    if len(unknown_types) > 0:
+        for filetype in unknown_types:
+            print _0007.format(filetype)
+        return 1
     version = options.version or query_make(top, make, "VERSION")
     revision = options.revision or query_make(top, make, "SVN_VERSION")
     status = options.status or query_make(top, make, "V_STATUS")
@@ -167,11 +201,13 @@ def main():
     defs_data = mk_defs_file(_DEFS_FILE, top, version, revision,
                              status, copyright_year)
     filesets = Filesets()
-    filesets.add_category_rule("libs3rd", "^$", "src/libs3rd.*")
-    filesets.add_category_rule("libs3rd", "^M", "src/libs3rd.*")
+    filesets.add_category_rule("libs3rd", "^$", "libs3rd.*")
+    filesets.add_category_rule("libs3rd", "^M", "libs3rd.*")
     filesets.add_category_rule("binary", ".*", ".*.pl$")
+    filesets.add_category_rule("binary", ".*", "src/doc/website.*")
     filesets.add_category_rule("source", ".*", _DEFS_FILE)
     filesets.add_category_rule("source", ".*", "doc/.*")
+    filesets.add_category_rule("source", ".*", "NOTICES.txt")
     filesets.add_category_rule("source", "^$", ".*")
     filesets.add_category_rule("source", "^M", ".*")
     filesets.add_category_rule("binary", "[I\?]", ".*")
@@ -184,17 +220,17 @@ def main():
             pathname = fullname[len(top) + 1:]
             filesets.svn_add(fullname, pathname)
     prefix, src_bundle, libs3rd_bundle = mk_bundle_filenames(top,
-                                                             filetype,
                                                              version,
                                                              revision,status)
-    dest = open_bundle(top, prefix, src_bundle, verbose,
-                       filesets.get_category_files("source"))
-    dest.add_data(_DEFS_FILE, defs_data)
-    dest.close()
-    dest = open_bundle(top, prefix, libs3rd_bundle, verbose,
-                       filesets.get_category_files("libs3rd"),
-                       "MANIFEST-LIBS3RD.txt")
-    dest.close()
+    for filetype in filetypes:
+        dest = open_bundle(top, prefix, src_bundle, filetype, verbose,
+                           filesets.get_category_files("source"))
+        dest.add_data(_DEFS_FILE, defs_data)
+        dest.close()
+        dest = open_bundle(top, prefix, libs3rd_bundle, filetype, verbose,
+                           filesets.get_category_files("libs3rd"),
+                           "MANIFEST-LIBS3RD.txt")
+        dest.close()
     return 0
 
 if __name__ == '__main__':

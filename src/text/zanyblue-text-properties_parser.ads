@@ -1,20 +1,35 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
---  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
 --
---  This program is free software; you can redistribute it and/or modify
---  it under the terms of the GNU General Public License as published by
---  the Free Software Foundation; either version 2 of the License, or
---  (at your option) any later version.
+--  Copyright (c) 2012, Michael Rohan <mrohan@zanyblue.com>
+--  All rights reserved.
 --
---  This program is distributed in the hope that it will be useful,
---  but WITHOUT ANY WARRANTY; without even the implied warranty of
---  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
---  GNU General Public License for more details.
+--  Redistribution and use in source and binary forms, with or without
+--  modification, are permitted provided that the following conditions
+--  are met:
 --
---  You should have received a copy of the GNU General Public License
---  along with this program; if not, write to the Free Software
---  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+--    * Redistributions of source code must retain the above copyright
+--      notice, this list of conditions and the following disclaimer.
+--
+--    * Redistributions in binary form must reproduce the above copyright
+--      notice, this list of conditions and the following disclaimer in the
+--      documentation and/or other materials provided with the distribution.
+--
+--    * Neither the name of ZanyBlue nor the names of its contributors may
+--      be used to endorse or promote products derived from this software
+--      without specific prior written permission.
+--
+--  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+--  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+--  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+--  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+--  HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+--  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+--  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+--  PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+--  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+--  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+--  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
 with Ada.Wide_Text_IO;
@@ -27,57 +42,87 @@ package ZanyBlue.Text.Properties_Parser is
 
    type Parser_Handler_Type is abstract tagged private;
 
-   procedure Add_Key_Value (Handler   : in out Parser_Handler_Type;
-                            Facility  : Wide_String;
-                            Key       : Wide_String;
-                            Value     : Wide_String;
-                            Locale    : Locale_Type;
-                            File_Name : Wide_String;
-                            Line      : Natural)
+   procedure Add_Key_Value (Handler       : in out Parser_Handler_Type;
+                            Facility      : in Wide_String;
+                            Key           : in Wide_String;
+                            Value         : in Wide_String;
+                            Locale        : in Locale_Type;
+                            Source_Locale : in Locale_Type;
+                            File_Name     : in Wide_String;
+                            Line          : in Natural)
       is abstract;
    --  Call back to handle the definition of a key/value pair.
 
    procedure Duplicate_Key (Handler       : in out Parser_Handler_Type;
-                            Facility      : Wide_String;
-                            Key           : Wide_String;
-                            Locale        : Locale_Type;
-                            File_Name     : Wide_String;
-                            Current_Line  : Natural;
-                            Previous_Line : Natural)
+                            Facility      : in Wide_String;
+                            Key           : in Wide_String;
+                            Locale        : in Locale_Type;
+                            File_Name     : in Wide_String;
+                            Current_Line  : in Natural;
+                            Previous_Line : in Natural)
       is abstract;
    --  Call back used to report a duplicate key error.
 
+   procedure Invalid_Character (Handler         : in out Parser_Handler_Type;
+                                Facility        : in Wide_String;
+                                File_Name       : in Wide_String;
+                                Current_Line    : in Natural;
+                                Ch              : in Character)
+      is abstract;
+   --  Call back used to report an invalid character, non-ISO-646, in the
+   --  source properties file.
+
    procedure Invalid_Definition (Handler         : in out Parser_Handler_Type;
-                                 Facility        : Wide_String;
-                                 Locale          : Locale_Type;
-                                 File_Name       : Wide_String;
-                                 Current_Line    : Natural;
-                                 Additional_Info : String)
+                                 Facility        : in Wide_String;
+                                 Locale          : in Locale_Type;
+                                 File_Name       : in Wide_String;
+                                 Current_Line    : in Natural;
+                                 Additional_Info : in String)
       is abstract;
    --  Call back used to report an invalid definition.
 
-   function Get_N_Messages (Handler : Parser_Handler_Type) return Natural;
+   function Get_N_Messages (Handler : in Parser_Handler_Type) return Natural;
    --  Return the number of messages parsed.
 
    procedure Reset_N_Messages (Handler : in out Parser_Handler_Type);
    --  Reset the number of messages parse (used when re-using a parser).
 
-   function Get_N_Errors (Handler : Parser_Handler_Type) return Natural;
+   function Get_N_Errors (Handler : in Parser_Handler_Type) return Natural;
    --  Get the number of error encountered during the parsing of a file.
 
-   procedure Parse (File_Name   : Wide_String;
-                    Facility    : Wide_String;
-                    Locale      : Locale_Type;
-                    Handler     : in out Parser_Handler_Type'Class);
+   procedure Increment_Errors (Handler   : in out Parser_Handler_Type;
+                               By_Amount : in Natural := 1);
+   --  Increment the number of errors associated with the properies files
+   --  parsed.
+
+   procedure Parse (Handler          : in out Parser_Handler_Type'Class;
+                    File_Name        : in Wide_String;
+                    Facility         : in Wide_String;
+                    Locale           : in Locale_Type);
+   --  Parse a properties file using the calling back via the Handler.
+
+   procedure Parse (Handler       : in out Parser_Handler_Type'Class;
+                    File_Name     : in Wide_String;
+                    Facility      : in Wide_String;
+                    Locale        : in Locale_Type;
+                    Source_Locale : in Locale_Type);
    --  Parse a properties file using the calling back via the Handler to
    --  process message definitions and errors (see the abstract methods
    --  above).
 
-   procedure Parse (Source_File : in out File_Type;
-                    File_Name   : Wide_String;
-                    Facility    : Wide_String;
-                    Locale      : Locale_Type;
-                    Handler     : in out Parser_Handler_Type'Class);
+   procedure Parse (Handler          : in out Parser_Handler_Type'Class;
+                    Source_File      : in out File_Type;
+                    File_Name        : in Wide_String;
+                    Facility         : in Wide_String;
+                    Locale           : in Locale_Type);
+   --  Same as Parse but on an already open file handle.
+
+   procedure Parse (Handler       : in out Parser_Handler_Type'Class;
+                    Source_File   : in out File_Type;
+                    File_Name     : in Wide_String;
+                    Facility      : in Wide_String;
+                    Locale        : in Locale_Type;
+                    Source_Locale : in Locale_Type);
    --  Same as Parse but on an already open file handle.
 
 private
@@ -90,8 +135,5 @@ private
 
    procedure Increment_Messages (Handler : in out Parser_Handler_Type);
    --  Increment the number of messages parsed.
-
-   procedure Increment_Errors (Handler : in out Parser_Handler_Type);
-   --  Increment the number of errors encountered.
 
 end ZanyBlue.Text.Properties_Parser;
