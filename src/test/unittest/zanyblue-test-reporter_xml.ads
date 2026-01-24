@@ -37,6 +37,7 @@
 --  with Hudson (www.hudson-ci.org), i.e., Java JUnit style XML.
 --
 
+with AUnit.Options; use AUnit.Options;
 with AUnit.Reporter; use AUnit.Reporter;
 with AUnit.Test_Results; use AUnit.Test_Results;
 
@@ -44,7 +45,8 @@ package ZanyBlue.Test.Reporter_XML is
 
    type XML_Reporter is new Reporter with null record;
 
-   procedure Report (Engine : XML_Reporter;
-                     R      : in out Result'Class);
+   procedure Report (Engine  : XML_Reporter;
+                     R       : in out Result'Class;
+                     Options : AUnit_Options := Default_Options);
 
 end ZanyBlue.Test.Reporter_XML;

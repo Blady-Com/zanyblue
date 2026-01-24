@@ -1,11 +1,11 @@
-#!/usr/bin/python -tt
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
 """
 mktarballs: Generate the distribution tar balls for ZanyBlue
 """
 
 import os
-import re
 import sys
 import time
 from optparse import OptionParser
@@ -16,12 +16,12 @@ sys.path.insert(0, os.path.join(_ROOT_DIR, "pylib"))
 from filesets import Filesets
 from bundles import TarDestination, ZipDestination
 
-_V_MAJOR = 1
-_V_MINOR = 0
-_V_PATCH = 0
+# Should files associated with the website be included in the generated
+# distribution bundle.
+_INCLUDE_WEBSITE = True
 
-_0001 = "This is MKBUNDLES, V{0}.{1}.{2} on {3}."
-_0002 = "Copyright (c) {0}, Michael Rohan.  All rights reserved."
+_0001 = "This is MKBUNDLES, V{0} - {1} on {2}."
+_0002 = "Copyright © {0}, Michael Rohan.  All rights reserved."
 _0003 = "Scanning the ZanyBlue directory \"{0}\" ..."
 _0004 = "Generating bundles for V{0}, r{2} ({1})"
 _0005 = "Generating the bundle \"{0}\" ({1} entries) ..."
@@ -36,7 +36,7 @@ _DEFS_CONTENTS = '''#
 #
 #  ZanyBlue, an Ada library and framework for finite element analysis.
 #
-#  Copyright (c) %(COPYRIGHT_YEAR)s, Michael Rohan <mrohan@zanyblue.com>
+#  Copyright © %(COPYRIGHT_YEAR)s, Michael Rohan <mrohan@zanyblue.com>
 #  All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without
@@ -71,6 +71,7 @@ _DEFS_CONTENTS = '''#
 #  Makefile definitions for the ZanyBlue version macros
 #
 
+BUILD=Production
 VERSION=%(VERSION)s
 STATUS=%(STATUS)s
 SVN_VERSION=%(REVISION)sX
@@ -78,6 +79,7 @@ COPYRIGHT_YEAR=%(COPYRIGHT_YEAR)s
 '''
 
 _FILE_TYPES = set(['tar', 'tar.bz2', 'tar.gz', 'zip'])
+
 
 def locate_top(args):
     """
@@ -92,6 +94,7 @@ def locate_top(args):
             top = os.path.dirname(top)
     return top
 
+
 def query_make(top, make, variable):
     """
     Return the value of a Makefile variable by querying the top level source
@@ -101,28 +104,32 @@ def query_make(top, make, variable):
     result = os.popen(cmd).read().strip()
     return result
 
+
 def mk_defs_file(name, top, version, revision, status, copyright_year):
     """
     Create the defs Makefile used to avoid querying the environment in created
     from tar bundles.
     """
     params = {
-       'VERSION':        version,
-       'REVISION':       revision,
-       'STATUS':         status,
-       'COPYRIGHT_YEAR': copyright_year }
+       'VERSION': version,
+       'REVISION': revision,
+       'STATUS': status,
+       'COPYRIGHT_YEAR': copyright_year
+    }
     return  _DEFS_CONTENTS % params
+
 
 def mk_bundle_filenames(top, version, revision, status):
     """
     Return the prefix (top level directory in the genreated bundle)
     and the two bundle file names (src and third party dependencies).
     """
-    args = [ version, status[0].lower(), revision.lower() ]
+    args = [version, status[0].lower(), revision.lower()]
     prefix = "zanyblue-{0}{1}".format(*args)
     src_bundle = "zanyblue-{0}{1}-r{2}.".format(*args)
     libs3rd_bundle = "zanyblue-{0}{1}-r{2}-libs3rd.".format(*args)
     return prefix, src_bundle, libs3rd_bundle
+
 
 def open_bundle(top, prefix, name, filetype, verbose, files,
                 manifest="MANIFEST.txt"):
@@ -140,42 +147,59 @@ def open_bundle(top, prefix, name, filetype, verbose, files,
         result.add(pathname, name)
     return result
 
+
 def main():
     """
     Main driver function.  Setup the command line option parser,
     parse and dispatch.
     """
     parser = OptionParser(usage=__doc__)
-    parser.add_option("-v", "--verbose",
-                      action="store_true",
-                      dest="verbose",
-                      default=False,
-                      help="Increase the amount of generated status output")
-    parser.add_option("-t", "--type",
-                      dest="filetypes",
-                      action="append",
-                      help="Package file type, e.g., tar, tar.bz2, zip, etc")
-    parser.add_option("-V", "--version",
-                      dest="version",
-                      help="Version number")
-    parser.add_option("-R", "--revision",
-                      dest="revision",
-                      help="SVN version number")
-    parser.add_option("-S", "--status",
-                      dest="status",
-                      help="Release status (ALPHA, BETA, ...)")
-    parser.add_option("-L", "--libs3rd",
-                      action="store_true",
-                      dest="libs3rd",
-                      default=False,
-                      help="Generate the libs3rd bundle")
-    parser.add_option("-Y", "--copyright-year",
-                      dest="copyright_year",
-                      help="Copyright year")
-    parser.add_option("-m", "--make",
-                      dest="make",
-		      default="make",
-                      help="Make command to use")
+    parser.add_option(
+        "-v", "--verbose",
+        action="store_true",
+        dest="verbose",
+        default=False,
+        help="Increase the amount of generated status output"
+    )
+    parser.add_option(
+        "-t", "--type",
+        dest="filetypes",
+        action="append",
+        help="Package file type, e.g., tar, tar.bz2, zip, etc"
+    )
+    parser.add_option(
+        "-V", "--version",
+        dest="version",
+        help="Version number"
+    )
+    parser.add_option(
+        "-R", "--revision",
+        dest="revision",
+        help="SVN version number"
+    )
+    parser.add_option(
+        "-S", "--status",
+        dest="status",
+        help="Release status (ALPHA, BETA, ...)"
+    )
+    parser.add_option(
+        "-L", "--libs3rd",
+        action="store_true",
+        dest="libs3rd",
+        default=False,
+        help="Generate the libs3rd bundle"
+    )
+    parser.add_option(
+        "-Y", "--copyright-year",
+        dest="copyright_year",
+        help="Copyright year"
+    )
+    parser.add_option(
+        "-m", "--make",
+        dest="make",
+        default="make",
+        help="Make command to use"
+    )
     (options, args) = parser.parse_args()
     if len(args) > 1:
         parser.print_help()
@@ -199,7 +223,7 @@ def main():
     revision = revision.replace(":", "-")
     status = status
     copyright_year = options.copyright_year or time.localtime().tm_year
-    print _0001.format(_V_MAJOR, _V_MINOR, _V_PATCH, time.ctime())
+    print _0001.format(version, status, time.ctime())
     print _0002.format(copyright_year)
     if verbose:
         print _0004.format(version, status, revision)
@@ -208,14 +232,16 @@ def main():
     filesets = Filesets()
     filesets.add_category_rule("libs3rd", "^$", "libs3rd.*")
     filesets.add_category_rule("libs3rd", "^M", "libs3rd.*")
-    filesets.add_category_rule("binary", ".*", ".*.pl$")
-    filesets.add_category_rule("binary", ".*", "src/doc/website.*")
+    filesets.add_category_rule("binary", ".*", ".*test-area.*")
     filesets.add_category_rule("source", ".*", _DEFS_FILE)
     filesets.add_category_rule("source", ".*", "doc/.*")
     filesets.add_category_rule("source", ".*", "NOTICES.txt")
     filesets.add_category_rule("source", "^$", ".*")
     filesets.add_category_rule("source", "^M", ".*")
     filesets.add_category_rule("binary", "[I\?]", ".*")
+    if not _INCLUDE_WEBSITE:
+        filesets.add_category_rule("binary", ".*", ".*.pl$")
+        filesets.add_category_rule("binary", ".*", "src/doc/website.*")
     print _0003.format(top)
     for path, subdirs, files in os.walk(top):
         for name in subdirs + files:
@@ -224,9 +250,12 @@ def main():
                 continue
             pathname = fullname[len(top) + 1:]
             filesets.svn_add(fullname, pathname)
-    prefix, src_bundle, libs3rd_bundle = mk_bundle_filenames(top,
-                                                             version,
-                                                             revision,status)
+    prefix, src_bundle, libs3rd_bundle = mk_bundle_filenames(
+        top,
+        version,
+        revision,
+        status
+    )
     for filetype in filetypes:
         dest = open_bundle(top, prefix, src_bundle, filetype, verbose,
                            filesets.get_category_files("source"))

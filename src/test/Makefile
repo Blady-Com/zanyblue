@@ -43,4 +43,7 @@ all clean sall check xcheck::
 	$(MAKE) -C unittest $@
 	$(MAKE) -C system $@
 
+mkr:
+	env
+
 include $(TOP)/src/mkfile/rules.mk

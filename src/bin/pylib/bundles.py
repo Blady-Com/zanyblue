@@ -19,8 +19,8 @@ MANIFEST_HEADER = '''#
 #
 #    $ md5sum --check {0}/{1}
 #
-
 '''
+
 
 class Destination(object):
     """Capture a destination, a tar or zip file."""
@@ -35,9 +35,9 @@ class Destination(object):
     def add(self, pathname, renamed=None):
         """Add a file to the output destination, possibly renamed."""
         if renamed:
-           destname = renamed
+            destname = renamed
         else:
-           destname = pathname
+            destname = pathname
         if self.prefix:
             destname = os.path.join(self.prefix, destname)
         if not self.quiet:
@@ -68,7 +68,7 @@ class Destination(object):
         """Close the destination."""
         if self.prefix:
             MANIFEST = MANIFEST_HEADER.format(self.prefix, self.manifest)
-            for path in sorted(self.checksums.keys ()):
+            for path in sorted(self.checksums.keys()):
                 checksum = self.checksums[path]
                 MANIFEST += "{0}  {1}\n".format(checksum, path)
             self.add_data(self.manifest, MANIFEST)
@@ -80,7 +80,7 @@ class Destination(object):
         """Return the name of a temporary file containing the file data."""
         (tmpfile, tmpname) = tempfile.mkstemp(".zbtmp")
         os.write(tmpfile, filedata)
-        os.close (tmpfile)
+        os.close(tmpfile)
         return tmpname
 
     def _v_call(self, method):
@@ -103,6 +103,7 @@ class Destination(object):
         except IOError, error:
             print "Error: %s" % (str(error),)
         return result.hexdigest()
+
 
 class TarDestination(Destination):
     """A .tar file destination."""
@@ -140,6 +141,7 @@ class TarDestination(Destination):
         Destination.close(self)
         self.tar_handle.close()
 
+
 class ZipDestination(Destination):
     """A .tar file destination."""
     def __init__(self, quiet, prefix, name, manifest="MANIFEST"):
@@ -148,7 +150,11 @@ class ZipDestination(Destination):
         self.zip_handle = None
         self.filename = name
         try:
-            self.zip_handle = zipfile.ZipFile(self.filename, "w", zipfile.ZIP_DEFLATED)
+            self.zip_handle = zipfile.ZipFile(
+                self.filename,
+                "w",
+                zipfile.ZIP_DEFLATED
+            )
             self.is_opened = True
         except (IOError, ValueError), error:
             # Can be raised if :gz, etc. is not recognized in the mode

@@ -1,5 +1,5 @@
-#!/usr/bin/python -tt
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
 """
 Representation of a locale: references to the various string values that
@@ -66,7 +66,8 @@ _EMPTY_LOCALE_DATA = {
                 'wed': None,
                 'thu': None,
                 'fri': None,
-                'sat': None },
+                'sat': None
+            },
             'abbreviated': {
                 'sun': None,
                 'mon': None,
@@ -74,7 +75,9 @@ _EMPTY_LOCALE_DATA = {
                 'wed': None,
                 'thu': None,
                 'fri': None,
-                'sat': None } },
+                'sat': None
+            }
+         },
         'month': {
             'wide': {
                 '1':  None,
@@ -88,7 +91,8 @@ _EMPTY_LOCALE_DATA = {
                 '9':  None,
                 '10': None,
                 '11': None,
-                '12': None },
+                '12': None
+            },
             'narrow': {        # Not used
                 '1':  None,
                 '2':  None,
@@ -101,7 +105,8 @@ _EMPTY_LOCALE_DATA = {
                 '9':  None,
                 '10': None,
                 '11': None,
-                '12': None },
+                '12': None
+            },
             'abbreviated': {
                 '1':  None,
                 '2':  None,
@@ -114,7 +119,9 @@ _EMPTY_LOCALE_DATA = {
                 '9':  None,
                 '10': None,
                 '11': None,
-                '12': None } },
+                '12': None
+            }
+        },
         'day_period': {
             'values': {
                 'am':           None,
@@ -128,7 +135,8 @@ _EMPTY_LOCALE_DATA = {
                 'evening':      None,
                 'lateEvening':  None,
                 'night':        None,
-                'pm':           None },
+                'pm':           None
+            },
             'rules': {
                 'exact': {
                     '0':  None,
@@ -154,7 +162,8 @@ _EMPTY_LOCALE_DATA = {
                     '20': None,
                     '21': None,
                     '22': None,
-                    '23': None },
+                    '23': None
+                },
                 'within': {
                     '0':  None,
                     '1':  None,
@@ -179,10 +188,14 @@ _EMPTY_LOCALE_DATA = {
                     '20': None,
                     '21': None,
                     '22': None,
-                    '23': None } } },
+                    '23': None
+                }
+            }
+        },
         'era': {
             '0': None,
-            '1': None },
+            '1': None
+        },
         'numeric': {
             'decimal':         None,
             'group':           None,
@@ -196,35 +209,45 @@ _EMPTY_LOCALE_DATA = {
             'nativeZeroDigit': None,
             'nan':             None,
             'patternDigit':    None,
-            'numericDigits':   None } },
+            'numericDigits':   None
+        }
+    },
     'formats': {
         'date': {
             'full':   None,
             'long':   None,
             'medium': None,
-            'short':  None },
+            'short':  None
+        },
         'time': {
             'full':   None,
             'long':   None,
             'medium': None,
-            'short':  None },
+            'short':  None
+        },
         'date_time': {
             'full':   None,
             'long':   None,
             'medium': None,
-            'short':  None },
+            'short':  None
+        },
         'numeric': {
             'decimal':    None,
             'scientific': None,
             'percent':    None,
-            'currency':   None } },
+            'currency':   None
+        }
+    },
     '*languages': {},
     '*scripts': {},
     '*territories': {},
     '*alias': None,
     '*numberingSystem': None,
     '*layout': 'left-to-right',
-    '*dayperiod': { 'exact': {}, 'within': {} }
+    '*dayperiod': {
+        'exact': {},
+        'within': {}
+    }
 }
 
 #
@@ -241,7 +264,8 @@ _ROOT_LOCALE_DATA = {
                 'wed': u"Wednesday",
                 'thu': u"Thursday",
                 'fri': u"Friday",
-                'sat': u"Saturday" },
+                'sat': u"Saturday"
+            },
             'abbreviated': {
                 'sun': u"Sun",
                 'mon': u"Mon",
@@ -249,7 +273,9 @@ _ROOT_LOCALE_DATA = {
                 'wed': u"Wed",
                 'thu': u"Thu",
                 'fri': u"Fri",
-                'sat': u"Sat" } },
+                'sat': u"Sat"
+            }
+        },
         'month': {
             'wide': {
                 '1':  u"January",
@@ -263,7 +289,8 @@ _ROOT_LOCALE_DATA = {
                 '9':  u"September",
                 '10': u"October",
                 '11': u"November",
-                '12': u"December" },
+                '12': u"December"
+            },
             'narrow': {        # Not used
                 '1':  u"",
                 '2':  u"",
@@ -276,7 +303,8 @@ _ROOT_LOCALE_DATA = {
                 '9':  u"",
                 '10': u"",
                 '11': u"",
-                '12': u"" },
+                '12': u""
+            },
             'abbreviated': {
                 '1':  u"Jan",
                 '2':  u"Feb",
@@ -289,7 +317,9 @@ _ROOT_LOCALE_DATA = {
                 '9':  u"Sep",
                 '10': u"Oct",
                 '11': u"Nov",
-                '12': u"Dec" } },
+                '12': u"Dec"
+            }
+        },
         'day_period': {
             'values': {
                 'am':           u"AM",
@@ -303,7 +333,8 @@ _ROOT_LOCALE_DATA = {
                 'evening':      u"",
                 'lateEvening':  u"",
                 'night':        u"",
-                'pm':           u"PM" },
+                'pm':           u"PM"
+            },
             'rules': {
                 'exact': {
                     '0':  u'am',
@@ -329,7 +360,8 @@ _ROOT_LOCALE_DATA = {
                     '20': u'pm',
                     '21': u'pm',
                     '22': u'pm',
-                    '23': u'pm' },
+                    '23': u'pm'
+                },
                 'within': {
                     '0':  u'am',
                     '1':  u'am',
@@ -354,10 +386,14 @@ _ROOT_LOCALE_DATA = {
                     '20': u'pm',
                     '21': u'pm',
                     '22': u'pm',
-                    '23': u'pm' } } },
+                    '23': u'pm'
+                }
+            }
+        },
         'era': {
             '0': u"BCE",
-            '1': u"CE" },
+            '1': u"CE"
+        },
         'numeric': {
             'decimal':         u".",
             'group':           u",",
@@ -371,36 +407,54 @@ _ROOT_LOCALE_DATA = {
             'nativeZeroDigit': u"0",
             'nan':             u"NaN",
             'patternDigit':    u"#",
-            'numericDigits':   u"0123456789" } },
+            'numericDigits':   u"0123456789"
+        }
+    },
     'formats': {
         'date': {
             'full':   u"EEEE, MMMM d, y",
             'long':   u"MMMM d, y",
             'medium': u"MMM d, y",
-            'short':  u"M/d/yy" },
+            'short':  u"M/d/yy"
+        },
         'time': {
             'full':   u"h:mm:ss a zzzz",
             'long':   u"h:mm:ss a z",
             'medium': u"h:mm:ss a",
-            'short':  u"h:mm a" },
+            'short':  u"h:mm a"
+        },
         'date_time': {
             'full':   u"{1} {0}",
             'long':   u"{1} {0}",
             'medium': u"{1} {0}",
-            'short':  u"{1} {0}" },
+            'short':  u"{1} {0}"
+        },
         'numeric': {
             'decimal':    u"#,##0.###",
             'scientific': u"#E0",
             'percent':    u"#,##0%",
-            'currency':   u"¤#,##0.00;(¤#,##0.00)" } },
+            'currency':   u"¤#,##0.00;(¤#,##0.00)"
+        }
+    },
     '*languages': {},
     '*scripts': {},
     '*territories': {},
     '*alias': None,
     '*numberingSystem': 'latn',
     '*layout': 'left-to-right',
-    '*dayperiod': { 'exact': {}, 'within': {} }
+    '*dayperiod': {
+        'exact': {},
+        'within': {}
+    }
 }
+
+
+def info(fmt, *args):
+    """
+    Print an informational message.
+    """
+    print fmt.format(*args)
+
 
 class InvalidPathError(Exception):
     """
@@ -436,7 +490,7 @@ class Locale(object):
         self.name = name
         self.set_tag_and_level(name)
         self.n_set = 0
-        self.locale_data = deepcopy(_EMPTY_LOCALE_DATA);
+        self.locale_data = deepcopy(_EMPTY_LOCALE_DATA)
 
     def accumulate_strings(self, strpool):
         """
@@ -497,9 +551,11 @@ class Locale(object):
             script = components[1][:4]
             territory = components[2][:3]
             self.level = 4
-        self.tag = "{0:<3}{1:<4}{2:<3}".format(language,
-                                               script,
-                                               territory).upper ()
+        self.tag = "{0:<3}{1:<4}{2:<3}".format(
+            language,
+            script,
+            territory
+        ).upper()
 
     def set_root_values(self, dayperiod_dom):
         """
@@ -509,35 +565,33 @@ class Locale(object):
         """
         self.locale_data = deepcopy(_ROOT_LOCALE_DATA)
         # The root locale stores the day period info, load it.
-        parse_element(self, dayperiod_dom,
-                           "*dayperiod/{0}/exact/{1}",
-                           [ { "name": "dayPeriodRule", "type": "*",
-                                                        "at": "#1" },
-                             { "name": "dayPeriodRules", "locales": "#0" },
-                             { "name": "dayPeriodRuleSet" },
-                             { "name": "supplementalData" } ])
-        parse_element(self, dayperiod_dom,
-                           "*dayperiod/{0}/within/{1}",
-                           [ { "name": "dayPeriodRule", "type": "*",
-                                                        "before": "#1" },
-                             { "name": "dayPeriodRules", "locales": "#0" },
-                             { "name": "dayPeriodRuleSet" },
-                             { "name": "supplementalData" } ])
+        parse_element(self, dayperiod_dom, "*dayperiod/{0}/exact/{1}", [
+            {"name": "dayPeriodRule", "type": "*", "at": "#1"},
+            {"name": "dayPeriodRules", "locales": "#0"},
+            {"name": "dayPeriodRuleSet"},
+            {"name": "supplementalData"}
+        ])
+        parse_element(self, dayperiod_dom, "*dayperiod/{0}/within/{1}", [
+            {"name": "dayPeriodRule", "type": "*", "before": "#1"},
+            {"name": "dayPeriodRules", "locales": "#0"},
+            {"name": "dayPeriodRuleSet"},
+            {"name": "supplementalData"}
+        ])
         locale_sets = self.locale_data['*dayperiod']
         for locales in locale_sets.keys():
             if not ' ' in locales:
                 continue
             for locale in locales.split(' '):
-                print "Copying day period information for \"{0}\" from \"{1}\"".format(
-                      locale, locales)
+                info("Copying day period information for \"{0}\" from \"{1}\"",
+                    locale, locales)
                 locale_sets[locale] = deepcopy(locale_sets[locales])
             del locale_sets[locales]
         for locale in locale_sets.keys():
             for hour_rule in locale_sets[locale].keys():
                 for rule in locale_sets[locale][hour_rule].keys():
                     if not rule.endswith(":00"):
-                        print "Non-hour rule \"{0}\" for locale \"{1}\"".format(
-                                  rule, locale)
+                        info("Non-hour rule \"{0}\" for locale \"{1}\"",
+                            rule, locale)
                         sys.exit(1)
                     plain_rule = int(rule.replace(":00", ""))
                     cur_rules = locale_sets[locale][hour_rule][rule]
@@ -545,7 +599,7 @@ class Locale(object):
                     del locale_sets[locale][hour_rule][rule]
 
     def apply_day_period_rules(self, rules):
-        print "Applying day period definitions for \"{0}\"".format(self.name)
+        info("Applying day period definitions for \"{0}\"", self.name)
         # Apply the day period ranges
         hour = 0
         for switch_hour in sorted(rules['within'].keys()):
@@ -555,7 +609,7 @@ class Locale(object):
                 self.set_value(param, value)
                 hour += 1
         # Apply the day period exact values
-        if rules.has_key('exact'):
+        if 'exact' in rules:
             for hour in sorted(rules['exact'].keys()):
                 param = "naming/day_period/rules/exact/{0}".format(hour)
                 value = rules['exact'][hour]
@@ -573,13 +627,13 @@ class Locale(object):
         createp = path[0] == '*'
         container = self.locale_data
         for component in components[:-1]:
-            if not container.has_key(component):
+            if component not in container:
                 if createp:
                     container[component] = {}
                 else:
                     raise InvalidPathError(path)
             container = container[component]
-        if (not container.has_key(key)) and (not createp):
+        if key not in container and not createp:
             raise InvalidPathError(path)
         return container, key
 
@@ -610,113 +664,114 @@ class Locale(object):
     def resolve_locale(self, parent, verbose):
         n_resolutions = self.resolve_params(self.locale_data, parent, [])
         if verbose and n_resolutions > 0:
-           print "Resolved locale \"{1}\" via locale \"{2}\", {0} items".format(
-                     n_resolutions,
-                     self.tag,
-                     parent.tag)
+            info("Resolved locale \"{1}\" via locale \"{2}\", {0} items",
+                n_resolutions,
+                self.tag,
+                parent.tag
+            )
         return n_resolutions
 
     def parse_locales(self, dom):
         n_set = self.n_set
-        parse_element(self, dom,
-                           "naming/day/{1}/{0}",
-                           [ { "name": "day", "type": "#0" },
-                             { "name": "dayWidth", "type": "#1" },
-                             { "name": "dayContext", "type": "format" },
-                             { "name": "days" },
-                             { "name": "calendar", "type": "gregorian" } ])
-        parse_element(self, dom,
-                           "naming/month/{1}/{0}",
-                           [ { "name": "month", "type": "#0" },
-                             { "name": "monthWidth", "type": "#1" },
-                             { "name": "monthContext", "type": "format" },
-                             { "name": "months" },
-                             { "name": "calendar", "type": "gregorian" } ])
-        parse_element(self, dom,
-                           "naming/day_period/values/{0}",
-                           [ { "name": "dayPeriod", "type": "#0" },
-                             { "name": "dayPeriodWidth", "type": "wide" },
-                             { "name": "dayPeriodContext", "type": "format" },
-                             { "name": "dayPeriods" },
-                             { "name": "calendar", "type": "gregorian" } ])
-        parse_element(self, dom,
-                           "naming/era/{0}",
-                           [ { "name": "era", "type": "#0" },
-                             { "name": "eraAbbr" },
-                             { "name": "eras" },
-                             { "name": "calendar", "type": "gregorian" } ])
-        for symbol in [ "decimal", "group", "list", "percentSign",
-                        "nativeZeroDigit", "patternDigit", "plusSign",
-			"minusSign", "exponential", "perMille", "infinity",
-			"nan" ]:
-            parse_element(self, dom,
-                               "naming/numeric/{0}".format(symbol),
-                               [ { "name": symbol, },
-                                 { "name": "symbols" },
-                                 { "name": "numbers" } ])
-        for formatType in [ "decimal", "scientific", "percent", "currency" ]:
-            parse_element(self, dom,
-                               "formats/numeric/{0}".format(formatType),
-                               [ { "name": "pattern", },
-                                 { "name": "{0}Format".format(formatType), },
-                                 { "name": "{0}FormatLength".format(formatType),
-                                   "type": "~"  },
-                                 { "name": "{0}Formats".format(formatType), } ])
-        parse_element(self, dom,
-                           "formats/date/{0}",
-                           [ { "name": "pattern" },
-                             { "name": "dateFormat" },
-                             { "name": "dateFormatLength", "type": "#0" },
-                             { "name": "dateFormats" },
-                             { "name": "calendar", "type": "gregorian" } ])
-        parse_element(self, dom,
-                           "formats/time/{0}",
-                           [ { "name": "pattern" },
-                             { "name": "timeFormat" },
-                             { "name": "timeFormatLength", "type": "#0" },
-                             { "name": "timeFormats" },
-                             { "name": "calendar", "type": "gregorian" } ])
-        parse_element(self, dom,
-                           "formats/date_time/{0}",
-                           [ { "name": "pattern" },
-                             { "name": "dateTimeFormat" },
-                             { "name": "dateTimeFormatLength", "type": "#0" },
-                             { "name": "dateTimeFormats" },
-                             { "name": "calendar", "type": "gregorian" } ])
-        parse_element(self, dom,
-                           "naming/alias",
-                           [ { "name": "alias", "source": "*" },
-                             { "name": "ldml" } ])
-        parse_element(self, dom,
-                           "*numberingSystem",
-                           [ { "name": "defaultNumberingSystem" },
-                             { "name": "numbers" },
-                             { "name": "ldml" } ])
+        parse_element(self, dom, "naming/day/{1}/{0}", [
+            {"name": "day", "type": "#0"},
+            {"name": "dayWidth", "type": "#1"},
+            {"name": "dayContext", "type": "format"},
+            {"name": "days"},
+            {"name": "calendar", "type": "gregorian"}
+        ])
+        parse_element(self, dom, "naming/month/{1}/{0}", [
+            {"name": "month", "type": "#0"},
+            {"name": "monthWidth", "type": "#1"},
+            {"name": "monthContext", "type": "format"},
+            {"name": "months"},
+            {"name": "calendar", "type": "gregorian"}
+        ])
+        parse_element(self, dom, "naming/day_period/values/{0}", [
+            {"name": "dayPeriod", "type": "#0"},
+            {"name": "dayPeriodWidth", "type": "wide"},
+            {"name": "dayPeriodContext", "type": "format"},
+            {"name": "dayPeriods"},
+            {"name": "calendar", "type": "gregorian"}
+        ])
+        parse_element(self, dom, "naming/era/{0}", [
+            {"name": "era", "type": "#0"},
+            {"name": "eraAbbr"},
+            {"name": "eras"},
+            {"name": "calendar", "type": "gregorian"}
+        ])
+        for symbol in ["decimal", "group", "list", "percentSign",
+                       "nativeZeroDigit", "patternDigit", "plusSign",
+                       "minusSign", "exponential", "perMille", "infinity",
+                       "nan"]:
+            parse_element(self, dom, "naming/numeric/{0}".format(symbol), [
+                {"name": symbol},
+                {"name": "symbols"},
+                {"name": "numbers"}
+            ])
+        for fmtType in ["decimal", "scientific", "percent", "currency"]:
+            parse_element(self, dom, "formats/numeric/{0}".format(fmtType), [
+                {"name": "pattern"},
+                {"name": "{0}Format".format(fmtType)},
+                {"name": "{0}FormatLength".format(fmtType), "type": "~"},
+                {"name": "{0}Formats".format(fmtType)}
+            ])
+        parse_element(self, dom, "formats/date/{0}", [
+            {"name": "pattern"},
+            {"name": "dateFormat"},
+            {"name": "dateFormatLength", "type": "#0"},
+            {"name": "dateFormats"},
+            {"name": "calendar", "type": "gregorian"}
+        ])
+        parse_element(self, dom, "formats/time/{0}", [
+            {"name": "pattern"},
+            {"name": "timeFormat"},
+            {"name": "timeFormatLength", "type": "#0"},
+            {"name": "timeFormats"},
+            {"name": "calendar", "type": "gregorian"}
+        ])
+        parse_element(self, dom, "formats/date_time/{0}", [
+            {"name": "pattern"},
+            {"name": "dateTimeFormat"},
+            {"name": "dateTimeFormatLength", "type": "#0"},
+            {"name": "dateTimeFormats"},
+            {"name": "calendar", "type": "gregorian"}
+        ])
+        parse_element(self, dom, "naming/alias", [
+            {"name": "alias", "source": "*"},
+            {"name": "ldml"}
+        ])
+        parse_element(self, dom, "*numberingSystem", [
+            {"name": "defaultNumberingSystem"},
+            {"name": "numbers"},
+            {"name": "ldml"}
+        ])
         return self.n_set - n_set
 
     def parse_properties(self, dom):
         n_set = self.n_set
-        parse_element(self, dom,
-                           "*languages/{0}",
-                           [ { "name": "language", "type": "#0" },
-			     { "name": "languages" } ])
-        parse_element(self, dom,
-                           "*scripts/{0}",
-                           [ { "name": "script", "type": "#0" },
-			     { "name": "scripts" } ])
-        parse_element(self, dom,
-                           "*territories/{0}",
-                           [ { "name": "territory", "type": "#0" },
-			     { "name": "territories" } ])
-        parse_element(self, dom,
-                           "*alias",
-                           [ { "name": "alias", "source": "*" },
-                             { "name": "ldml" } ])
-        parse_element(self, dom,
-                           "*layout",
-                           [ { "name": "orientation", "characters": "*" },
-                             { "name": "layout" },
-                             { "name": "ldml" } ])
+        parse_element(self, dom, "*languages/{0}", [
+            {"name": "language", "type": "#0"},
+            {"name": "languages"}
+        ])
+        parse_element(self, dom, "*scripts/{0}", [
+            {"name": "script", "type": "#0"},
+            {"name": "scripts"}
+        ])
+        parse_element(self, dom, "*territories/{0}", [
+            {"name": "territory", "type": "#0"},
+            {"name": "territories"}
+        ])
+        parse_element(self, dom, "*alias", [
+            {"name": "alias", "source": "*"},
+            {"name": "ldml"}
+        ])
+        parse_element(self, dom, "*layout", [
+            {"name": "characterOrder"},
+            {"name": "orientation"},
+            {"name": "layout"},
+            {"name": "ldml"}
+        ])
         return self.n_set - n_set
 
     def parse(self, dom):
@@ -728,19 +783,34 @@ class Locale(object):
         name = self.name
         for category in ["*languages", "*scripts", "*territories"]:
             facility = category[1]
-            filename = os.path.join(props_dir, "{0}_{1}.properties".format(facility, name))
-            self.write_property_file(filename, name, self.locale_data[category])
+            filename = os.path.join(
+                props_dir,
+                "{0}_{1}.properties".format(facility, name)
+            )
+            self.write_property_file(
+                filename,
+                name,
+                self.locale_data[category]
+            )
             if name == base:
-                filename = os.path.join(props_dir, "{0}.properties".format(facility))
-                self.write_property_file(filename, name, self.locale_data[category])
+                filename = os.path.join(
+                    props_dir,
+                    "{0}.properties".format(facility)
+                )
+                self.write_property_file(
+                    filename,
+                    name,
+                    self.locale_data[category]
+                )
 
     def write_property_file(self, filename, name, values):
-        print "Creating properties file \"{0}\" for locale \"{1}\"".format(
-                  filename,
-                  name
+        info("Creating properties file \"{0}\" for locale \"{1}\"",
+            filename,
+            name
         )
         fp = open(filename, "w")
-        fp.write("# This is generated ZanyBlue CLDR data based on Unicode.org's CLDR data\n")
+        fp.write("# This is generated ZanyBlue CLDR data based on ")
+        fp.write("Unicode.org's CLDR data\n")
         fp.write("# DO NOT EDIT\n\n")
         for code in sorted(values.keys()):
             value = self.java_string(values[code])
@@ -830,18 +900,20 @@ class Locale(object):
                       self.get_value("naming/day_period/values/pm"))
 
     def get_day_period(self, strpool, param):
-        cdlr2zb = { "am":           "AM",
-                    "weeHours":     "Wee_Hours",
-                    "earlyMorning": "Early_Morning",
-                    "morning":      "Morning",
-                    "lateMorning":  "Late_Morning",
-                    "noon":         "Noon",
-                    "midDay":       "Midday",
-                    "afternoon":    "Afternoon",
-                    "evening":      "Evening",
-                    "lateEvening":  "Late_Evening",
-                    "night":        "Night",
-                    "pm":           "PM" }
+        cdlr2zb = {
+            "am": "AM",
+            "weeHours": "Wee_Hours",
+            "earlyMorning": "Early_Morning",
+            "morning": "Morning",
+            "lateMorning": "Late_Morning",
+            "noon": "Noon",
+            "midDay": "Midday",
+            "afternoon": "Afternoon",
+            "evening": "Evening",
+            "lateEvening": "Late_Evening",
+            "night": "Night",
+            "pm": "PM"
+        }
         index = self.get_value("naming/day_period/rules/" + param)
         return cdlr2zb[strpool.value(index)]
 
@@ -850,69 +922,75 @@ class Locale(object):
         self.write_day_period_rule_set(fp, strpool, "within")
 
     def write_day_period_rule_set(self, fp, strpool, name):
-        zbm_write(fp, ZBMSG0010, "{0}_Day_Periods".format(name.capitalize ()))
+        zbm_write(fp, ZBMSG0010, "{0}_Day_Periods".format(name.capitalize()))
         zbm_write(fp, ZBMSG0059,
-                      self.get_day_period(strpool, name + "/0"),
-                      self.get_day_period(strpool, name + "/1"),
-                      self.get_day_period(strpool, name + "/2"))
+            self.get_day_period(strpool, name + "/0"),
+            self.get_day_period(strpool, name + "/1"),
+            self.get_day_period(strpool, name + "/2"))
         for n in [3, 6, 9, 12, 15, 18]:
-            zbm_write(fp, ZBMSG0060,
-                          n, self.get_day_period(strpool, "{0}/{1}".format(name, n)),
-                          n+1, self.get_day_period(strpool, "{0}/{1}".format(name, n+1)),
-                          n+2, self.get_day_period(strpool, "{0}/{1}".format(name, n+2)))
+            zbm_write(
+                fp,
+                ZBMSG0060,
+                n,
+                self.get_day_period(strpool, "{0}/{1}".format(name, n)),
+                n + 1,
+                self.get_day_period(strpool, "{0}/{1}".format(name, n + 1)),
+                n + 2,
+                self.get_day_period(strpool, "{0}/{1}".format(name, n + 2))
+            )
         zbm_write(fp, ZBMSG0061,
-                      self.get_day_period(strpool, name + "/21"),
-                      self.get_day_period(strpool, name + "/22"),
-                      self.get_day_period(strpool, name + "/23"))
+            self.get_day_period(strpool, name + "/21"),
+            self.get_day_period(strpool, name + "/22"),
+            self.get_day_period(strpool, name + "/23"))
 
     def write_eras(self, fp):
         zbm_write(fp, ZBMSG0010, "Era_Names")
         zbm_write(fp, ZBMSG0019,
-                      self.get_value("naming/era/0"),
-                      self.get_value("naming/era/1"))
+            self.get_value("naming/era/0"),
+            self.get_value("naming/era/1"))
 
     def write_date_time_formats(self, fp, name):
         zbm_write(fp, ZBMSG0010, "%s_Formats" % name)
         zbm_write(fp, ZBMSG0030,
-                      self.get_value("formats/%s/full" % name.lower()),
-                      self.get_value("formats/%s/long" % name.lower()),
-                      self.get_value("formats/%s/medium" % name.lower()),
-                      self.get_value("formats/%s/short" % name.lower()))
+            self.get_value("formats/%s/full" % name.lower()),
+            self.get_value("formats/%s/long" % name.lower()),
+            self.get_value("formats/%s/medium" % name.lower()),
+            self.get_value("formats/%s/short" % name.lower()))
 
     def write_numeric_names(self, fp):
         zbm_write(fp, ZBMSG0010, "Numeric_Items")
         zbm_write(fp, ZBMSG0031,
-                      self.get_value("naming/numeric/decimal"),
-                      self.get_value("naming/numeric/group"))
+            self.get_value("naming/numeric/decimal"),
+            self.get_value("naming/numeric/group"))
         zbm_write(fp, ZBMSG0032,
-                      self.get_value("naming/numeric/list"),
-                      self.get_value("naming/numeric/nativeZeroDigit"))
+            self.get_value("naming/numeric/list"),
+            self.get_value("naming/numeric/nativeZeroDigit"))
         zbm_write(fp, ZBMSG0033,
-                      self.get_value("naming/numeric/plusSign"),
-                      self.get_value("naming/numeric/minusSign"))
+            self.get_value("naming/numeric/plusSign"),
+            self.get_value("naming/numeric/minusSign"))
         zbm_write(fp, ZBMSG0034,
-                      self.get_value("naming/numeric/exponential"),
-                      self.get_value("naming/numeric/percentSign"))
+            self.get_value("naming/numeric/exponential"),
+            self.get_value("naming/numeric/percentSign"))
         zbm_write(fp, ZBMSG0035,
-                      self.get_value("naming/numeric/perMille"),
-                      self.get_value("naming/numeric/infinity"))
+            self.get_value("naming/numeric/perMille"),
+            self.get_value("naming/numeric/infinity"))
         zbm_write(fp, ZBMSG0036,
-                      self.get_value("naming/numeric/nan"),
-                      self.get_value("naming/numeric/patternDigit"))
+            self.get_value("naming/numeric/nan"),
+            self.get_value("naming/numeric/patternDigit"))
         zbm_write(fp, ZBMSG0058,
-                      self.get_value("naming/numeric/numericDigits"))
+            self.get_value("naming/numeric/numericDigits"))
 
     def write_numeric_formats(self, fp, lastp):
         zbm_write(fp, ZBMSG0010, "Numeric_Formats")
         zbm_write(fp, ZBMSG0037,
-                      self.get_value("formats/numeric/decimal"),
-                      self.get_value("formats/numeric/scientific"))
+            self.get_value("formats/numeric/decimal"),
+            self.get_value("formats/numeric/scientific"))
         if not lastp:
             zbm_write(fp, ZBMSG0038,
-                          self.get_value("formats/numeric/percent"),
-                          self.get_value("formats/numeric/currency"))
+                self.get_value("formats/numeric/percent"),
+                self.get_value("formats/numeric/currency"))
             zbm_new_line(fp)
         else:
             zbm_write(fp, ZBMSG0039,
-                          self.get_value("formats/numeric/percent"),
-                          self.get_value("formats/numeric/currency"))
+                self.get_value("formats/numeric/percent"),
+                self.get_value("formats/numeric/currency"))

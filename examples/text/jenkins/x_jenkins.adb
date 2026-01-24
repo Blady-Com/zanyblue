@@ -44,14 +44,15 @@ with ZanyBlue.Text.Pseudo;
 with ZanyBlue.Text.Locales;
 with ZanyBlue.Text.Arguments;
 with ZanyBlue.Text.Null_Object;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.Formatting;
+with ZanyBlue.Text.Version_Status_Arguments;
 
 procedure X_Jenkins is
 
    use ZanyBlue.Text.Null_Object;
    use ZanyBlue.Text.Arguments;
    use ZanyBlue.Text.Formatting;
+   use ZanyBlue.Text.Version_Status_Arguments;
 
    Help_Error  : exception;
    Usage_Error : exception;
@@ -109,6 +110,10 @@ procedure X_Jenkins is
 
 begin
    Jenkins.Messages.Initialize;
+   Print_Line ("App", "Banner", +ZanyBlue.Version_Major,
+                                +ZanyBlue.Version_Minor,
+                                +ZanyBlue.Version_Patch,
+                                +ZanyBlue.Version_Status);
    Process_Command_Line;
    Display ("FilePath.validateAntFileMask.whitespaceSeprator");
    Display ("FilePath.validateAntFileMask.doesntMatchAndSuggest",

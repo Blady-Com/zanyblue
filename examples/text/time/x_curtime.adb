@@ -38,13 +38,14 @@ with Ada.Command_Line;
 with Curtime_Messages;
 with ZanyBlue.Text.Pseudo;
 with ZanyBlue.Text.Locales;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.Formatting;
+with ZanyBlue.Text.Version_Status_Arguments;
 
 procedure X_CurTime is
 
    use Ada.Calendar;
    use ZanyBlue.Text.Formatting;
+   use ZanyBlue.Text.Version_Status_Arguments;
 
    type Mode_Type is (Normal, Help);
 
@@ -88,10 +89,13 @@ procedure X_CurTime is
    Mode : Mode_Type := Normal;
 
 begin
+   Print_Line ("curtime", "0001", +ZanyBlue.Version_Major,
+                                  +ZanyBlue.Version_Minor,
+                                  +ZanyBlue.Version_Patch,
+                                  +ZanyBlue.Version_Status);
    Process_Command_Line (Mode);
    case Mode is
    when Normal =>
-      Print_Line ("curtime", "0001", +Now);
       Print_Line ("curtime", "0002", +Now);
       Print_Line ("curtime", "0003", +Now);
       Print_Line ("curtime", "0004", +Now);
@@ -100,8 +104,9 @@ begin
       Print_Line ("curtime", "0007", +Now);
       Print_Line ("curtime", "0008", +Now);
       Print_Line ("curtime", "0009", +Now);
-      Print_Line ("curtime", "0010", +Now, +Time_Format);
+      Print_Line ("curtime", "0010", +Now);
+      Print_Line ("curtime", "0011", +Now, +Time_Format);
    when Help =>
-      Print_Line ("curtime", "0011");
+      Print_Line ("curtime", "0012");
    end case;
 end X_CurTime;

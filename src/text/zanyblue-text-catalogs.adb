@@ -32,165 +32,24 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Exceptions;
-with Ada.Containers.Hashed_Maps;
 with Ada.Containers.Indefinite_Vectors;
-with Ada.Containers.Indefinite_Hashed_Maps;
-with Ada.Strings.Wide_Unbounded;
 with ZanyBlue.OS;
+with ZanyBlue.Text.Message_Maps;
+with ZanyBlue.Text.Indexed_Strings;
 
 package body ZanyBlue.Text.Catalogs is
 
    use Ada.Containers;
-   use Ada.Exceptions;
-   use Ada.Strings.Wide_Unbounded;
    use ZanyBlue.OS;
-
-   type Message_Definition is
-      record
-         Pool         : Static_Message_Pool_Type;
-         First        : Positive;
-         Last         : Natural;
-         Locale_Index : Locale_Index_Type := 1;
-         Count        : Natural := 0;
-      end record;
-
-   type Message_Triple is
-      record
-         Facility_Index : Facility_Index_Type;
-         Key_Index      : Key_Index_Type;
-         Locale_Index   : Locale_Index_Type;
-      end record;
-
-   function Message_Triple_Hash (Value : in Message_Triple) return Hash_Type;
-   --  Ada.Containers hash function for the Message_Triple type.
-
-   package Message_Maps is
-      new Hashed_Maps (Key_Type        => Message_Triple,
-                       Element_Type    => Message_Definition,
-                       Hash            => Message_Triple_Hash,
-                       Equivalent_Keys => "=");
-
-   package Id_To_Name_Vectors is
-      new Indefinite_Vectors (Index_Type      => Positive,
-                              Element_Type    => Wide_String);
-
-   package Name_To_Id_Maps is
-      new Indefinite_Hashed_Maps (Key_Type        => Wide_String,
-                                  Element_Type    => Positive,
-                                  Hash            => ZanyBlue.Text.Wide_Hash,
-                                  Equivalent_Keys => "=");
-
-   No_Such_Item : exception;
-
-   --
-   --  Indexed_Strings
-   --
-   --  Protected type to store strings with a sequence number (index)
-   --  allowing querying of the value by index.  This type is used to
-   --  store facility, key and locale names.
-   --
-   protected type Indexed_Strings is
-
-      function Length return Natural;
-      --  Return the number of items currently stored in the indexed map.
-
-      function Get (Index : in Positive) return Wide_String;
-      --  Get the name associated with a particular index.  Raises the
-      --  exception No_Such_Item if the index does not exist.
-
-      function Get (Name : in Wide_String;
-                    Id   : in Exception_Id) return Positive;
-      --  Find index associated with a particular name.  If not present,
-      --  the argument exception is raised.
-
-      procedure Add (Name : in Wide_String; Index : out Positive);
-      --  Add a new name to the set.  The name is associated with the next
-      --  index value, i.e., Length + 1.  This is a noop if the name already
-      --  exists in the set.
-
-   private
-
-      Name_To_Id : Name_To_Id_Maps.Map;
-      Id_To_Name : Id_To_Name_Vectors.Vector;
-
-   end Indexed_Strings;
-
-   --
-   --  Message_Map
-   --
-   --  Protected type to store mappings from (Facility, Key, Locale)
-   --  index triples to message strings.
-   --
-   protected type Message_Map is
-
-      function Length return Natural;
-      --  Return the number of messages currently stored in the map.
-
-      procedure Get (Triple : in Message_Triple;
-                     Result : out Message_Definition);
-      --  Get the message associated with a particular index triple.  Raises
-      --  the exception No_Such_Item if it does not exist.
-
-      function Get_Pool return Wide_String;
-      --  Return a copy of a the current pool data.  This is used primarily
-      --  by the zbmcompile utility to dump a compiled set of .properties
-      --  files.
-
-      function Text (Message : in Message_Definition) return Wide_String;
-      --  Get the message associated with a particular message.  Raises
-      --  the exception No_Such_Item if it does not exist.
-
-      function Pool_Size return Natural;
-      --  Return the size of the current string pool.
-
-      procedure Add (Triple  : in Message_Triple;
-                     Message : in Message_Definition);
-      --  Add a new message to the set.
-
-      procedure Add (Triple        : in Message_Triple;
-                     Message       : in Wide_String;
-                     Source_Locale : in Locale_Index_Type);
-      --  Add a new message to the set.
-
-      procedure Adjust_Size (Extra_Messages : in Natural);
-      --  When bulk loading (zbmcompile Initialize) adjust the size of the
-      --  set to accommodate the new messages.
-
-      procedure Iterate (
-         Handler : not null
-                      access
-                         procedure (Facility      : in Facility_Index_Type;
-                                    Key           : in Key_Index_Type;
-                                    Locale        : in Locale_Index_Type;
-                                    Source_Locale : in Locale_Index_Type;
-                                    First         : in Positive;
-                                    Last          : in Natural;
-                                    Count         : in Natural));
-
-      procedure Iterate (
-         Handler : not null
-                      access
-                         procedure (Facility      : in Facility_Index_Type;
-                                    Key           : in Key_Index_Type;
-                                    Locale        : in Locale_Index_Type;
-                                    Source_Locale : in Locale_Index_Type;
-                                    Message       : in Wide_String;
-                                    Count         : in Natural));
-
-   private
-
-      Messages     : Message_Maps.Map;
-      Pool         : Unbounded_Wide_String;
-
-   end Message_Map;
+   use ZanyBlue.Text.Message_Maps;
+   use ZanyBlue.Text.Indexed_Strings;
 
    type Catalog_Value is
       record
-         Facilities     : Indexed_Strings;
-         Keys           : Indexed_Strings;
-         Locales        : Indexed_Strings;
-         Messages       : Message_Map;
+         Facilities     : Indexed_Strings_Type;
+         Keys           : Indexed_Strings_Type;
+         Locales        : Indexed_Strings_Type;
+         Messages       : Message_Map_Type;
          Logical_Size   : Natural := 0;
          Pseudo_Map     : Pseudo_Map_Access;
          Mark_Messages  : Boolean := True;
@@ -198,6 +57,8 @@ package body ZanyBlue.Text.Catalogs is
          Single_Pool    : Boolean := False;
          Raise_Errors   : Boolean := True;
          Source_Locales : Boolean := True;
+         Printer        : Printer_Access := Standard_Printer;
+         Filter         : Message_Filter_Access := null;
       end record;
 
    function Map_To_Triple (Catalog  : in Catalog_Type;
@@ -318,18 +179,6 @@ package body ZanyBlue.Text.Catalogs is
    begin
       Catalog.C.Facilities.Add (Facility, Index);
    end Add_Facility;
-
-   -------------
-   -- Add_Key --
-   -------------
-
-   procedure Add_Key (Catalog  : in Catalog_Type;
-                      Key      : in Wide_String) is
-      Index : Key_Index_Type;             --  Throwaway value
-      pragma Warnings (Off, Index);
-   begin
-      Add_Key (Catalog, Key, Index);
-   end Add_Key;
 
    -------------
    -- Add_Key --
@@ -786,6 +635,18 @@ package body ZanyBlue.Text.Catalogs is
                      & Additional_Info;
    end Invalid_Definition;
 
+   -----------------
+   -- Is_Filtered --
+   -----------------
+
+   function Is_Filtered (Catalog  : in Catalog_Type;
+                         Facility : in Wide_String;
+                         Key      : in Wide_String) return Boolean is
+   begin
+      return Catalog.C.Filter /= null and then
+             Catalog.C.Filter.Is_Filtered (Facility, Key);
+   end Is_Filtered;
+
    --------------
    -- Is_Valid --
    --------------
@@ -963,23 +824,6 @@ package body ZanyBlue.Text.Catalogs is
       return Result;
    end Map_To_Triple;
 
-   -------------------------
-   -- Message_Triple_Hash --
-   -------------------------
-
-   function Message_Triple_Hash (Value : in Message_Triple) return Hash_Type is
-      type M is mod 2**31;
-      Result : M := 0;
-   begin
-      Result := Result xor M'Mod (Value.Facility_Index);
-      Result := Result * 10019;
-      Result := Result xor M'Mod (Value.Key_Index);
-      Result := Result * 10019;
-      Result := Result xor M'Mod (Value.Locale_Index);
-      Result := Result * 10019;
-      return Hash_Type (Result);
-   end Message_Triple_Hash;
-
    --------------------------
    -- Number_Of_Facilities --
    --------------------------
@@ -1024,6 +868,40 @@ package body ZanyBlue.Text.Catalogs is
    begin
       return Catalog.C.Messages.Pool_Size;
    end Pool_Size;
+
+   -----------
+   -- Print --
+   -----------
+
+   procedure Print (Catalog     : Catalog_Type;
+                    Destination : Ada.Text_IO.File_Type;
+                    Facility    : Wide_String;
+                    Key         : Wide_String;
+                    Locale      : Locale_Type;
+                    Arguments   : ZanyBlue.Text.Arguments.Argument_List;
+                    Message     : Wide_String;
+                    With_NL     : Boolean) is
+   begin
+      Catalog.C.Printer.Print (Destination, Facility, Key, Locale, Arguments,
+                               Message, With_NL);
+   end Print;
+
+   -----------
+   -- Print --
+   -----------
+
+   procedure Print (Catalog     : Catalog_Type;
+                    Destination : Ada.Wide_Text_IO.File_Type;
+                    Facility    : Wide_String;
+                    Key         : Wide_String;
+                    Locale      : Locale_Type;
+                    Arguments   : ZanyBlue.Text.Arguments.Argument_List;
+                    Message     : Wide_String;
+                    With_NL     : Boolean) is
+   begin
+      Catalog.C.Printer.Print (Destination, Facility, Key, Locale, Arguments,
+                               Message, With_NL);
+   end Print;
 
    -------------------
    -- Query_Message --
@@ -1082,6 +960,26 @@ package body ZanyBlue.Text.Catalogs is
       Handler.Catalog := Catalog;
    end Set_Catalog;
 
+   ----------------
+   -- Set_Filter --
+   ----------------
+
+   procedure Set_Filter (Catalog  : in Catalog_Type;
+                         Filter   : in Message_Filter_Access) is
+   begin
+      Catalog.C.Filter := Filter;
+   end Set_Filter;
+
+   -----------------
+   -- Set_Printer --
+   -----------------
+
+   procedure Set_Printer (Catalog : Catalog_Type;
+                          Printer : Printer_Access) is
+   begin
+      Catalog.C.Printer := Printer;
+   end Set_Printer;
+
    ----------------------------
    -- Source_Locales_Enabled --
    ----------------------------
@@ -1101,281 +999,5 @@ package body ZanyBlue.Text.Catalogs is
    begin
       Catalog.C.Single_Pool := True;
    end Use_Single_Pool;
-
-   ---------------------
-   -- Indexed_Strings --
-   ---------------------
-
-   protected body Indexed_Strings is
-
-      ---------
-      -- Add --
-      ---------
-
-      procedure Add (Name  : in Wide_String;
-                     Index : out Positive) is
-         use type Name_To_Id_Maps.Cursor;
-         Position : constant Name_To_Id_Maps.Cursor := Name_To_Id.Find (Name);
-      begin
-         if Position = Name_To_Id_Maps.No_Element then
-            Id_To_Name.Append (Name);
-            Index := Positive (Id_To_Name.Length);
-            Name_To_Id.Insert (Name, Index);
-         else
-            Index := Name_To_Id_Maps.Element (Position);
-         end if;
-      end Add;
-
-      ---------
-      -- Get --
-      ---------
-
-      function Get (Index : in Positive) return Wide_String is
-      begin
-         if Index <= Length then
-            return Id_To_Name.Element (Index);
-         else
-            raise No_Such_Item;
-         end if;
-      end Get;
-
-      ---------
-      -- Get --
-      ---------
-
-      function Get (Name : in Wide_String;
-                    Id   : in Exception_Id) return Positive is
-         use type Name_To_Id_Maps.Cursor;
-         Position : constant Name_To_Id_Maps.Cursor := Name_To_Id.Find (Name);
-      begin
-         if Position /= Name_To_Id_Maps.No_Element then
-            return Name_To_Id_Maps.Element (Position);
-         else
-            Raise_Exception (Id, Message => To_UTF8 (Name));
-         end if;
-      end Get;
-
-      ------------
-      -- Length --
-      ------------
-
-      function Length return Natural is
-      begin
-         --  ASSERT: Id_To_Name.Length = Name_To_Id.Length
-         return Natural (Id_To_Name.Length);
-      end Length;
-
-   end Indexed_Strings;
-
-   -----------------
-   -- Message_Map --
-   -----------------
-
-   protected body Message_Map is
-
-      ---------
-      -- Add --
-      ---------
-
-      procedure Add (Triple  : in Message_Triple;
-                     Message : in Message_Definition) is
-         use Message_Maps;
-         Position : constant Cursor := Find (Messages, Triple);
-      begin
-         if Position = No_Element then
-            Messages.Insert (Triple, Message);
-         else
-            Messages.Replace_Element (Position, Message);
-         end if;
-      end Add;
-
-      ---------
-      -- Add --
-      ---------
-
-      procedure Add (Triple        : in Message_Triple;
-                     Message       : in Wide_String;
-                     Source_Locale : in Locale_Index_Type) is
-         New_Message : Message_Definition;
-         First       : Natural := 0;
-         Last        : Natural;
-      begin
-         if Message'Length > 0 then
-            --  Attempt to locate the message in the existing pool
-            First := Index (Pool, Message);
-            Last  := First + Message'Length - 1;
-         end if;
-         if First = 0 then
-            --  Failed to find it in the existing pool, add it
-            First := Length (Pool) + 1;
-            Append (Pool, Message);
-            Last := Length (Pool);
-         end if;
-         New_Message.Pool := null;
-         New_Message.First := First;
-         New_Message.Last := Last;
-         New_Message.Locale_Index := Source_Locale;
-         Add (Triple, New_Message);
-      end Add;
-
-      -----------------
-      -- Adjust_Size --
-      -----------------
-
-      procedure Adjust_Size (Extra_Messages : in Natural) is
-         use Message_Maps;
-         Capacity : constant Natural := Natural (Messages.Capacity);
-         Size     : constant Natural := Natural (Messages.Length);
-         New_Size : constant Natural := Size + Extra_Messages;
-      begin
-         if New_Size > Capacity then
-            --  Extend the size of the messages container, if necessary
-            Messages.Reserve_Capacity (Count_Type (New_Size));
-         end if;
-      end Adjust_Size;
-
-      ---------
-      -- Get --
-      ---------
-
-      procedure Get (Triple : in Message_Triple;
-                     Result : out Message_Definition) is
-
-         use Message_Maps;
-
-         procedure Increment_Count (Key     : in Message_Triple;
-                                    Element : in out Message_Definition);
-
-         procedure Increment_Count (Key     : in Message_Triple;
-                                    Element : in out Message_Definition) is
-            pragma Unreferenced (Key);
-         begin
-            if Element.Count < Natural'Last then
-               Element.Count := Element.Count + 1;
-            end if;
-         end Increment_Count;
-
-         Position : constant Cursor := Messages.Find (Triple);
-
-      begin
-         if Position /= No_Element then
-            Update_Element (Messages, Position, Increment_Count'Access);
-         end if;
-         Result := Messages.Element (Triple);
-      end Get;
-
-      --------------
-      -- Get_Pool --
-      --------------
-
-      function Get_Pool return Wide_String is
-      begin
-         return To_Wide_String (Pool);
-      end Get_Pool;
-
-      -------------
-      -- Iterate --
-      -------------
-
-      procedure Iterate (
-         Handler : not null
-                      access
-                         procedure (Facility      : in Facility_Index_Type;
-                                    Key           : in Key_Index_Type;
-                                    Locale        : in Locale_Index_Type;
-                                    Source_Locale : in Locale_Index_Type;
-                                    First         : in Positive;
-                                    Last          : in Natural;
-                                    Count         : in Natural)) is
-         use Message_Maps;
-
-         procedure Callback (Position : in Cursor);
-         --  Ada.Containers callback used to reformat arguments to pass off to
-         --  the supplied handler.
-
-         --------------
-         -- Callback --
-         --------------
-
-         procedure Callback (Position : in Cursor) is
-            M : constant Message_Definition := Element (Position);
-            T : constant Message_Triple := Key (Position);
-         begin
-            Handler (T.Facility_Index, T.Key_Index, T.Locale_Index,
-                     M.Locale_Index, M.First, M.Last, M.Count);
-         end Callback;
-
-      begin
-         Messages.Iterate (Callback'Access);
-      end Iterate;
-
-      -------------
-      -- Iterate --
-      -------------
-
-      procedure Iterate (
-         Handler : not null
-                      access
-                         procedure (Facility      : in Facility_Index_Type;
-                                    Key           : in Key_Index_Type;
-                                    Locale        : in Locale_Index_Type;
-                                    Source_Locale : in Locale_Index_Type;
-                                    Message       : in Wide_String;
-                                    Count         : in Natural))
-      is
-         use Message_Maps;
-
-         procedure Callback (Position : in Cursor);
-         --  Ada.Containers callback used to reformat arguments to pass off to
-         --  the supplied handler.
-
-         --------------
-         -- Callback --
-         --------------
-
-         procedure Callback (Position : in Cursor) is
-            M : constant Message_Definition := Element (Position);
-            T : constant Message_Triple := Key (Position);
-         begin
-            Handler (T.Facility_Index, T.Key_Index, T.Locale_Index,
-                     M.Locale_Index, Text (Element (Position)), M.Count);
-         end Callback;
-
-      begin
-         Messages.Iterate (Callback'Access);
-      end Iterate;
-
-      ------------
-      -- Length --
-      ------------
-
-      function Length return Natural is
-      begin
-         return Natural (Messages.Length);
-      end Length;
-
-      ---------------
-      -- Pool_Size --
-      ---------------
-
-      function Pool_Size return Natural is
-      begin
-         return Length (Pool);
-      end Pool_Size;
-
-      ----------
-      -- Text --
-      ----------
-
-      function Text (Message : in Message_Definition) return Wide_String is
-      begin
-         if Message.Pool /= null then
-            return Message.Pool (Message.First .. Message.Last);
-         else
-            return Slice (Pool, Message.First, Message.Last);
-         end if;
-      end Text;
-
-   end Message_Map;
 
 end ZanyBlue.Text.Catalogs;

@@ -62,9 +62,9 @@ procedure T_0063 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    end Check;
 
 begin
-   Check ("date", "",       "16/06/1904");
+   Check ("date", "",       "6/16/04");
    Check ("date", "full",   "Thursday 16 June 1904");
-   Check ("date", "long",   "16 June 1904");
-   Check ("date", "medium", "16 Jun 1904");
-   Check ("date", "short",  "16/06/1904");
+   Check ("date", "long",   "June 16, 1904");
+   Check ("date", "medium", "Jun 16, 1904");
+   Check ("date", "short",  "6/16/04");
 end T_0063;

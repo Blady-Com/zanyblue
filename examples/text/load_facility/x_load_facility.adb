@@ -39,19 +39,13 @@
 
 with Ada.Command_Line;
 with Ada.Strings.Unbounded;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.Pseudo;
 with ZanyBlue.Text.Locales;
 with ZanyBlue.Text.Catalogs;
 with ZanyBlue.Text.Formatting;
-with ZanyBlue.Text.Generic_Enumerations;
+with ZanyBlue.Text.Version_Status_Arguments;
 
 procedure X_Load_Facility is
-
-   type Release_Status_Type is (Alpha, Beta, Production);
-
-   package Status_Args is
-      new ZanyBlue.Text.Generic_Enumerations (Release_Status_Type);
 
    use Ada.Command_Line;
    use Ada.Strings.Unbounded;
@@ -60,12 +54,7 @@ procedure X_Load_Facility is
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Catalogs;
    use ZanyBlue.Text.Formatting;
-   use Status_Args;
-
-   Version_Major : constant := 1;
-   Version_Minor : constant := 0;
-   Version_Patch : constant := 0;
-   Version_Status : constant Release_Status_Type := Alpha;
+   use ZanyBlue.Text.Version_Status_Arguments;
 
    Usage_Error : exception;
 
@@ -105,8 +94,10 @@ begin
    Process_Command_Line;
    Load_Facility (Standard_Catalog, "textxmpl", N_Locales, N_Messages,
                   To_Wide_String (To_String (Message_Directory)));
-   Print_Line ("textxmpl", "banner", +Version_Major, +Version_Minor,
-                                     +Version_Patch, +Version_Status);
+   Print_Line ("textxmpl", "banner", +ZanyBlue.Version_Major,
+                                     +ZanyBlue.Version_Minor,
+                                     +ZanyBlue.Version_Patch,
+                                     +ZanyBlue.Version_Status);
    Print_Line ("textxmpl", "loaded", +N_Messages, +N_Locales);
 exception
 when Usage_Error =>

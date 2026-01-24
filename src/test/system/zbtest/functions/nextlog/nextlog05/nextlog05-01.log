@@ -24,4 +24,4 @@ Executing the "end scope" action: compare nextlog-build-02.log
 Error, the reference log file "nextlog-build-02.log" was not found
 Test "zbtest.nextlog.nextlog-build-02" failed
 Status for "zbtest.nextlog": 2 failures, 0 OK
-ZBTest completed at .*
+ZBTest completed on .*

@@ -41,4 +41,11 @@ package ZBTest is
    subtype Message_Id_Type is Wide_String (1 .. 5);
    --  ZBTest uses the convention of numeric style (5 digit) message keys
 
+   ZBTest_Init_Name : constant Wide_String := "_startup_";
+   --  Name of the per directory initialization script.  The extension
+   --  ZBTest_Extension is appended to this.
+
+   ZBTest_Extension : constant Wide_String := "zbt";
+   --  The extension for ZBtest scripts, e.g., xmpl.zbt
+
 end ZBTest;

@@ -44,7 +44,7 @@ procedure T_0039 (R : in out AUnit.Test_Cases.Test_Case'Class) is
                               Value        : Wide_String) is
    begin
       Check_Value (R, Territory_Name (Abbreviation, Locale => fr), Value,
-                      "Expected: " & Value);
+                      "Mis-match for " & Abbreviation);
    end Check_Territory;
 
 begin
@@ -53,7 +53,7 @@ begin
       return;
    end if;
    Check_Territory ("001", "Monde");
-   Check_Territory ("AC", "Île de l'Ascension");
+   Check_Territory ("AC", "Île de l’Ascension");
    Check_Territory ("BB", "Barbade");
    Check_Territory ("CA", "Canada");
    Check_Territory ("DE", "Allemagne");
@@ -70,7 +70,7 @@ begin
    Check_Territory ("OM", "Oman");
    Check_Territory ("PA", "Panama");
    Check_Territory ("QA", "Qatar");
-   Check_Territory ("RE", "Réunion");
+   Check_Territory ("RE", "La Réunion");
    Check_Territory ("SA", "Arabie saoudite");
    Check_Territory ("TA", "Tristan da Cunha");
    Check_Territory ("UA", "Ukraine");

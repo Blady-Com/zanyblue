@@ -43,5 +43,5 @@ procedure T_0011 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    Arg     : constant Float_Argument_Type := Create (-Infinity);
 
 begin
-   Check_Value (R, Arg.Format ("float", "*^10g", Locale), "****-∞****");
+   Check_Value (R, Arg.Format ("float", "*^10g", Locale), "****‎-∞***");
 end T_0011;

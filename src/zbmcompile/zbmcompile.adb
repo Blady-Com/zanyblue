@@ -74,8 +74,7 @@ package body ZBMCompile is
                      Stored : in Natural) return Natural;
    --  Return the percentage savings for stored characters in a catalog pool.
 
-   procedure Summarize (Catalog : in Catalog_Type;
-                        Options : in Parameter_Set_Type);
+   procedure Summarize (Catalog : in Catalog_Type);
    --  Print a summary of the facilities and messages loaded.
 
    function Update_Stamp_File (File_Name : in Wide_String) return Boolean;
@@ -96,11 +95,10 @@ package body ZBMCompile is
       end if;
       for I in 1 ..  Length (Facilities) loop
          Consistency_Check (Handler, Value (Facilities, I),
-                            Options.Get_String ("reference_locale"),
-                            Options.Get_Boolean ("verbose"));
+                            Options.Get_String ("reference_locale"));
       end loop;
       if Options.Get_Boolean ("generate_accessors") then
-         Accessors_Check (Handler, Options.Get_Boolean ("verbose"));
+         Accessors_Check (Handler);
       end if;
    end Check_Loaded;
 
@@ -159,30 +157,12 @@ package body ZBMCompile is
                end loop;
             end;
          end if;
-         Print_If (Options.Get_Boolean ("verbose"),
-                   ZBMCompile_Facility, "00012",
-                   Argument0 => +N_Messages,
-                   Argument1 => +Value (Facilities, I),
-                   Argument2 => +N_Locales);
+         Print_Line (ZBMCompile_Facility, "V00001",
+                     Argument0 => +N_Messages,
+                     Argument1 => +Value (Facilities, I),
+                     Argument2 => +N_Locales);
       end loop;
    end Load_Files;
-
-   --------------
-   -- Print_If --
-   --------------
-
-   procedure Print_If (Condition  : in Boolean;
-                       Facility   : in Wide_String;
-                       Key        : in Wide_String;
-                       Argument0  : in Argument_Type'Class := Null_Argument;
-                       Argument1  : in Argument_Type'Class := Null_Argument;
-                       Argument2  : in Argument_Type'Class := Null_Argument;
-                       Argument3  : in Argument_Type'Class := Null_Argument;
-                       Argument4  : in Argument_Type'Class := Null_Argument) is
-   begin
-      Print_If (Condition, Standard_Output, Facility, Key,
-                Argument0, Argument1, Argument2, Argument3, Argument4);
-   end Print_If;
 
    --------------
    -- Print_If --
@@ -222,12 +202,12 @@ package body ZBMCompile is
       Load_Files (Handler, Files_Loaded, Options);
       Check_Loaded (Handler, Options);
       if not Files_Loaded then
-         Print_Line (ZBMCompile_Facility, "00015");
+         Print_Line (ZBMCompile_Facility, "E00005");
          return False;
       elsif Handler.Get_N_Errors > 0 then
          Print_Line (ZBMCompile_Facility,
                      Select_Message (Options.Get_Boolean ("force"),
-                                     "00026", "00025"),
+                                     "E00010", "E00009"),
                      Argument0 => +Handler.Get_N_Errors);
          if not Options.Get_Boolean ("force") then
             return False;
@@ -237,7 +217,7 @@ package body ZBMCompile is
          Catalog := Optimize (Catalog, Options);
          Handler.Set_Catalog (Catalog);
       end if;
-      Summarize (Catalog, Options);
+      Summarize (Catalog);
       Create_Root_Spec (Catalog, Options);
       Create_Root_Body (Catalog, Options);
       if Options.Get_Boolean ("generate_accessors") then
@@ -270,9 +250,8 @@ package body ZBMCompile is
    --------------------
 
    function Select_Message (Condition  : Boolean;
-                            True_Id    : Message_Id_Type;
-                            False_Id   : Message_Id_Type)
-      return Message_Id_Type is
+                            True_Id    : Wide_String;
+                            False_Id   : Wide_String) return Wide_String is
    begin
       if Condition then
          return True_Id;
@@ -285,18 +264,17 @@ package body ZBMCompile is
    -- Summarize --
    ---------------
 
-   procedure Summarize (Catalog : in Catalog_Type;
-                        Options : in Parameter_Set_Type) is
+   procedure Summarize (Catalog : in Catalog_Type) is
    begin
-      Print_If (Options.Get_Boolean ("verbose"), ZBMCompile_Facility, "00020",
-                Argument0 => +Number_Of_Facilities (Catalog),
-                Argument1 => +Number_Of_Keys (Catalog),
-                Argument2 => +Number_Of_Locales (Catalog),
-                Argument3 => +Number_Of_Messages (Catalog));
-      Print_If (Options.Get_Boolean ("verbose"), ZBMCompile_Facility, "00027",
-                Argument0 => +Logical_Pool_Size (Catalog),
-                Argument1 => +Pool_Size (Catalog),
-                Argument2 => +Savings (Logical_Pool_Size (Catalog),
+      Print_Line (ZBMCompile_Facility, "V00002",
+                  Argument0 => +Number_Of_Facilities (Catalog),
+                  Argument1 => +Number_Of_Keys (Catalog),
+                  Argument2 => +Number_Of_Locales (Catalog),
+                  Argument3 => +Number_Of_Messages (Catalog));
+      Print_Line (ZBMCompile_Facility, "V00003",
+                  Argument0 => +Logical_Pool_Size (Catalog),
+                  Argument1 => +Pool_Size (Catalog),
+                  Argument2 => +Savings (Logical_Pool_Size (Catalog),
                                        Pool_Size (Catalog)));
    end Summarize;
 
@@ -310,16 +288,16 @@ package body ZBMCompile is
       File : File_Type;
    begin
       Wide_Create (File, File_Name);
-      Print_Line (File, ZBMCompile_Facility, "00041",
+      Print_Line (File, ZBMCompile_Facility, "I00006",
                   Argument0 => +Clock);
       Close (File);
-      Print_Line (ZBMCompile_Facility, "00042",
+      Print_Line (ZBMCompile_Facility, "I00007",
                   Argument0 => +File_Name,
                   Argument1 => +Now);
       return True;
    exception
    when E : Name_Error =>
-      Print_Line (ZBMCompile_Facility, "00043",
+      Print_Line (ZBMCompile_Facility, "E00019",
                   Argument0 => +File_Name,
                   Argument1 => +E);
       return False;

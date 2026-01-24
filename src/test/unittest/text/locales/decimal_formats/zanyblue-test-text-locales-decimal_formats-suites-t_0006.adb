@@ -38,6 +38,6 @@ procedure T_0006 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    L : constant Locale_Type := Make_Locale ("ar");
 
 begin
-   Check_Value (R, Numeric_Format (L, Decimal), "#,##0.###;#,##0.###-",
+   Check_Value (R, Numeric_Format (L, Decimal), "#,##0.###",
                 "ar Decimal format");
 end T_0006;

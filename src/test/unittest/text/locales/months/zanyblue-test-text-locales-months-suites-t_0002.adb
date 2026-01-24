@@ -38,28 +38,28 @@ procedure T_0002 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    L : constant Locale_Type := Make_Locale ("de");
 
 begin
-   Check_Value (R, Short_Month_Name (L, Jan), "Jan",
+   Check_Value (R, Short_Month_Name (L, Jan), "Jan.",
                 "de short month name, Jan");
-   Check_Value (R, Short_Month_Name (L, Feb), "Feb",
+   Check_Value (R, Short_Month_Name (L, Feb), "Feb.",
                 "de short month name, Feb");
-   Check_Value (R, Short_Month_Name (L, Mar), "Mär",
+   Check_Value (R, Short_Month_Name (L, Mar), "März",
                 "de short month name, Mar");
-   Check_Value (R, Short_Month_Name (L, Apr), "Apr",
+   Check_Value (R, Short_Month_Name (L, Apr), "Apr.",
                 "de short month name, Apr");
    Check_Value (R, Short_Month_Name (L, May), "Mai",
                 "de short month name, May");
-   Check_Value (R, Short_Month_Name (L, Jun), "Jun",
+   Check_Value (R, Short_Month_Name (L, Jun), "Juni",
                 "de short month name, Jun");
-   Check_Value (R, Short_Month_Name (L, Jul), "Jul",
+   Check_Value (R, Short_Month_Name (L, Jul), "Juli",
                 "de short month name, Jul");
-   Check_Value (R, Short_Month_Name (L, Aug), "Aug",
+   Check_Value (R, Short_Month_Name (L, Aug), "Aug.",
                 "de short month name, Aug");
-   Check_Value (R, Short_Month_Name (L, Sep), "Sep",
+   Check_Value (R, Short_Month_Name (L, Sep), "Sep.",
                 "de short month name, Sep");
-   Check_Value (R, Short_Month_Name (L, Oct), "Okt",
+   Check_Value (R, Short_Month_Name (L, Oct), "Okt.",
                 "de short month name, Oct");
-   Check_Value (R, Short_Month_Name (L, Nov), "Nov",
+   Check_Value (R, Short_Month_Name (L, Nov), "Nov.",
                 "de short month name, Nov");
-   Check_Value (R, Short_Month_Name (L, Dec), "Dez",
+   Check_Value (R, Short_Month_Name (L, Dec), "Dez.",
                 "de short month name, Dec");
 end T_0002;

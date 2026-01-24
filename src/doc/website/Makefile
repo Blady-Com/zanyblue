@@ -33,7 +33,7 @@
 #
 
 #
-# Makefile for the ZanyBlue documentation
+# Makefile for the ZanyBlue website
 #
 
 TOP=../../..
@@ -51,6 +51,7 @@ DATAFILES+=$(DATADIR)/.htaccess
 WEBFILES+=$(patsubst %.htp,$(DOCDIR)/%.html,$(TEMPLATES))
 WEBFILES+=$(patsubst $(IMAGEDIR)/%,$(DOCDIR)/%,$(IMAGEFILES))
 WEBFILES+=$(patsubst $(DATADIR)/%,$(DOCDIR)/%,$(DATAFILES))
+WEBFILES+=$(DOCDIR)/notices.html
 WEBFILES+=$(DOCDIR)/zbxmpls.cgi
 CLEAN_FILES+=$(WEBFILES)
 
@@ -60,6 +61,8 @@ $(HTMLPAGES):	$(TEMPLATES)
 
 $(DOCDIR)/%.html:	%.htp
 	$(HTP) $*.htp $(DOCDIR)/$*.html
+
+$(wildcard *.htp): defs.hti
 
 $(DOCDIR)/zbxmpls.cgi:	zbxmpls.cgi
 	$(call COPY,zbxmpls.cgi,$(DOCDIR)/zbxmpls.cgi)

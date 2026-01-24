@@ -37,3 +37,5 @@ desc Test the "zbmcompile": no error for non ISO-646 in comments
 copy xmpl.properties
 
 execute -o $(nextlog) zbmcompile Messages xmpl
+rename messages.ads $(nextlog)
+rename messages.adb $(nextlog)

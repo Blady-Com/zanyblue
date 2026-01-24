@@ -38,6 +38,6 @@ procedure T_0003 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    L : constant Locale_Type := Make_Locale ("fr");
 
 begin
-   Check_Value (R, Numeric_Format (L, Currency), "#,##0.00 ¤",
+   Check_Value (R, Numeric_Format (L, Currency), "#,##0.00 ¤;(#,##0.00 ¤)",
                 "fr Currency format");
 end T_0003;

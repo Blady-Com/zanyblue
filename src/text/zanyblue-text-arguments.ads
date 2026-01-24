@@ -355,6 +355,8 @@ package ZanyBlue.Text.Arguments is
    --  Return the argument category type asscociated with a type name, e.g.,
    --  "date", "time" and "datetime" all map to "Calendar_Category_Type", etc.
 
+   Empty_Argument_List : constant Argument_List;
+
 private
 
    use Ada.Containers;
@@ -365,5 +367,7 @@ private
    type Argument_List is tagged record
       Contents : Argument_Vectors.Vector;
    end record;
+
+   Empty_Argument_List : constant Argument_List := (Contents => <>);
 
 end ZanyBlue.Text.Arguments;

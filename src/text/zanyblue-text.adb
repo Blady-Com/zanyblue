@@ -94,11 +94,8 @@ package body ZanyBlue.Text is
       Left_Stream  := Stream (Left);
       Right_Stream := Stream (Right);
       while not Done loop
-         if End_Of_File (Left) then
-            Done := True;
-         elsif End_Of_File (Right) then
-            Done := True;
-         else
+         Done := End_Of_File (Left) or End_Of_File (Right);
+         if not Done then
             Character'Read (Left_Stream, Left_Ch);
             Character'Read (Right_Stream, Right_Ch);
             Result := Left_Ch /= Right_Ch;

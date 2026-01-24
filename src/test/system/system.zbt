@@ -36,3 +36,4 @@ desc System tests for the ZanyBlue Utilities
 
 run zbtest
 run zbmcompile
+run examples

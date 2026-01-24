@@ -38,42 +38,33 @@
 --
 
 with Ada.Command_Line;
+with Definitions;
 with XFormatting_Messages;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.Pseudo;
 with ZanyBlue.Text.Locales;
+with ZanyBlue.Text.Arguments;
 with ZanyBlue.Text.Formatting;
-with ZanyBlue.Text.Generic_Floats;
-with ZanyBlue.Text.Generic_Integers;
-with ZanyBlue.Text.Generic_Enumerations;
+with ZanyBlue.Text.Version_Status_Arguments;
 
 procedure X_Formatting is
-
-   type Release_Status_Type is (Alpha, Beta, Production);
-   type My_Float is new Float;
-
-   package ZB_Floats is
-      new ZanyBlue.Text.Generic_Floats (My_Float);
-   package Status_Args is
-      new ZanyBlue.Text.Generic_Enumerations (Release_Status_Type);
 
    use Ada.Command_Line;
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Pseudo;
+   use ZanyBlue.Text.Arguments;
    use ZanyBlue.Text.Formatting;
-   use ZB_Floats;
-   use Status_Args;
+   use ZanyBlue.Text.Version_Status_Arguments;
+   use Definitions;
+   use Definitions.Long_Integer_Arguments;
+   use Definitions.Long_Long_Integer_Arguments;
 
    Usage_Error, Help_Error : exception;
 
    procedure Process_Command_Line;
 
-   generic
-      type Integer_Type is range <>;
-   procedure Generic_Display_Value (Value : Integer_Type; Name : String);
-
-   procedure Display_Value (Value : My_Float);
-   procedure Display_Value (Value : My_Float; Precision : Natural);
+   procedure Display_Value (Value : Float);
+   procedure Display_Value (Value : Float; Precision : Natural);
+   procedure Display_Value (Value : Argument_Type'Class; Name : String);
 
    procedure Process_Command_Line is
    begin
@@ -102,75 +93,58 @@ procedure X_Formatting is
       end loop;
    end Process_Command_Line;
 
-   procedure Generic_Display_Value (Value : Integer_Type; Name : String) is
-      package Integer_Handler is
-         new ZanyBlue.Text.Generic_Integers (Integer_Type);
-      use Integer_Handler;
+   procedure Display_Value (Value : Argument_Type'Class; Name : String) is
    begin
-      Print_Line ("xformatting", "title", +Value, +Name);
-      Print_Line ("xformatting", "00001", +Value);
-      Print_Line ("xformatting", "00002", +Value);
-      Print_Line ("xformatting", "00003", +Value);
-      Print_Line ("xformatting", "00004", +Value);
-      Print_Line ("xformatting", "00005", +Value);
-      Print_Line ("xformatting", "00006", +Value);
-      Print_Line ("xformatting", "00007", +Value);
-      Print_Line ("xformatting", "00008", +Value);
-      Print_Line ("xformatting", "00009", +Value);
-      Print_Line ("xformatting", "00010", +Value);
-      Print_Line ("xformatting", "00011", +Value);
-      Print_Line ("xformatting", "00012", +Value);
-      Print_Line ("xformatting", "00013", +Value);
-      Print_Line ("xformatting", "00014", +Value);
-      Print_Line ("xformatting", "00015", +Value);
-      Print_Line ("xformatting", "00016", +Value);
-      Print_Line ("xformatting", "00017", +Value);
-      Print_Line ("xformatting", "00018", +Value);
-      Print_Line ("xformatting", "00019", +Value);
-      Print_Line ("xformatting", "00020", +Value);
-   end Generic_Display_Value;
+      Print_Line ("xformatting", "title", Value, +Name);
+      Print_Line ("xformatting", "00001", Value);
+      Print_Line ("xformatting", "00002", Value);
+      Print_Line ("xformatting", "00003", Value);
+      Print_Line ("xformatting", "00004", Value);
+      Print_Line ("xformatting", "00005", Value);
+      Print_Line ("xformatting", "00006", Value);
+      Print_Line ("xformatting", "00007", Value);
+      Print_Line ("xformatting", "00008", Value);
+      Print_Line ("xformatting", "00009", Value);
+      Print_Line ("xformatting", "00010", Value);
+      Print_Line ("xformatting", "00011", Value);
+      Print_Line ("xformatting", "00012", Value);
+      Print_Line ("xformatting", "00013", Value);
+      Print_Line ("xformatting", "00014", Value);
+      Print_Line ("xformatting", "00015", Value);
+      Print_Line ("xformatting", "00016", Value);
+      Print_Line ("xformatting", "00017", Value);
+      Print_Line ("xformatting", "00018", Value);
+      Print_Line ("xformatting", "00019", Value);
+      Print_Line ("xformatting", "00020", Value);
+   end Display_Value;
 
-   procedure Display_Value is
-      new Generic_Display_Value (Integer);
-
-   procedure Display_Value is
-      new Generic_Display_Value (Long_Integer);
-
-   procedure Display_Value is
-      new Generic_Display_Value (Long_Long_Integer);
-
-   procedure Display_Value (Value : My_Float) is
+   procedure Display_Value (Value : Float) is
    begin
       Print_Line ("xformatting", "00022", +Value);
    end Display_Value;
 
-   procedure Display_Value (Value : My_Float; Precision : Natural) is
+   procedure Display_Value (Value : Float; Precision : Natural) is
    begin
       Print_Line ("xformatting", "00021", +Value, +Precision);
    end Display_Value;
 
-   Version_Major : constant := 1;
-   Version_Minor : constant := 0;
-   Version_Patch : constant := 0;
-   Version_Status : constant Release_Status_Type := Alpha;
-
-   X : constant My_Float := 1.2345678901e10;
+   X : constant Float := 1.2345678901e10;
 
 begin
    Process_Command_Line;
-   Print_Line ("xformatting", "banner", +Integer'(Version_Major),
-                                        +Integer'(Version_Minor),
-                                        +Integer'(Version_Patch),
-                                        +Version_Status);
-   Display_Value (Integer'(1964), "Simple positive value");
-   Display_Value (Integer'(-1964), "Simple negative value");
-   Display_Value (Integer'First, "First integer value");
-   Display_Value (Integer'Last, "Last integer value");
-   Display_Value (Long_Integer'First, "First long integer first value");
-   Display_Value (Long_Integer'Last, "Last long integer last value");
-   Display_Value (Long_Long_Integer'First, "First long long integer value");
-   Display_Value (Long_Long_Integer'Last, "Last long long integer value");
-   Display_Value (Long_Long_Integer'Last - 1964,
+   Print_Line ("xformatting", "banner", +ZanyBlue.Version_Major,
+                                        +ZanyBlue.Version_Minor,
+                                        +ZanyBlue.Version_Patch,
+                                        +ZanyBlue.Version_Status);
+   Display_Value (+Integer'(1964), "Simple positive value");
+   Display_Value (+Integer'(-1964), "Simple negative value");
+   Display_Value (+Integer'First, "First integer value");
+   Display_Value (+Integer'Last, "Last integer value");
+   Display_Value (+Long_Integer'First, "First long integer first value");
+   Display_Value (+Long_Integer'Last, "Last long integer last value");
+   Display_Value (+Long_Long_Integer'First, "First long long integer value");
+   Display_Value (+Long_Long_Integer'Last, "Last long long integer value");
+   Display_Value (+(Long_Long_Integer'Last - 1964),
                   "Random long long integer value");
    Display_Value (X);
    Display_Value (X, 0);

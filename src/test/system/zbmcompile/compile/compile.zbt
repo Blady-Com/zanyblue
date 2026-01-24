@@ -94,5 +94,7 @@ run compile57
 run compile58
 run compile59
 run compile60
+run compile61
+run compile62
 run slocales
 run types

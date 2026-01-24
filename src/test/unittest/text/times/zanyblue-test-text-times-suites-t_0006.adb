@@ -53,9 +53,9 @@ begin
    Append (List, +V1);
    Append (List, +V2);
    Check_Value (R, List.Format (0, "", "", Locale, False),
-                   "4:48 PM 4/17/08",
+                   "4/17/08, 4:48 PM",
                 "List.Format PM failed");
    Check_Value (R, List.Format (1, "", "", Locale, False),
-                   "4:48 AM 4/17/08",
+                   "4/17/08, 4:48 AM",
            "List.Format AM failed");
 end T_0006;

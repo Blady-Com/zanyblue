@@ -40,7 +40,7 @@ procedure T_0006 (R : in out AUnit.Test_Cases.Test_Case'Class) is
 begin
    Check_Value (R, Day_Period_Name (L, AM), "ص",
                 "ar day period am");
-   Check_Value (R, Day_Period_Name (L, Noon), "noon",
+   Check_Value (R, Day_Period_Name (L, Noon), "ظ",
                 "ar day period noon");
    Check_Value (R, Day_Period_Name (L, PM), "م",
                 "ar day period pm");

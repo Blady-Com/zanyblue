@@ -49,7 +49,6 @@ project t_zanyblue is
                         "parameters/sets",
                         "parameters/scopes",
                         "text",
-                        "text/argument_categories",
                         "text/arguments",
                         "text/booleans",
                         "text/buffer",

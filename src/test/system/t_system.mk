@@ -33,7 +33,7 @@
 #
 
 ZBTEST=$(TOP)/bin/zbtest$E
-ZBTFILE=$(basename $(firstword $(wildcard *.zbt)))
+ZBTFILE=$(basename $(firstword $(filter-out _startup_.zbt,$(wildcard *.zbt))))
 XMLOUT=$(abspath $(TOP)/src/test/$(ZBTFILE).xml)
 CLEAN_DIRS+=$(wildcard test-area)
 # Test subdirectories have Makefiles

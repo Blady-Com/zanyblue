@@ -43,7 +43,7 @@ begin
    Check_Day_Period (R, Early_Morning, "",     L);
    Check_Day_Period (R, Morning,       "",     L);
    Check_Day_Period (R, Late_Morning,  "",     L);
-   Check_Day_Period (R, Noon,          "noon", L);
+   Check_Day_Period (R, Noon,          "ظ",    L);
    Check_Day_Period (R, Midday,        "",     L);
    Check_Day_Period (R, Afternoon,     "",     L);
    Check_Day_Period (R, Evening,       "",     L);

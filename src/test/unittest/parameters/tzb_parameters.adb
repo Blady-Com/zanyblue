@@ -33,7 +33,6 @@
 --
 
 with AUnit.Run;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Test.Parameters.Suites;
 
 procedure TZB_Parameters is

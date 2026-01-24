@@ -1,8 +1,10 @@
 # XML parsing support routines.
 
+
 def add_value(args, index, value):
-    args.extend([ None for i in range(index + 1 - len(args))])
+    args.extend([None for i in range(index + 1 - len(args))])
     args[index] = value
+
 
 def qualifiers_match(obj, dest_name, element, args, qualifiers, debug):
     result = True
@@ -27,6 +29,10 @@ def qualifiers_match(obj, dest_name, element, args, qualifiers, debug):
                     print "    value", dest_name, "=>", value
                 if value == '':
                     return False
+                for c in value:
+                    # Exclude any Wide_Wide_String values!
+                    if ord(c) > 65536:
+                        return False
                 result = value
             elif match_value[0] == "~":
                 if value != '':
@@ -36,6 +42,7 @@ def qualifiers_match(obj, dest_name, element, args, qualifiers, debug):
         element = element.parentNode
     return result
 
+
 def element_value(element):
     result = ""
     for node in element.childNodes:
@@ -43,10 +50,18 @@ def element_value(element):
             result += node.data
     return result
 
+
 def parse_element(obj, dom, dest_name, qualifiers, debug=False):
     for element in dom.getElementsByTagName(qualifiers[0]["name"]):
         args = []
-        match = qualifiers_match(obj, dest_name, element, args, qualifiers, debug)
+        match = qualifiers_match(
+            obj,
+            dest_name,
+            element,
+            args,
+            qualifiers,
+            debug
+        )
         if match:
             parameter = dest_name.format(*args)
             if type(match).__name__ == 'bool':

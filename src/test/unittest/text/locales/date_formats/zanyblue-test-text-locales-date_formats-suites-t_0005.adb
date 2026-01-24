@@ -42,8 +42,8 @@ begin
                 "zh (Hans) full date format");
    Check_Value (R, Date_Format (L, Long), "y年M月d日",
                 "zh (Hans) long date format");
-   Check_Value (R, Date_Format (L, Medium), "yyyy-M-d",
+   Check_Value (R, Date_Format (L, Medium), "y年M月d日",
                 "zh (Hans) medium date format");
-   Check_Value (R, Date_Format (L, Short), "yy-M-d",
+   Check_Value (R, Date_Format (L, Short), "yy/M/d",
                 "zh (Hans) short date format");
 end T_0005;

@@ -60,9 +60,9 @@ procedure T_0053 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    end Check;
 
 begin
-   Check ("",       "4:48 p.m. 16/06/1904");
-   Check ("full",   "4:48:03 p.m. -0100 Thursday 16 June 1904");
-   Check ("long",   "4:48:03 p.m. -0100 16 June 1904");
-   Check ("medium", "4:48:03 p.m. 16 Jun 1904");
-   Check ("short",  "4:48 p.m. 16/06/1904");
+   Check ("",       "6/16/04, 4:48 p.m.");
+   Check ("full",   "Thursday 16 June 1904 at 4:48:03 p.m. -0100");
+   Check ("long",   "June 16, 1904 at 4:48:03 p.m. -0100");
+   Check ("medium", "Jun 16, 1904, 4:48:03 p.m.");
+   Check ("short",  "6/16/04, 4:48 p.m.");
 end T_0053;

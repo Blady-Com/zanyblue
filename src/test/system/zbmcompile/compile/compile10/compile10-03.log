@@ -11,21 +11,32 @@ package body My_Package is
 
    subtype Z is ZTC.ZBMCompile_Definition;
 
-   Facility_1 : aliased constant Wide_String := "myapp1";
-   Facility_2 : aliased constant Wide_String := "myapp2";
+   Facility_1 : aliased constant Wide_String := ""
+      & "myapp1"
+      & "";
+   Facility_2 : aliased constant Wide_String := ""
+      & "myapp2"
+      & "";
    Facilities : constant ZT.Constant_String_List (1 .. 2) := (
                    Facility_1'Access,
                    Facility_2'Access);
 
-   Key_1 : aliased constant Wide_String := "hello";
-   Key_2 : aliased constant Wide_String := "goodbye";
-   Key_3 : aliased constant Wide_String := "extra";
+   Key_1 : aliased constant Wide_String := ""
+      & "hello"
+      & "";
+   Key_2 : aliased constant Wide_String := ""
+      & "goodbye"
+      & "";
+   Key_3 : aliased constant Wide_String := ""
+      & "extra"
+      & "";
    Keys : constant ZT.Constant_String_List (1 .. 3) := (
                    Key_1'Access,
                    Key_2'Access,
                    Key_3'Access);
 
-   Locale_1 : aliased constant Wide_String := "";
+   Locale_1 : aliased constant Wide_String := ""
+      & "";
    Locales : constant ZT.Constant_String_List (1 .. 1) := (
                    1 => Locale_1'Access);
 

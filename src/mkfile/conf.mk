@@ -52,24 +52,9 @@ OS ?= unix
 #TYPE=relocatable
 TYPE=static
 
-# The choices for BUILD are "Debug", for a debug build, "Production" for an
-# optimized production build, and  "Coverage" for a coverage enable build via
-# "gcov".
-#BUILD=Production
-BUILD=Debug
-
-# ---------------------------------------------------------------------------
-# Macros derived from the configuration macros.
-GNATFLAGS+=-XOS=$(OS)
-GNATFLAGS+=-XTYPE=$(TYPE)
-GNATFLAGS+=-XBUILD=$(BUILD)
-GNATFLAGS+=-aP$(TOP)/lib/gnat
-GNATFLAGS+=-aP$(TOP)/src
-
 GNATMAKE=gnatmake
 GNATCHECK=gnat check
 GNATCLEAN=gnat clean
-#GNATHTML=$(SRCDIR)/bin/gnathtml.pl
 GNATHTML=gnathtml.pl
 
 # HTML Preprocessor
@@ -95,8 +80,8 @@ PREPFLAGS+=-DCOPYRIGHT_YEAR=$(COPYRIGHT_YEAR)
 
 # If defs.mk doesn't exist, i.e., this is not a source tar ball
 # snapshot, query the environment for the svn version and copyright info.
-ifndef SVN_VERSION
 VERSION=$(V_MAJOR).$(V_MINOR).$(V_PATCH)
+ifndef SVN_VERSION
 SVN_VERSION=$(shell svnversion $(TOP))
 COPYRIGHT_YEAR=$(CURRENT_YEAR)
 endif
@@ -110,6 +95,31 @@ INCDIR=$(TOP)/include/zanyblue
 LIBDIR=$(TOP)/lib/zanyblue
 GPRDIR=$(TOP)/lib/gnat
 SRCDIR=$(TOP)/src
+STAGEDIR=$(TOP)/stage
+ADMINDIR=$(SRCDIR)/admin
+ifeq ($(DEV_BUILD),no)
+GANALYTICSHTI=$(ADMINDIR)/ganalytics.hti
+else
+GANALYTICSHTI=$(ADMINDIR)/ganalytics-stub.hti
+endif
+DISTRIBUTION=$(wildcard $(TOP)/zanyblue-*.tar.gz)
+DISTRIBDIR=$(wildcard $(STAGEDIR)/*)
+
+# The choices for BUILD are "Debug", for a debug build, "Production" for an
+# optimized production build, and  "Coverage" for a coverage enable build via
+# "gcov".
+# Build defaults to Debug
+ifeq ($(BUILD),)
+BUILD=Debug
+endif
+
+# ---------------------------------------------------------------------------
+# Macros derived from the configuration macros.
+GNATFLAGS+=-XOS=$(OS)
+GNATFLAGS+=-XTYPE=$(TYPE)
+GNATFLAGS+=-XBUILD=$(BUILD)
+GNATFLAGS+=-aP$(TOP)/lib/gnat
+GNATFLAGS+=-aP$(TOP)/src
 
 # Add coverage generated files to the clean list
 CLEAN_FILES+=$(wildcard $(TOP)/src/obj/*.gcno)

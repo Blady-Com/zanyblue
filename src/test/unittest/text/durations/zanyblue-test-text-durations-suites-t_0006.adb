@@ -45,7 +45,7 @@ procedure T_0006 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    V1        : constant Duration := Duration (0);
    V2        : constant Duration := Duration (60 + 1);
    V3        : constant Duration := Duration (3600 + 60 + 1);
-   V4        : constant Duration := Duration (3600*25 + 60 + 1);
+   V4        : constant Duration := Duration (3600 * 25 + 60 + 1);
    List      : Argument_List;
 
 begin

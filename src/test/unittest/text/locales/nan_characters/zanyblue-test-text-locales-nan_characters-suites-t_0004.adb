@@ -38,6 +38,6 @@ procedure T_0004 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    L : constant Locale_Type := Make_Locale ("ja");
 
 begin
-   Check_Value (R, Numeric_Item (L, Nan_Character), "NaN（非数）",
+   Check_Value (R, Numeric_Item (L, Nan_Character), "NaN",
                 "ja Nan");
 end T_0004;

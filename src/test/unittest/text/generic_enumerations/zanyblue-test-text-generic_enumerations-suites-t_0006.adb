@@ -34,17 +34,15 @@
 
 with ZanyBlue.Text.Locales;
 with ZanyBlue.Text.Arguments;
+with ZanyBlue.Test.Text.Generic_Enumerations.Lights;
 
 separate (ZanyBlue.Test.Text.Generic_Enumerations.Suites)
 procedure T_0006 (R : in out AUnit.Test_Cases.Test_Case'Class) is
 
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Arguments;
-
-   type Lights is (Red, Orange, Green);
-   package Lights_Arguments is
-      new ZanyBlue.Text.Generic_Enumerations (Lights);
-   use Lights_Arguments;
+   use ZanyBlue.Test.Text.Generic_Enumerations.Lights;
+   use ZanyBlue.Test.Text.Generic_Enumerations.Lights.Light_Type_Arguments;
 
    List     : Argument_List;
 

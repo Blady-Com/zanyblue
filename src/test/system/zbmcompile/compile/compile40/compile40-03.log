@@ -11,42 +11,108 @@ package body My_Package is
 
    subtype Z is ZTC.ZBMCompile_Definition;
 
-   Facility_1 : aliased constant Wide_String := "App";
+   Facility_1 : aliased constant Wide_String := ""
+      & "App"
+      & "";
    Facilities : constant ZT.Constant_String_List (1 .. 1) := (
                    1 => Facility_1'Access);
 
-   Key_1 : aliased constant Wide_String := "msg0";
-   Key_2 : aliased constant Wide_String := "msg1";
-   Key_3 : aliased constant Wide_String := "msg2";
-   Key_4 : aliased constant Wide_String := "msg3";
-   Key_5 : aliased constant Wide_String := "msg4";
-   Key_6 : aliased constant Wide_String := "msg5";
-   Key_7 : aliased constant Wide_String := "msg6";
-   Key_8 : aliased constant Wide_String := "msg7";
-   Key_9 : aliased constant Wide_String := "msg8";
-   Key_10 : aliased constant Wide_String := "msg9";
-   Key_11 : aliased constant Wide_String := "msg10";
-   Key_12 : aliased constant Wide_String := "msg11";
-   Key_13 : aliased constant Wide_String := "msg12";
-   Key_14 : aliased constant Wide_String := "msg13";
-   Key_15 : aliased constant Wide_String := "msg14";
-   Key_16 : aliased constant Wide_String := "msg15";
-   Key_17 : aliased constant Wide_String := "msg16";
-   Key_18 : aliased constant Wide_String := "msg17";
-   Key_19 : aliased constant Wide_String := "msg18";
-   Key_20 : aliased constant Wide_String := "msg19";
-   Key_21 : aliased constant Wide_String := "msg20";
-   Key_22 : aliased constant Wide_String := "msg21";
-   Key_23 : aliased constant Wide_String := "msg22";
-   Key_24 : aliased constant Wide_String := "msg23";
-   Key_25 : aliased constant Wide_String := "msg24";
-   Key_26 : aliased constant Wide_String := "msg25";
-   Key_27 : aliased constant Wide_String := "msg26";
-   Key_28 : aliased constant Wide_String := "msg27";
-   Key_29 : aliased constant Wide_String := "msg28";
-   Key_30 : aliased constant Wide_String := "msg29";
-   Key_31 : aliased constant Wide_String := "msg30";
-   Key_32 : aliased constant Wide_String := "msg31";
+   Key_1 : aliased constant Wide_String := ""
+      & "msg0"
+      & "";
+   Key_2 : aliased constant Wide_String := ""
+      & "msg1"
+      & "";
+   Key_3 : aliased constant Wide_String := ""
+      & "msg2"
+      & "";
+   Key_4 : aliased constant Wide_String := ""
+      & "msg3"
+      & "";
+   Key_5 : aliased constant Wide_String := ""
+      & "msg4"
+      & "";
+   Key_6 : aliased constant Wide_String := ""
+      & "msg5"
+      & "";
+   Key_7 : aliased constant Wide_String := ""
+      & "msg6"
+      & "";
+   Key_8 : aliased constant Wide_String := ""
+      & "msg7"
+      & "";
+   Key_9 : aliased constant Wide_String := ""
+      & "msg8"
+      & "";
+   Key_10 : aliased constant Wide_String := ""
+      & "msg9"
+      & "";
+   Key_11 : aliased constant Wide_String := ""
+      & "msg10"
+      & "";
+   Key_12 : aliased constant Wide_String := ""
+      & "msg11"
+      & "";
+   Key_13 : aliased constant Wide_String := ""
+      & "msg12"
+      & "";
+   Key_14 : aliased constant Wide_String := ""
+      & "msg13"
+      & "";
+   Key_15 : aliased constant Wide_String := ""
+      & "msg14"
+      & "";
+   Key_16 : aliased constant Wide_String := ""
+      & "msg15"
+      & "";
+   Key_17 : aliased constant Wide_String := ""
+      & "msg16"
+      & "";
+   Key_18 : aliased constant Wide_String := ""
+      & "msg17"
+      & "";
+   Key_19 : aliased constant Wide_String := ""
+      & "msg18"
+      & "";
+   Key_20 : aliased constant Wide_String := ""
+      & "msg19"
+      & "";
+   Key_21 : aliased constant Wide_String := ""
+      & "msg20"
+      & "";
+   Key_22 : aliased constant Wide_String := ""
+      & "msg21"
+      & "";
+   Key_23 : aliased constant Wide_String := ""
+      & "msg22"
+      & "";
+   Key_24 : aliased constant Wide_String := ""
+      & "msg23"
+      & "";
+   Key_25 : aliased constant Wide_String := ""
+      & "msg24"
+      & "";
+   Key_26 : aliased constant Wide_String := ""
+      & "msg25"
+      & "";
+   Key_27 : aliased constant Wide_String := ""
+      & "msg26"
+      & "";
+   Key_28 : aliased constant Wide_String := ""
+      & "msg27"
+      & "";
+   Key_29 : aliased constant Wide_String := ""
+      & "msg28"
+      & "";
+   Key_30 : aliased constant Wide_String := ""
+      & "msg29"
+      & "";
+   Key_31 : aliased constant Wide_String := ""
+      & "msg30"
+      & "";
+   Key_32 : aliased constant Wide_String := ""
+      & "msg31"
+      & "";
    Keys : constant ZT.Constant_String_List (1 .. 32) := (
                    Key_1'Access,
                    Key_2'Access,
@@ -81,7 +147,8 @@ package body My_Package is
                    Key_31'Access,
                    Key_32'Access);
 
-   Locale_1 : aliased constant Wide_String := "";
+   Locale_1 : aliased constant Wide_String := ""
+      & "";
    Locales : constant ZT.Constant_String_List (1 .. 1) := (
                    1 => Locale_1'Access);
 

@@ -86,9 +86,11 @@ package body ZanyBlue.Test.Reporter_XML is
    ------------
 
    procedure Report (Engine : XML_Reporter;
-                     R      : in out Result'Class)
+                     R      : in out Result'Class;
+                     Options : AUnit_Options := Default_Options)
    is
       pragma Unreferenced (Engine);
+      pragma Unreferenced (Options);
    begin
       Put_Line ("<?xml version=""1.0"" encoding=""utf-8""?>");
       Put_Line ("<testsuites>");

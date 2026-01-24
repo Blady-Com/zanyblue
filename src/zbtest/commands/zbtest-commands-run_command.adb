@@ -34,7 +34,6 @@
 
 with Ada.Calendar;
 with ZanyBlue.Wide_Directories;
-with ZBTest.XML_Data;
 
 separate (ZBTest.Commands)
 procedure Run_Command (State : in out State_Type;
@@ -42,11 +41,15 @@ procedure Run_Command (State : in out State_Type;
 
    use Ada.Calendar;
    use ZanyBlue.Wide_Directories;
-   use ZBTest.XML_Data;
 
    procedure Execute_Script (State  : in out State_Type;
                              Script : in Wide_String);
    --  Execute the script: open the script file and execute each line.
+
+   procedure Load_Init_Scripts (State          : in out State_Type;
+                                Script_Dir     : in Wide_String);
+   --  Load any zbtest initialization scripts found in the directory
+   --  tree, if not already loaded.
 
    function Locate_Script (Path : in Wide_String;
                            Name : in Wide_String) return Wide_String;
@@ -72,6 +75,10 @@ procedure Run_Command (State : in out State_Type;
                              Script : in Wide_String) is
       File       : File_Type;
    begin
+      State.Set_String ("_source", Script);
+      State.Set_Integer ("_lineno", 0);
+      State.Set_String ("_testname", Wide_Base_Name (Script));
+      State.Set_String ("_fulltestname", Full_Test_Name (State));
       Wide_Open (File, In_File, Script);
       State.Read_Eval_Loop (File, False);
       Close (File);
@@ -83,6 +90,43 @@ procedure Run_Command (State : in out State_Type;
       Print_10040 (+E, +Script);
    end Execute_Script;
 
+   -----------------------
+   -- Load_Init_Scripts --
+   -----------------------
+
+   procedure Load_Init_Scripts (State          : in out State_Type;
+                                Script_Dir     : in Wide_String) is
+      Init_Script : constant Wide_String
+                       := Wide_Compose (Script_Dir,
+                                        ZBTest_Init_Name,
+                                        ZBTest_Extension);
+      Init_Param : constant Wide_String := "_init⇨" & Init_Script;
+   begin
+      begin
+         --  Load the scripts in our parent directories first.
+         Load_Init_Scripts (State, Wide_Containing_Directory (Script_Dir));
+      exception
+      when ZanyBlue.Wide_Directories.Use_Error =>
+         --  At the root directory, just continue
+         null;
+      when ZanyBlue.Wide_Directories.Name_Error =>
+         --  Something strange about he name, just return.
+         null;
+      end;
+      if State.Is_Defined (Init_Param) then
+         --  Initialization script already loaded.  They are only loaded
+         --  once per scope.
+         return;
+      end if;
+      State.Set_Boolean (Init_Param, True);
+      if not Wide_Exists (Init_Script) then
+         --  Initialization script does not exist at this directory level.
+         return;
+      end if;
+      Print_00047 (+Init_Script);
+      Execute_Script (State, Init_Script);
+   end Load_Init_Scripts;
+
    -------------------
    -- Locate_Script --
    -------------------
@@ -90,11 +134,14 @@ procedure Run_Command (State : in out State_Type;
    function Locate_Script (Path : in Wide_String;
                            Name : in Wide_String) return Wide_String is
 
-      Test_1 : constant Wide_String := Wide_Compose ("", Name, "zbt");
-      Test_2 : constant Wide_String := Wide_Compose (Name, Name, "zbt");
-      Test_3 : constant Wide_String := Wide_Compose (Path, Name, "zbt");
+      Test_1 : constant Wide_String := Wide_Compose ("", Name,
+                                                     ZBTest_Extension);
+      Test_2 : constant Wide_String := Wide_Compose (Name, Name,
+                                                     ZBTest_Extension);
+      Test_3 : constant Wide_String := Wide_Compose (Path, Name,
+                                                     ZBTest_Extension);
       Test_4 : constant Wide_String := Wide_Compose (Wide_Compose (Path, Name),
-                                                     Name, "zbt");
+                                                     Name, ZBTest_Extension);
    begin
       if Wide_Is_File (Name) then
          return Name;
@@ -140,11 +187,9 @@ procedure Run_Command (State : in out State_Type;
    begin
       Print_00013 (+Script);
       State.New_Scope;
-      State.Initialize_Scope (Script_Dir, Script, Implicit_Scope => True);
-      State.Set ("_xmlnode", Create_XML_Node (State.Get ("_doc"),
-                                              State.Get ("_xmlnode"),
-                                              "testsuite"));
-      Set_Attribute (State.Get ("_xmlnode"), "name", State.Full_Test_Name);
+      State.Initialize_Scope (Script_Dir, Implicit_Scope => True);
+      Load_Init_Scripts (State, Script_Dir);
+      Register_XML_Scope (State);
       Execute_Script (State, Script);
       Wrap_Up (State, Full_Test_Name (State));
    end Run;
@@ -155,23 +200,16 @@ procedure Run_Command (State : in out State_Type;
 
    procedure Wrap_Up (State     : in out State_Type;
                       Test_Name : in Wide_String) is
-      XML_Node : XML_Node_Type;
-      Start    : Time;
-      Elapsed  : Float;
       N_Fail   : Natural;
       N_OK     : Natural;
    begin
-      XML_Node := XML_Node_Type (State.Get ("_xmlnode"));
-      Start := State.Get_Time ("_start_time");
       --  Close any user created scopes ...
       while not State.Is_Defined ("_implicit_scope", False) loop
          State.End_Scope;
       end loop;
+      Set_XML_Elapsed_Time (State);
       State.End_Scope (N_OK, N_Fail);
       Print_00018 (+Test_Name, +N_OK, +N_Fail);
-      --  Set the time it took to execute in the XML doc
-      Elapsed := Float (Clock - Start);
-      Set_Attribute (XML_Node, "time", Format ("{0:f}", +Elapsed));
    end Wrap_Up;
 
 begin

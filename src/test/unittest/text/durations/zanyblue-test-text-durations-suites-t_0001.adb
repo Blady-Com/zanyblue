@@ -43,7 +43,7 @@ procedure T_0001 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    V1        : constant Duration := Duration (0);
    V2        : constant Duration := Duration (60 + 1);
    V3        : constant Duration := Duration (3600 + 60 + 1);
-   V4        : constant Duration := Duration (3600*25 + 60 + 1);
+   V4        : constant Duration := Duration (3600 * 25 + 60 + 1);
    Arg1      : constant Duration_Argument_Type := Create (V1);
    Arg2      : constant Duration_Argument_Type := Create (V2);
    Arg3      : constant Duration_Argument_Type := Create (V3);

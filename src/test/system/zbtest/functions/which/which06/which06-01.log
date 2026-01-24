@@ -1,4 +1,4 @@
-This is ZBTest, Version [0-9]+.[0-9]+.[0-9]+ .* \(.*\) at .* on .*
+This is ZBTest, Version [0-9]+.[0-9]+.[0-9]+ .* \(.*\) on .* at .*
 Copyright \(c\) 2009-.*, Michael Rohan.  All rights reserved
 Creating test area directory ".*test-area.test-area"
 Executing the ZBTest script ".*test-area.which.zbt"
@@ -10,4 +10,4 @@ Usage: which [ -f | -e ] filename
 zbtest.which \(3> echo Invalid which usage 
 Invalid which usage
 Status for "zbtest.which": 0 failures, 0 OK
-ZBTest completed at .* on .*, elapsed time .*
+ZBTest completed on .* at .*, elapsed time .*

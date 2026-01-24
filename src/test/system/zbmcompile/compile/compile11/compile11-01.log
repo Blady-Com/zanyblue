@@ -38,4 +38,11 @@
   <parameter name="parameter_modes" type="boolean" value="false" />
   <parameter name="accessor:exceptions" type="boolean" value="false" />
 </parameter-set>
+This is ZBMCompile, Version .* on .*
+Copyright \(c\) 2009-.*, Michael Rohan.  All rights reserved
+Loaded 0 messages for the facility "myapp1" (0 locales)
+Loaded 0 messages for the facility "myapp2" (0 locales)
+Skipping consistency checks for "myapp1", base locale ("") is not defined
+Skipping consistency checks for "myapp2", base locale ("") is not defined
 Error, no messages files processed
+ZBMCompile completed on .*. elapsed time .*

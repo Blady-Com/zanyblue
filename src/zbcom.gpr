@@ -54,7 +54,7 @@ project zbcom is
 
    C_Switches := ("-gnato",
                   "-gnatf",
-                  "-gnat05",
+                  "-gnat12",
                   "-gnatW8",
                   "-gnatwale",
                   "-gnaty",

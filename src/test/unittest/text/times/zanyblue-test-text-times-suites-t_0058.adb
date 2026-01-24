@@ -60,9 +60,9 @@ procedure T_0058 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    end Check;
 
 begin
-   Check ("",       "٤:٤٨ م ١٦‏/٦‏/١٩٠٤");
-   Check ("full",   "+٠٣٠٠ ٤:٤٨:٠٣ م الخميس، ١٦ يونيو، ١٩٠٤");
-   Check ("long",   "+٠٣٠٠ ٤:٤٨:٠٣ م ١٦ يونيو، ١٩٠٤");
-   Check ("medium", "٤:٤٨:٠٣ م ١٦‏/٠٦‏/١٩٠٤");
-   Check ("short",  "٤:٤٨ م ١٦‏/٦‏/١٩٠٤");
+   Check ("",       "١٦‏/٦‏/١٩٠٤ ٤:٤٨ م");
+   Check ("full",   "الخميس، ١٦ يونيو، ١٩٠٤ ٤:٤٨:٠٣ م +٠٣٠٠");
+   Check ("long",   "١٦ يونيو، ١٩٠٤ ٤:٤٨:٠٣ م +٠٣٠٠");
+   Check ("medium", "١٦‏/٠٦‏/١٩٠٤ ٤:٤٨:٠٣ م");
+   Check ("short",  "١٦‏/٦‏/١٩٠٤ ٤:٤٨ م");
 end T_0058;

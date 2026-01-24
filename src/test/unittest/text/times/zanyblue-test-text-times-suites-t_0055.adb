@@ -60,9 +60,9 @@ procedure T_0055 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    end Check;
 
 begin
-   Check ("",       "16:48, 16.06.04");
-   Check ("full",   "16:48:03 +0400, четверг, 16 июня 1904 г.");
-   Check ("long",   "16:48:03 +0400, 16 июня 1904 г.");
-   Check ("medium", "16:48:03, 16.06.1904");
-   Check ("short",  "16:48, 16.06.04");
+   Check ("",       "16.06.04, 16:48");
+   Check ("full",   "четверг, 16 июня 1904 г., 16:48:03 +0400");
+   Check ("long",   "16 июня 1904 г., 16:48:03 +0400");
+   Check ("medium", "16 июня 1904 г., 16:48:03");
+   Check ("short",  "16.06.04, 16:48");
 end T_0055;

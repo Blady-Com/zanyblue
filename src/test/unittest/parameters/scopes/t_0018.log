@@ -5,7 +5,7 @@
     <value>z</value>
   </parameter>
   <parameter name="s" type="string" value="xyz" />
-  <parameter name="t" type="time" value="4:48 PM 11/2/11" />
+  <parameter name="t" type="time" value="11/2/11, 4:48 PM" />
   <parameter name="_level" type="integer" value="1" />
   <parameter name="b" type="boolean" value="false" />
   <parameter name="f" type="float" value="1.00000E+00" />

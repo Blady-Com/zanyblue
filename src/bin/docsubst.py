@@ -1,4 +1,5 @@
-#!/usr/bin/python -tt
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 """
 docsubst.py VAR1=VALUE1 VAR2=VALUE2 src dst
 
@@ -8,10 +9,12 @@ values.
 
 import sys
 
+
 def error(fmt, *args):
     msg = fmt % args
-    sys.stderr.write ("%s\n" % msg)
+    sys.stderr.write("%s\n" % msg)
     return 1
+
 
 def main():
     variables = {}

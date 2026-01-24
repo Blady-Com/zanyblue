@@ -197,8 +197,8 @@ package body ZBMCompile.Codegen.Accessors is
       procedure Close_And_Report (File             : in out File_Type;
                                   File_Name        : in Wide_String;
                                   Facility_Package : in Wide_String;
-                                  Updated_Id       : in Message_Id_Type;
-                                  Retained_Id      : in Message_Id_Type);
+                                  Updated_Id       : in Wide_String;
+                                  Retained_Id      : in Wide_String);
 
       procedure Write_Accessor (Spec_File       : in File_Type;
                                 Body_File       : in File_Type;
@@ -207,15 +207,12 @@ package body ZBMCompile.Codegen.Accessors is
       procedure Close_And_Report (File             : in out File_Type;
                                   File_Name        : in Wide_String;
                                   Facility_Package : in Wide_String;
-                                  Updated_Id       : in Message_Id_Type;
-                                  Retained_Id      : in Message_Id_Type) is
+                                  Updated_Id       : in Wide_String;
+                                  Retained_Id      : in Wide_String) is
          Updated : Boolean;
       begin
          Close_And_Update (File, Updated);
-         if not Options.Get_Boolean ("verbose") then
-            return;
-         end if;
-         Print_Line ("zbmcompile",
+         Print_Line (ZBMCompile_Facility,
                      Select_Message (Updated, Updated_Id, Retained_Id),
                      +Facility_Package, +File_Name);
       end Close_And_Report;
@@ -223,6 +220,8 @@ package body ZBMCompile.Codegen.Accessors is
       procedure Write_Accessor (Spec_File       : in File_Type;
                                 Body_File       : in File_Type;
                                 Key_Descriptor  : in Key_Descriptor_Type) is
+         Local_Arguments : constant Wide_String := "Arguments";
+         Empty_Arguments : constant Wide_String := "Empty_Argument_List";
          Key  : constant Wide_String := Get_Key (Catalog,
                                                  Key_Descriptor.Index);
          Dash : constant Wide_Character := '-';
@@ -248,15 +247,29 @@ package body ZBMCompile.Codegen.Accessors is
          end if;
          New_Line (Spec_File);
          Print_Line (Body_File, Accessor_Facility, "20008", +Modes);
+         if Key_Descriptor.N_Args > 0 then
+            --  Arguments, include the local arguments list
+            Print_Line (Body_File, Accessor_Facility, "20009", +Modes);
+         end if;
+         Print_Line (Body_File, Accessor_Facility, "20010", +Modes);
          --  Append the arguments to the local Argument_List
          for I in 1 .. Key_Descriptor.N_Args loop
-            Print_Line (Body_File, Accessor_Facility, "20009", +(I - 1));
+            Print_Line (Body_File, Accessor_Facility, "20011", +(I - 1));
          end loop;
          --  Write the call to the underlying ZB routine.
-         Print_Line (Body_File, Accessor_Facility, "20010",
-                     +Get_Facility_Index (Catalog, Facility),
-                     +Get_Key_Index (Catalog, Key),
-                     +Key);
+         if Key_Descriptor.N_Args > 0 then
+            Print_Line (Body_File, Accessor_Facility, "20012",
+                        +Get_Facility_Index (Catalog, Facility),
+                        +Get_Key_Index (Catalog, Key),
+                        +Key,
+                        +Local_Arguments);
+         else
+            Print_Line (Body_File, Accessor_Facility, "20012",
+                        +Get_Facility_Index (Catalog, Facility),
+                        +Get_Key_Index (Catalog, Key),
+                        +Key,
+                        +Empty_Arguments);
+         end if;
       end Write_Accessor;
 
       Output_Directory : constant Wide_String :=
@@ -319,11 +332,11 @@ package body ZBMCompile.Codegen.Accessors is
       end loop;
       --  Write the end of package declaration/implementation
       Print_Line (Spec_File, Accessor_Facility, "10010", +Facility_Package);
-      Print_Line (Body_File, Accessor_Facility, "20011", +Facility_Package);
+      Print_Line (Body_File, Accessor_Facility, "20013", +Facility_Package);
       Close_And_Report (Spec_File, Spec_Name, Facility_Package,
-                        "00045", "00046");
+                        "V00007", "V00008");
       Close_And_Report (Body_File, Body_Name, Facility_Package,
-                        "00048", "00049");
+                        "V00009", "V00010");
    end Create_Facility_Accessors;
 
    ------------------------------
@@ -344,7 +357,7 @@ package body ZBMCompile.Codegen.Accessors is
 
    begin
       if not Options.Get_Boolean ("accessor_comments") then
-         Print_Line (ZBMCompile_Facility, "00054");
+         Print_Line (ZBMCompile_Facility, "I00008");
       end if;
       Create_Key_Descriptors (Handler, Facility, Base_Locale,
                               Max_Args, Key_Descriptors);
@@ -360,7 +373,7 @@ package body ZBMCompile.Codegen.Accessors is
    exception
    when Constraint_Error =>
       --  Facility name is defined but it contains no messages
-      Print_Line (ZBMCompile_Facility, "00050",
+      Print_Line (ZBMCompile_Facility, "E00021",
                   Argument0 => +Facility);
    end Create_Facility_Packages;
 

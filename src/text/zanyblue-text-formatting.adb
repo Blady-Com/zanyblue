@@ -32,7 +32,6 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Strings.Wide_Fixed;
 with ZanyBlue.OS;
 with ZanyBlue.Text.Format_Errors;
 with ZanyBlue.Text.Format_Message;
@@ -333,8 +332,7 @@ package body ZanyBlue.Text.Formatting is
                     Catalog   : in Catalog_Type := Standard_Catalog) is
    begin
       Print (Ada.Wide_Text_IO.Current_Output, Facility, Key, Arguments,
-             Locale => Locale,
-             Catalog => Catalog);
+             Locale, Catalog);
    end Print;
 
    -----------
@@ -352,13 +350,8 @@ package body ZanyBlue.Text.Formatting is
                     Catalog   : in Catalog_Type := Standard_Catalog) is
    begin
       Print (Ada.Wide_Text_IO.Current_Output, Facility, Key,
-             Argument0 => Argument0,
-             Argument1 => Argument1,
-             Argument2 => Argument2,
-             Argument3 => Argument3,
-             Argument4 => Argument4,
-             Locale => Locale,
-             Catalog => Catalog);
+             Argument0, Argument1, Argument2, Argument3, Argument4,
+             Locale, Catalog);
    end Print;
 
    -----------
@@ -373,8 +366,6 @@ package body ZanyBlue.Text.Formatting is
                     Catalog     : in Catalog_Type := Standard_Catalog) is
    begin
       Write_Message (Destination, Facility, Key, Arguments,
-                     Format (Facility, Key, Arguments,
-                             Locale => Locale, Catalog => Catalog),
                      False, Locale, Catalog);
    end Print;
 
@@ -409,8 +400,7 @@ package body ZanyBlue.Text.Formatting is
                     Arguments : in Argument_List;
                     Locale    : in Locale_Type := Current_Locale) is
    begin
-      Print (Ada.Wide_Text_IO.Current_Output, Text, Arguments,
-             Locale => Locale);
+      Print (Ada.Wide_Text_IO.Current_Output, Text, Arguments, Locale);
    end Print;
 
    -----------
@@ -426,12 +416,8 @@ package body ZanyBlue.Text.Formatting is
                     Locale    : in Locale_Type := Current_Locale) is
    begin
       Print (Ada.Wide_Text_IO.Current_Output, Text,
-             Argument0 => Argument0,
-             Argument1 => Argument1,
-             Argument2 => Argument2,
-             Argument3 => Argument3,
-             Argument4 => Argument4,
-             Locale => Locale);
+             Argument0, Argument1, Argument2, Argument3, Argument4,
+             Locale);
    end Print;
 
    -----------
@@ -443,9 +429,9 @@ package body ZanyBlue.Text.Formatting is
                     Arguments    : in Argument_List;
                     Locale       : in Locale_Type := Current_Locale) is
    begin
-      Write_Message (Destination, "", "", Arguments,
+      Print (Standard_Catalog, Destination, "", "", Locale, Arguments,
                      Format_Message (Text, Arguments, null, Locale, True),
-                     False, Locale, Standard_Catalog);
+                     False);
    end Print;
 
    -----------
@@ -464,7 +450,7 @@ package body ZanyBlue.Text.Formatting is
    begin
       Make_Arguments (Arguments, Argument0, Argument1, Argument2, Argument3,
                                  Argument4);
-      Print (Destination, Text, Arguments, Locale => Locale);
+      Print (Destination, Text, Arguments, Locale);
    end Print;
 
    ----------------
@@ -477,10 +463,8 @@ package body ZanyBlue.Text.Formatting is
                          Locale    : in Locale_Type := Current_Locale;
                          Catalog   : in Catalog_Type := Standard_Catalog) is
    begin
-      Write_Message (Ada.Wide_Text_IO.Current_Output, Facility, Key, Arguments,
-                     Format (Facility, Key, Arguments,
-                             Locale => Locale, Catalog => Catalog),
-                     True, Locale, Catalog);
+      Print_Line (Ada.Wide_Text_IO.Current_Output, Facility, Key, Arguments,
+                  Locale, Catalog);
    end Print_Line;
 
    ----------------
@@ -498,14 +482,10 @@ package body ZanyBlue.Text.Formatting is
        Locale    : in Locale_Type := Current_Locale;
        Catalog   : in Catalog_Type := Standard_Catalog)
    is
-      Arguments : Argument_List;
    begin
-      Make_Arguments (Arguments, Argument0, Argument1, Argument2, Argument3,
-                                 Argument4);
-      Write_Message (Ada.Wide_Text_IO.Current_Output, Facility, Key, Arguments,
-                     Format (Facility, Key, Arguments,
-                             Locale => Locale, Catalog => Catalog),
-                     True, Locale, Catalog);
+      Print_Line (Ada.Wide_Text_IO.Current_Output, Facility, Key,
+                  Argument0, Argument1, Argument2, Argument3, Argument4,
+                  Locale, Catalog);
    end Print_Line;
 
    ----------------
@@ -520,8 +500,6 @@ package body ZanyBlue.Text.Formatting is
                          Catalog     : in Catalog_Type := Standard_Catalog) is
    begin
       Write_Message (Destination, Facility, Key, Arguments,
-                     Format (Facility, Key, Arguments,
-                             Locale => Locale, Catalog => Catalog),
                      True, Locale, Catalog);
    end Print_Line;
 
@@ -544,10 +522,8 @@ package body ZanyBlue.Text.Formatting is
       Arguments : Argument_List;
    begin
       Make_Arguments (Arguments, Argument0, Argument1, Argument2, Argument3,
-                                 Argument4);
+                      Argument4);
       Write_Message (Destination, Facility, Key, Arguments,
-                     Format (Facility, Key, Arguments,
-                             Locale => Locale, Catalog => Catalog),
                      True, Locale, Catalog);
    end Print_Line;
 
@@ -559,9 +535,7 @@ package body ZanyBlue.Text.Formatting is
                          Arguments : in Argument_List;
                          Locale    : in Locale_Type := Current_Locale) is
    begin
-      Write_Message (Ada.Wide_Text_IO.Current_Output, "", "", Arguments,
-                     Format_Message (Text, Arguments, null, Locale, True),
-                     True, Locale, Standard_Catalog);
+      Print_Line (Ada.Wide_Text_IO.Current_Output, Text, Arguments, Locale);
    end Print_Line;
 
    ----------------
@@ -580,10 +554,8 @@ package body ZanyBlue.Text.Formatting is
       Arguments : Argument_List;
    begin
       Make_Arguments (Arguments, Argument0, Argument1, Argument2, Argument3,
-                                 Argument4);
-      Write_Message (Ada.Wide_Text_IO.Current_Output, "", "", Arguments,
-                     Format_Message (Text, Arguments, null, Locale, True),
-                     True, Locale, Standard_Catalog);
+                      Argument4);
+      Print_Line (Ada.Wide_Text_IO.Current_Output, Text, Arguments, Locale);
    end Print_Line;
 
    ----------------
@@ -595,9 +567,9 @@ package body ZanyBlue.Text.Formatting is
                          Arguments    : in Argument_List;
                          Locale       : in Locale_Type := Current_Locale) is
    begin
-      Write_Message (Destination, "", "", Arguments,
-                     Format_Message (Text, Arguments, null, Locale, True),
-                     True, Locale, Standard_Catalog);
+      Print (Standard_Catalog, Destination, "", "", Locale, Arguments,
+             Format_Message (Text, Arguments, null, Locale, True),
+             True);
    end Print_Line;
 
    ----------------
@@ -618,9 +590,7 @@ package body ZanyBlue.Text.Formatting is
    begin
       Make_Arguments (Arguments, Argument0, Argument1, Argument2, Argument3,
                                  Argument4);
-      Write_Message (Destination, "", "", Arguments,
-                     Format_Message (Text, Arguments, null, Locale, True),
-                     True, Locale, Standard_Catalog);
+      Print_Line (Destination, Text, Arguments, Locale);
    end Print_Line;
 
    ----------------------
@@ -714,6 +684,16 @@ package body ZanyBlue.Text.Formatting is
           Message => String'(Format (Text, Arguments, Locale => Locale)));
    end Raise_Exception;
 
+   ----------------
+   -- Set_Filter --
+   ----------------
+
+   procedure Set_Filter (Filter   : in Message_Filter_Access;
+                         Catalog  : in Catalog_Type := Standard_Catalog) is
+   begin
+      Set_Filter (Catalog, Filter);
+   end Set_Filter;
+
    ----------------------------
    -- Source_Locales_Enabled --
    ----------------------------
@@ -740,40 +720,13 @@ package body ZanyBlue.Text.Formatting is
                             Facility     : in Wide_String;
                             Key          : in Wide_String;
                             Arguments    : in Argument_List;
-                            Text         : in Wide_String;
                             With_NL      : in Boolean;
                             Locale       : in Locale_Type;
                             Catalog      : in Catalog_Type) is
-
-      pragma Unreferenced (Facility);
-      pragma Unreferenced (Key);
-      pragma Unreferenced (Arguments);
-      pragma Unreferenced (Locale);
-      pragma Unreferenced (Catalog);
-
-      use Ada.Wide_Text_IO;
-      use Ada.Strings.Wide_Fixed;
-
-      NL     : constant Wide_String := "" & Wide_Character'Val (10);
-      Done   : Boolean := False;
-      Start  : Positive := Text'First;
-      Finish : Natural;
-
    begin
-      --  Write the given text to the destination splitting on "\n"
-      --  characters
-      while not Done loop
-         Finish := Index (Text, NL, Start);
-         Done := Finish = 0;
-         if Done then
-            Put (Destination, Text (Start .. Text'Last));
-         else
-            Put_Line (Destination, Text (Start .. Finish - 1));
-         end if;
-         Start := Finish + 1;
-      end loop;
-      if With_NL then
-         New_Line (Destination);
+      if not Is_Filtered (Catalog, Facility, Key) then
+         Print (Catalog, Destination, Facility, Key, Locale, Arguments,
+                Format (Facility, Key, Arguments, Locale, Catalog), With_NL);
       end if;
    end Write_Message;
 
@@ -785,40 +738,13 @@ package body ZanyBlue.Text.Formatting is
                             Facility     : in Wide_String;
                             Key          : in Wide_String;
                             Arguments    : in Argument_List;
-                            Text         : in Wide_String;
                             With_NL      : in Boolean;
                             Locale       : in Locale_Type;
                             Catalog      : in Catalog_Type) is
-
-      pragma Unreferenced (Facility);
-      pragma Unreferenced (Key);
-      pragma Unreferenced (Arguments);
-      pragma Unreferenced (Locale);
-      pragma Unreferenced (Catalog);
-
-      use Ada.Text_IO;
-      use Ada.Strings.Wide_Fixed;
-
-      NL     : constant Wide_String := "" & Wide_Character'Val (10);
-      Done   : Boolean := False;
-      Start  : Positive := Text'First;
-      Finish : Natural;
-
    begin
-      --  Write the given text to the destination splitting on "\n"
-      --  characters
-      while not Done loop
-         Finish := Index (Text, NL, Start);
-         Done := Finish = 0;
-         if Done then
-            Put (Destination, To_UTF8 (Text (Start .. Text'Last)));
-         else
-            Put_Line (Destination, To_UTF8 (Text (Start .. Finish - 1)));
-         end if;
-         Start := Finish + 1;
-      end loop;
-      if With_NL then
-         New_Line (Destination);
+      if not Is_Filtered (Catalog, Facility, Key) then
+         Print (Catalog, Destination, Facility, Key, Locale, Arguments,
+                Format (Facility, Key, Arguments, Locale, Catalog), With_NL);
       end if;
    end Write_Message;
 

@@ -38,9 +38,9 @@ procedure T_0005 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    L : constant Locale_Type := Make_Locale ("zh");
 
 begin
-   Check_Value (R, Date_Time_Format (L, Full), "{1}{0}",
+   Check_Value (R, Date_Time_Format (L, Full), "{1} {0}",
                 "zh (Hans) full date/time format");
-   Check_Value (R, Date_Time_Format (L, Long), "{1}{0}",
+   Check_Value (R, Date_Time_Format (L, Long), "{1} {0}",
                 "zh (Hans) long date/time format");
    Check_Value (R, Date_Time_Format (L, Medium), "{1} {0}",
                 "zh (Hans) medium date/time format");

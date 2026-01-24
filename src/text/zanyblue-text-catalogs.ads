@@ -32,13 +32,21 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
+with Ada.Text_IO;
+with Ada.Wide_Text_IO;
+
 with ZanyBlue.Text.Pseudo;
+with ZanyBlue.Text.Filter;
 with ZanyBlue.Text.Locales;
+with ZanyBlue.Text.Printer;
+with ZanyBlue.Text.Arguments;
 with ZanyBlue.Text.Properties_Parser;
 
 package ZanyBlue.Text.Catalogs is
 
    use ZanyBlue.Text.Pseudo;
+   use ZanyBlue.Text.Filter;
+   use ZanyBlue.Text.Printer;
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Properties_Parser;
 
@@ -156,6 +164,15 @@ package ZanyBlue.Text.Catalogs is
    --  the message found is used.  This can subsequently be used to format
    --  message arguments.
 
+   procedure Set_Filter (Catalog  : in Catalog_Type;
+                         Filter   : in Message_Filter_Access);
+   --  Set the filter associated with a catalog, can be null.
+
+   function Is_Filtered (Catalog  : in Catalog_Type;
+                         Facility : in Wide_String;
+                         Key      : in Wide_String) return Boolean;
+   --  Should the given message be filtered out, i.e., ignored.
+
    procedure Add_Facility (Catalog  : in Catalog_Type;
                            Facility : in Wide_String);
    --  Add a facility name to the set of known facilities
@@ -164,10 +181,6 @@ package ZanyBlue.Text.Catalogs is
                            Facility : in Wide_String;
                            Index    : out Facility_Index_Type);
    --  Add a facility name to the set of known facilities
-
-   procedure Add_Key (Catalog  : in Catalog_Type;
-                      Key      : in Wide_String);
-   --  Add a key name to the set of known keys
 
    procedure Add_Key (Catalog  : in Catalog_Type;
                       Key      : in Wide_String;
@@ -317,6 +330,32 @@ package ZanyBlue.Text.Catalogs is
    function Source_Locales_Enabled (Catalog : in Catalog_Type)
       return Boolean;
    --  Are source locales for message argument formatting enabled.
+
+   procedure Print (Catalog     : Catalog_Type;
+                    Destination : Ada.Text_IO.File_Type;
+                    Facility    : Wide_String;
+                    Key         : Wide_String;
+                    Locale      : Locale_Type;
+                    Arguments   : ZanyBlue.Text.Arguments.Argument_List;
+                    Message     : Wide_String;
+                    With_NL     : Boolean);
+   --  Print a message to a Character based file.   This is implemented
+   --  via the Printer class associated with the catalog.
+
+   procedure Print (Catalog     : Catalog_Type;
+                    Destination : Ada.Wide_Text_IO.File_Type;
+                    Facility    : Wide_String;
+                    Key         : Wide_String;
+                    Locale      : Locale_Type;
+                    Arguments   : ZanyBlue.Text.Arguments.Argument_List;
+                    Message     : Wide_String;
+                    With_NL     : Boolean);
+   --  Print a message to a Wide_Character based file.   This is implemented
+   --  via the Printer class associated with the catalog.
+
+   procedure Set_Printer (Catalog : Catalog_Type;
+                          Printer : Printer_Access);
+   --  Set the printer associated with a catalog.
 
    --------------------------------------------------------------------------
    --  INTERNAL API'S TO SUPPORT GENERATION OF ADA SOURCE VIA ZBMCOMPILE

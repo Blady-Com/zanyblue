@@ -42,8 +42,8 @@ begin
                 "ja full date format");
    Check_Value (R, Date_Format (L, Long), "y年M月d日",
                 "ja long date format");
-   Check_Value (R, Date_Format (L, Medium), "yyyy/MM/dd",
+   Check_Value (R, Date_Format (L, Medium), "y/MM/dd",
                 "ja medium date format");
-   Check_Value (R, Date_Format (L, Short), "yyyy/MM/dd",
+   Check_Value (R, Date_Format (L, Short), "y/MM/dd",
                 "ja short date format");
 end T_0004;

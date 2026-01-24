@@ -38,9 +38,10 @@
 use strict;
 use CGI;
 use FileHandle;
+use File::Basename;
 
-my $instdir = "/home/mrohan/zb/ref";
-my $tmpldir = "/var/www";
+my $tmpldir = dirname ($0);
+my $instdir = "$tmpldir/.bin";
 my %examples = (
     "curtime"    => 1,
     "dumplocale" => 1,
@@ -49,7 +50,7 @@ my %examples = (
     "tomcat"     => 1,
 );
 
-my %languages = (
+my %locales = (
     "Arabic"                  => "ar",
     "Czech"                   => "cs",
     "Danish"                  => "da",
@@ -97,40 +98,88 @@ my $template = sprintf ("%s/examples.html", $tmpldir);
 my $cgi = new CGI ();
 my $params = $cgi->Vars;
 my $application = get_param ($params, 'application', "", keys (%examples));
-my $locale = get_param ($params, 'locale', "en", values (%languages));
+my $locale = get_param ($params, 'locale', "en", values (%locales));
 my $pseudo = get_param ($params, 'pseudo', "n", values (%pseudo_options));
-my $example_options = make_example_options ($application, \%examples);
-my $language_options = make_language_options ($locale, \%languages);
-my $pseudo_options = make_pseudo_options ($pseudo, \%pseudo_options);
-my $executable = locate_executable ($application);
-my $command = generate_command ($executable, $locale, $pseudo);
-my $description = generate_description ($application, $executable);
-my $output = generate_output ($command);
+my $html = expand_template($application, $template, $locale, $pseudo,
+                           \%examples, \%locales, \%pseudo_options);
 print $cgi->header(-charset => "UTF-8");
-my $fh = new FileHandle($template);
-my $printing = 1;
-while (<$fh>) {
-    $printing = 0 if (/<!-- BEGIN-OUTPUT -->/ and not $output);
-    s/<!-- EXAMPLE_OPTIONS -->/$example_options/;
-    s/<!-- LANGUAGE_OPTIONS -->/$language_options/;
-    s/<!-- PSEUDO_OPTIONS -->/$pseudo_options/;
-    s/<!-- COMMAND -->/    \$ $command/;
-    s/<!-- DESCRIPTION -->/$description/;
-    s/<!-- OUTPUT -->/$output/;
-    s/<!-- LOCALE -->/$locale/;
-    print if ($printing);
-    $printing = 1 if (/<!-- END-OUTPUT -->/);
-}
-$fh->close();
+printf ("%s\n", $html);
 
-sub locate_executable {
-    my $application = shift;
-    my $result = "";
-    if (exists $examples{$application}) {
-        $result = "$instdir/bin/x_$application";
+###################
+# execute_command #
+###################
+
+sub execute_command {
+    my $name = shift;
+    my $command = shift;
+    my @result = ();
+    my $fh = new FileHandle ("$command 2>&1|");
+    if (not defined ($fh)) {
+        my $errmsg = sprintf ("Failed to execute \"%s\" application: %s\n", $name, "$!");
+        push (@result, $errmsg);
     }
+    else {
+        while (<$fh>) {
+            push (@result, $_);
+        }
+        $fh->close ();
+    }
+    return \@result;
+}
+
+###################
+# expand_template #
+###################
+
+sub expand_template {
+    my $application = shift;
+    my $template = shift;
+    my $locale = shift;
+    my $pseudo = shift;
+    my $examples = shift;
+    my $locales = shift;
+    my $pseudo_options = shift;
+    my $title = "";
+    if ($application) {
+        my $pseudo_name = "";
+        foreach my $name (keys (%pseudo_options)) {
+            if ($pseudo eq $pseudo_options{$name}) {
+                $pseudo_name = $name;
+            }
+        }
+        $title = " &gt; $application $locale $pseudo_name";
+    }
+    my $example_html = make_example_options ($application, $examples);
+    my $language_html = make_language_options ($locale, $locales);
+    my $pseudo_html = make_pseudo_options ($pseudo, $pseudo_options);
+    my $executable = locate_executable ($application);
+    my $command = generate_command ($executable, $locale, $pseudo);
+    my $description = generate_description ($application, $executable);
+    my $output = generate_output ($application, $command);
+    $command =~ s:.*/::;
+    my $fh = new FileHandle($template);
+    my $result = "";
+    my $printing = 1;
+    while (<$fh>) {
+        $printing = 0 if (/<!-- BEGIN-OUTPUT -->/ and not $output);
+        s/<!-- TITLE -->/$title/;
+        s/<!-- EXAMPLE_OPTIONS -->/$example_html/;
+        s/<!-- LANGUAGE_OPTIONS -->/$language_html/;
+        s/<!-- PSEUDO_OPTIONS -->/$pseudo_html/;
+        s/<!-- COMMAND -->/    \$ $command/;
+        s/<!-- DESCRIPTION -->/$description/;
+        s/<!-- OUTPUT -->/$output/;
+        s/<!-- LOCALE -->/$locale/;
+        $result .= $_ if ($printing);
+        $printing = 1 if (/<!-- END-OUTPUT -->/);
+    }
+    $fh->close();
     return $result;
 }
+
+####################
+# generate_command #
+####################
 
 sub generate_command {
     my $executable = shift;
@@ -143,18 +192,19 @@ sub generate_command {
     return $result;
 }
 
+########################
+# generate_description #
+########################
+
 sub generate_description {
     my $application = shift;
     my $executable = shift;
     my $result = "";
     if ($executable) {
 
-        my $output = new FileHandle ("$executable -h 2>&1|");
-        if (not defined ($output)) {
-            return "NO DESCRIPTION!\n";
-        }
+        my $output = execute_command ($application, "$executable -h");
         my $inlist = 0;
-        while (<$output>) {
+        foreach (@{$output}) {
             if (/^\s*\* /) {
                 if (not $inlist) {
                     $inlist = 1;
@@ -172,27 +222,31 @@ sub generate_description {
             }
             $result .= $_;
         }
-        $output->close ();
     }
     return $result;
 }
 
+###################
+# generate_output #
+###################
+
 sub generate_output {
+    my $application = shift;
     my $command = shift;
     my $result = "";
     if (not $command) {
         return $result;
     }
-    my $output = new FileHandle ("$command 2>&1|");
-    if (not defined ($output)) {
-        return "NO OUTPUT!\n";
-    }
-    while (<$output>) {
+    my $output = execute_command ($application, $command);
+    foreach (@{$output}) {
         $result .= "    $_";
     }
-    $output->close ();
     return $result;
 }
+
+#############
+# get_param #
+#############
 
 sub get_param {
     my $params = shift;
@@ -206,6 +260,23 @@ sub get_param {
     return $defvalue;
 }
 
+#####################
+# locate_executable #
+#####################
+
+sub locate_executable {
+    my $application = shift;
+    my $result = "";
+    if (exists $examples{$application}) {
+        $result = "$instdir/x_$application";
+    }
+    return $result;
+}
+
+########################
+# make_example_options #
+########################
+
 sub make_example_options {
     my $selected = shift;
     my $examples = shift;
@@ -218,18 +289,26 @@ sub make_example_options {
     return $result;
 }
 
+#########################
+# make_language_options #
+#########################
+
 sub make_language_options {
     my $locale = shift;
-    my $languages = shift;
+    my $locales = shift;
     my $result = "";
-    foreach my $language (sort (keys %{$languages})) {
-        my $tag = $languages->{$language};
+    foreach my $language (sort (keys %{$locales})) {
+        my $tag = $locales->{$language};
         $result .= "  <option value=\"$tag\"";
         $result .= " selected" if ($tag eq $locale);
         $result .= ">$language</option>\n";
     }
     return $result;
 }
+
+#######################
+# make_pseudo_options #
+#######################
 
 sub make_pseudo_options {
     my $pseudo = shift;

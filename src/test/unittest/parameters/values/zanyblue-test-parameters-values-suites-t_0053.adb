@@ -43,6 +43,6 @@ procedure T_0053 (R : in out AUnit.Test_Cases.Test_Case'Class) is
 
 begin
    Check_Value (R, Value (To_List (To_Time_Value (T), "xmpl"), 1),
-                   "4:48 PM 10/31/11",
+                   "10/31/11, 4:48 PM",
                 "To_List from Time");
 end T_0053;

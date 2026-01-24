@@ -36,55 +36,49 @@
 with Ada.Command_Line;
 with Ada.Wide_Text_IO;
 with Messages.Moons_Wide_Prints;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.Locales;
 with ZanyBlue.Text.Formatting;
-with ZanyBlue.Text.Generic_Enumerations;
+with ZanyBlue.Text.Version_Status_Arguments;
+with Definitions;
 
 procedure X_AMoons is
 
-   type Planet_Names is (Mercury, Venus, Earth, Mars,
-                         Jupiter, Saturn, Uranus, Neptune);
-
-   package Planet_Name_Formatting is
-      new ZanyBlue.Text.Generic_Enumerations (Planet_Names);
-   package Planet_Name_IO is
-      new Ada.Wide_Text_IO.Enumeration_IO (Planet_Names);
-
    use Ada.Command_Line;
    use Ada.Wide_Text_IO;
-   use Planet_Name_IO;
    use Messages.Moons_Wide_Prints;
    use ZanyBlue.Text.Locales;
-   use Planet_Name_Formatting;
    use ZanyBlue.Text.Formatting;
+   use ZanyBlue.Text.Version_Status_Arguments;
+   use Definitions;
+   use Definitions.Planet_Name_Formatting;
+   use Definitions.Planet_Name_IO;
 
-   Moons  : constant array (Planet_Names) of Natural := (
-                  Earth => 1, Mars => 2, Jupiter => 63,
-                  Saturn => 62, Uranus => 27, Neptune => 13,
-                  others => 0);
    Planet : Planet_Names;
 
 begin
    if Argument_Count = 1 then
       Set_Locale (Argument (1));
    end if;
+   Print_0001 (+ZanyBlue.Version_Major,
+               +ZanyBlue.Version_Minor,
+               +ZanyBlue.Version_Patch,
+               +ZanyBlue.Version_Status);
    loop
-      Print_0001 (With_NL => False);
+      Print_0002 (With_NL => False);
       begin
          Get (Planet);
-         if Moons (Planet) /= 1 then
-            Print_0002 (+Moons (Planet), +Planet);
+         if Number_Of_Moons (Planet) /= 1 then
+            Print_0003 (+Number_Of_Moons (Planet), +Planet);
          else
-            Print_0003 (+Planet);
+            Print_0004 (+Planet);
          end if;
       exception
          when Data_Error =>
-            Print_0005;
+            Print_0006;
       end;
    end loop;
 exception
 when End_Error | Data_Error =>
    New_Line;
-   Print_0004;
+   Print_0005;
 end X_AMoons;

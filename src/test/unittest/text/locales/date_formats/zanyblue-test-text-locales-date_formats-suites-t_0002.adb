@@ -42,7 +42,7 @@ begin
                 "de full date format");
    Check_Value (R, Date_Format (L, Long), "d. MMMM y",
                 "de long date format");
-   Check_Value (R, Date_Format (L, Medium), "dd.MM.yyyy",
+   Check_Value (R, Date_Format (L, Medium), "dd.MM.y",
                 "de medium date format");
    Check_Value (R, Date_Format (L, Short), "dd.MM.yy",
                 "de short date format");

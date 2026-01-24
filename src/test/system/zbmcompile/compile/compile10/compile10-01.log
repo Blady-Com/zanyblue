@@ -38,3 +38,14 @@
   <parameter name="parameter_modes" type="boolean" value="false" />
   <parameter name="accessor:exceptions" type="boolean" value="false" />
 </parameter-set>
+This is ZBMCompile, Version .* on .*
+Copyright \(c\) 2009-.*, Michael Rohan.  All rights reserved
+Loaded 2 messages for the facility "myapp1" (1 locales)
+Loaded 3 messages for the facility "myapp2" (1 locales)
+Performing consistency checks for the facility "myapp1"
+Performing consistency checks for the facility "myapp2"
+Loaded 2 facilities, 3 keys, 1 locales and 5 messages
+Loaded total 133 characters, stored 133 unique characters, 0% saving
+Wrote the spec "My_Package" to the file "..my_package.ads"
+Wrote the body "My_Package" to the file "..my_package.adb"
+ZBMCompile completed on .*, elapsed time .*

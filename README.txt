@@ -51,6 +51,14 @@ The unitary "+" operator is overloaded by the ZanyBlue.Text package to create
 the "boxed" object.  See the ZanyBlue documentation for details on the types
 supported by the package.
 
+If accessors are used, the generated Ada package will contain a routine
+for each key defined, e.g.,
+
+    Print_00001 (+1904);
+
+Argument numbers and, if type information is included in the messages,
+argument types can be checked by the compiler.
+
 Website
 -------
 
@@ -61,20 +69,9 @@ For up-to-date information, visit the web site:
 Downloading
 -----------
 
-The download area contains two bundles:
+The download area contains the bundle:
 
 1) "zanyblue-VERSION-REVISION.tar.gz", the core ZanyBlue source bundle.
-2) "zanyblue-VERSION-REVISION-libs3rd.tar.gz", third party support components,
-   currently this is just the CLDR data from Unicode.org.
-
-Normally, only the primary source bundle is needed.  The third party bundle
-is needed only if the set of built-in set of locale is change, e.g., adding
-day names, date formats, etc, for "la", Latin.
-
-If the both packages are downloaded, they should both be downloaded to and
-extracted in the same directory: the third party components adds the directory
-"zanyblue-VERSION/src/libs3rd" to the directory tree created by the core
-bundle.
 
 Building
 --------
@@ -102,4 +99,4 @@ from AdaCore.
 Contact
 -------
 
-For additional information contact Michael Rohan <michael@zanyblue.com>
+For additional information contact Michael Rohan <mrohan@zanyblue.com>

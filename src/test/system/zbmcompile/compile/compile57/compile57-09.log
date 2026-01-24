@@ -11,159 +11,459 @@ package body ZBTest_Messages is
 
    subtype Z is ZTC.ZBMCompile_Definition;
 
-   Facility_1 : aliased constant Wide_String := "ZBTest";
+   Facility_1 : aliased constant Wide_String := ""
+      & "ZBTest"
+      & "";
    Facilities : constant ZT.Constant_String_List (1 .. 1) := (
                    1 => Facility_1'Access);
 
-   Key_1 : aliased constant Wide_String := "40009";
-   Key_2 : aliased constant Wide_String := "40002";
-   Key_3 : aliased constant Wide_String := "40004";
-   Key_4 : aliased constant Wide_String := "40006";
-   Key_5 : aliased constant Wide_String := "40024";
-   Key_6 : aliased constant Wide_String := "40019";
-   Key_7 : aliased constant Wide_String := "40003";
-   Key_8 : aliased constant Wide_String := "40007";
-   Key_9 : aliased constant Wide_String := "40005";
-   Key_10 : aliased constant Wide_String := "40001";
-   Key_11 : aliased constant Wide_String := "00007";
-   Key_12 : aliased constant Wide_String := "00001";
-   Key_13 : aliased constant Wide_String := "40011";
-   Key_14 : aliased constant Wide_String := "30024";
-   Key_15 : aliased constant Wide_String := "00030";
-   Key_16 : aliased constant Wide_String := "10006";
-   Key_17 : aliased constant Wide_String := "30006";
-   Key_18 : aliased constant Wide_String := "40013";
-   Key_19 : aliased constant Wide_String := "20014";
-   Key_20 : aliased constant Wide_String := "30022";
-   Key_21 : aliased constant Wide_String := "40010";
-   Key_22 : aliased constant Wide_String := "00023";
-   Key_23 : aliased constant Wide_String := "00010";
-   Key_24 : aliased constant Wide_String := "30004";
-   Key_25 : aliased constant Wide_String := "10027";
-   Key_26 : aliased constant Wide_String := "10021";
-   Key_27 : aliased constant Wide_String := "10012";
-   Key_28 : aliased constant Wide_String := "00008";
-   Key_29 : aliased constant Wide_String := "00002";
-   Key_30 : aliased constant Wide_String := "20010";
-   Key_31 : aliased constant Wide_String := "10018";
-   Key_32 : aliased constant Wide_String := "20024";
-   Key_33 : aliased constant Wide_String := "30003";
-   Key_34 : aliased constant Wide_String := "30019";
-   Key_35 : aliased constant Wide_String := "00003";
-   Key_36 : aliased constant Wide_String := "10025";
-   Key_37 : aliased constant Wide_String := "30012";
-   Key_38 : aliased constant Wide_String := "10007";
-   Key_39 : aliased constant Wide_String := "20006";
-   Key_40 : aliased constant Wide_String := "10013";
-   Key_41 : aliased constant Wide_String := "20011";
-   Key_42 : aliased constant Wide_String := "10011";
-   Key_43 : aliased constant Wide_String := "30009";
-   Key_44 : aliased constant Wide_String := "10032";
-   Key_45 : aliased constant Wide_String := "30001";
-   Key_46 : aliased constant Wide_String := "30007";
-   Key_47 : aliased constant Wide_String := "10033";
-   Key_48 : aliased constant Wide_String := "00022";
-   Key_49 : aliased constant Wide_String := "10028";
-   Key_50 : aliased constant Wide_String := "10014";
-   Key_51 : aliased constant Wide_String := "30015";
-   Key_52 : aliased constant Wide_String := "30020";
-   Key_53 : aliased constant Wide_String := "10029";
-   Key_54 : aliased constant Wide_String := "10030";
-   Key_55 : aliased constant Wide_String := "10003";
-   Key_56 : aliased constant Wide_String := "10020";
-   Key_57 : aliased constant Wide_String := "30010";
-   Key_58 : aliased constant Wide_String := "00031";
-   Key_59 : aliased constant Wide_String := "10002";
-   Key_60 : aliased constant Wide_String := "40022";
-   Key_61 : aliased constant Wide_String := "10036";
-   Key_62 : aliased constant Wide_String := "10016";
-   Key_63 : aliased constant Wide_String := "40008";
-   Key_64 : aliased constant Wide_String := "10019";
-   Key_65 : aliased constant Wide_String := "30005";
-   Key_66 : aliased constant Wide_String := "30013";
-   Key_67 : aliased constant Wide_String := "30002";
-   Key_68 : aliased constant Wide_String := "30011";
-   Key_69 : aliased constant Wide_String := "30014";
-   Key_70 : aliased constant Wide_String := "10034";
-   Key_71 : aliased constant Wide_String := "00019";
-   Key_72 : aliased constant Wide_String := "10035";
-   Key_73 : aliased constant Wide_String := "10001";
-   Key_74 : aliased constant Wide_String := "30016";
-   Key_75 : aliased constant Wide_String := "30008";
-   Key_76 : aliased constant Wide_String := "30018";
-   Key_77 : aliased constant Wide_String := "30023";
-   Key_78 : aliased constant Wide_String := "20019";
-   Key_79 : aliased constant Wide_String := "30017";
-   Key_80 : aliased constant Wide_String := "10015";
-   Key_81 : aliased constant Wide_String := "10022";
-   Key_82 : aliased constant Wide_String := "40021";
-   Key_83 : aliased constant Wide_String := "00018";
-   Key_84 : aliased constant Wide_String := "00011";
-   Key_85 : aliased constant Wide_String := "00016";
-   Key_86 : aliased constant Wide_String := "20003";
-   Key_87 : aliased constant Wide_String := "10010";
-   Key_88 : aliased constant Wide_String := "10037";
-   Key_89 : aliased constant Wide_String := "20000";
-   Key_90 : aliased constant Wide_String := "10026";
-   Key_91 : aliased constant Wide_String := "10009";
-   Key_92 : aliased constant Wide_String := "30021";
-   Key_93 : aliased constant Wide_String := "10005";
-   Key_94 : aliased constant Wide_String := "00009";
-   Key_95 : aliased constant Wide_String := "20012";
-   Key_96 : aliased constant Wide_String := "00032";
-   Key_97 : aliased constant Wide_String := "00015";
-   Key_98 : aliased constant Wide_String := "00013";
-   Key_99 : aliased constant Wide_String := "40020";
-   Key_100 : aliased constant Wide_String := "10031";
-   Key_101 : aliased constant Wide_String := "00012";
-   Key_102 : aliased constant Wide_String := "20015";
-   Key_103 : aliased constant Wide_String := "00036";
-   Key_104 : aliased constant Wide_String := "20009";
-   Key_105 : aliased constant Wide_String := "00024";
-   Key_106 : aliased constant Wide_String := "20001";
-   Key_107 : aliased constant Wide_String := "20022";
-   Key_108 : aliased constant Wide_String := "40012";
-   Key_109 : aliased constant Wide_String := "00021";
-   Key_110 : aliased constant Wide_String := "00029";
-   Key_111 : aliased constant Wide_String := "00020";
-   Key_112 : aliased constant Wide_String := "30000";
-   Key_113 : aliased constant Wide_String := "10004";
-   Key_114 : aliased constant Wide_String := "40017";
-   Key_115 : aliased constant Wide_String := "40018";
-   Key_116 : aliased constant Wide_String := "40023";
-   Key_117 : aliased constant Wide_String := "20007";
-   Key_118 : aliased constant Wide_String := "00017";
-   Key_119 : aliased constant Wide_String := "10023";
-   Key_120 : aliased constant Wide_String := "20017";
-   Key_121 : aliased constant Wide_String := "20018";
-   Key_122 : aliased constant Wide_String := "20023";
-   Key_123 : aliased constant Wide_String := "40000";
-   Key_124 : aliased constant Wide_String := "20020";
-   Key_125 : aliased constant Wide_String := "10024";
-   Key_126 : aliased constant Wide_String := "20021";
-   Key_127 : aliased constant Wide_String := "40014";
-   Key_128 : aliased constant Wide_String := "20016";
-   Key_129 : aliased constant Wide_String := "00034";
-   Key_130 : aliased constant Wide_String := "00025";
-   Key_131 : aliased constant Wide_String := "20013";
-   Key_132 : aliased constant Wide_String := "00035";
-   Key_133 : aliased constant Wide_String := "00027";
-   Key_134 : aliased constant Wide_String := "00028";
-   Key_135 : aliased constant Wide_String := "00037";
-   Key_136 : aliased constant Wide_String := "00026";
-   Key_137 : aliased constant Wide_String := "00014";
-   Key_138 : aliased constant Wide_String := "40015";
-   Key_139 : aliased constant Wide_String := "20002";
-   Key_140 : aliased constant Wide_String := "40016";
-   Key_141 : aliased constant Wide_String := "20005";
-   Key_142 : aliased constant Wide_String := "20008";
-   Key_143 : aliased constant Wide_String := "20004";
-   Key_144 : aliased constant Wide_String := "00006";
-   Key_145 : aliased constant Wide_String := "00005";
-   Key_146 : aliased constant Wide_String := "10008";
-   Key_147 : aliased constant Wide_String := "00004";
-   Key_148 : aliased constant Wide_String := "00033";
-   Key_149 : aliased constant Wide_String := "10017";
+   Key_1 : aliased constant Wide_String := ""
+      & "40009"
+      & "";
+   Key_2 : aliased constant Wide_String := ""
+      & "40002"
+      & "";
+   Key_3 : aliased constant Wide_String := ""
+      & "40004"
+      & "";
+   Key_4 : aliased constant Wide_String := ""
+      & "40006"
+      & "";
+   Key_5 : aliased constant Wide_String := ""
+      & "40024"
+      & "";
+   Key_6 : aliased constant Wide_String := ""
+      & "40019"
+      & "";
+   Key_7 : aliased constant Wide_String := ""
+      & "40003"
+      & "";
+   Key_8 : aliased constant Wide_String := ""
+      & "40007"
+      & "";
+   Key_9 : aliased constant Wide_String := ""
+      & "40005"
+      & "";
+   Key_10 : aliased constant Wide_String := ""
+      & "40001"
+      & "";
+   Key_11 : aliased constant Wide_String := ""
+      & "00007"
+      & "";
+   Key_12 : aliased constant Wide_String := ""
+      & "00001"
+      & "";
+   Key_13 : aliased constant Wide_String := ""
+      & "40011"
+      & "";
+   Key_14 : aliased constant Wide_String := ""
+      & "30024"
+      & "";
+   Key_15 : aliased constant Wide_String := ""
+      & "00030"
+      & "";
+   Key_16 : aliased constant Wide_String := ""
+      & "10006"
+      & "";
+   Key_17 : aliased constant Wide_String := ""
+      & "30006"
+      & "";
+   Key_18 : aliased constant Wide_String := ""
+      & "40013"
+      & "";
+   Key_19 : aliased constant Wide_String := ""
+      & "20014"
+      & "";
+   Key_20 : aliased constant Wide_String := ""
+      & "30022"
+      & "";
+   Key_21 : aliased constant Wide_String := ""
+      & "40010"
+      & "";
+   Key_22 : aliased constant Wide_String := ""
+      & "00023"
+      & "";
+   Key_23 : aliased constant Wide_String := ""
+      & "00010"
+      & "";
+   Key_24 : aliased constant Wide_String := ""
+      & "30004"
+      & "";
+   Key_25 : aliased constant Wide_String := ""
+      & "10027"
+      & "";
+   Key_26 : aliased constant Wide_String := ""
+      & "10021"
+      & "";
+   Key_27 : aliased constant Wide_String := ""
+      & "10012"
+      & "";
+   Key_28 : aliased constant Wide_String := ""
+      & "00008"
+      & "";
+   Key_29 : aliased constant Wide_String := ""
+      & "00002"
+      & "";
+   Key_30 : aliased constant Wide_String := ""
+      & "20010"
+      & "";
+   Key_31 : aliased constant Wide_String := ""
+      & "10018"
+      & "";
+   Key_32 : aliased constant Wide_String := ""
+      & "20024"
+      & "";
+   Key_33 : aliased constant Wide_String := ""
+      & "30003"
+      & "";
+   Key_34 : aliased constant Wide_String := ""
+      & "30019"
+      & "";
+   Key_35 : aliased constant Wide_String := ""
+      & "00003"
+      & "";
+   Key_36 : aliased constant Wide_String := ""
+      & "10025"
+      & "";
+   Key_37 : aliased constant Wide_String := ""
+      & "30012"
+      & "";
+   Key_38 : aliased constant Wide_String := ""
+      & "10007"
+      & "";
+   Key_39 : aliased constant Wide_String := ""
+      & "20006"
+      & "";
+   Key_40 : aliased constant Wide_String := ""
+      & "10013"
+      & "";
+   Key_41 : aliased constant Wide_String := ""
+      & "20011"
+      & "";
+   Key_42 : aliased constant Wide_String := ""
+      & "10011"
+      & "";
+   Key_43 : aliased constant Wide_String := ""
+      & "30009"
+      & "";
+   Key_44 : aliased constant Wide_String := ""
+      & "10032"
+      & "";
+   Key_45 : aliased constant Wide_String := ""
+      & "30001"
+      & "";
+   Key_46 : aliased constant Wide_String := ""
+      & "30007"
+      & "";
+   Key_47 : aliased constant Wide_String := ""
+      & "10033"
+      & "";
+   Key_48 : aliased constant Wide_String := ""
+      & "00022"
+      & "";
+   Key_49 : aliased constant Wide_String := ""
+      & "10028"
+      & "";
+   Key_50 : aliased constant Wide_String := ""
+      & "10014"
+      & "";
+   Key_51 : aliased constant Wide_String := ""
+      & "30015"
+      & "";
+   Key_52 : aliased constant Wide_String := ""
+      & "30020"
+      & "";
+   Key_53 : aliased constant Wide_String := ""
+      & "10029"
+      & "";
+   Key_54 : aliased constant Wide_String := ""
+      & "10030"
+      & "";
+   Key_55 : aliased constant Wide_String := ""
+      & "10003"
+      & "";
+   Key_56 : aliased constant Wide_String := ""
+      & "10020"
+      & "";
+   Key_57 : aliased constant Wide_String := ""
+      & "30010"
+      & "";
+   Key_58 : aliased constant Wide_String := ""
+      & "00031"
+      & "";
+   Key_59 : aliased constant Wide_String := ""
+      & "10002"
+      & "";
+   Key_60 : aliased constant Wide_String := ""
+      & "40022"
+      & "";
+   Key_61 : aliased constant Wide_String := ""
+      & "10036"
+      & "";
+   Key_62 : aliased constant Wide_String := ""
+      & "10016"
+      & "";
+   Key_63 : aliased constant Wide_String := ""
+      & "40008"
+      & "";
+   Key_64 : aliased constant Wide_String := ""
+      & "10019"
+      & "";
+   Key_65 : aliased constant Wide_String := ""
+      & "30005"
+      & "";
+   Key_66 : aliased constant Wide_String := ""
+      & "30013"
+      & "";
+   Key_67 : aliased constant Wide_String := ""
+      & "30002"
+      & "";
+   Key_68 : aliased constant Wide_String := ""
+      & "30011"
+      & "";
+   Key_69 : aliased constant Wide_String := ""
+      & "30014"
+      & "";
+   Key_70 : aliased constant Wide_String := ""
+      & "10034"
+      & "";
+   Key_71 : aliased constant Wide_String := ""
+      & "00019"
+      & "";
+   Key_72 : aliased constant Wide_String := ""
+      & "10035"
+      & "";
+   Key_73 : aliased constant Wide_String := ""
+      & "10001"
+      & "";
+   Key_74 : aliased constant Wide_String := ""
+      & "30016"
+      & "";
+   Key_75 : aliased constant Wide_String := ""
+      & "30008"
+      & "";
+   Key_76 : aliased constant Wide_String := ""
+      & "30018"
+      & "";
+   Key_77 : aliased constant Wide_String := ""
+      & "30023"
+      & "";
+   Key_78 : aliased constant Wide_String := ""
+      & "20019"
+      & "";
+   Key_79 : aliased constant Wide_String := ""
+      & "30017"
+      & "";
+   Key_80 : aliased constant Wide_String := ""
+      & "10015"
+      & "";
+   Key_81 : aliased constant Wide_String := ""
+      & "10022"
+      & "";
+   Key_82 : aliased constant Wide_String := ""
+      & "40021"
+      & "";
+   Key_83 : aliased constant Wide_String := ""
+      & "00018"
+      & "";
+   Key_84 : aliased constant Wide_String := ""
+      & "00011"
+      & "";
+   Key_85 : aliased constant Wide_String := ""
+      & "00016"
+      & "";
+   Key_86 : aliased constant Wide_String := ""
+      & "20003"
+      & "";
+   Key_87 : aliased constant Wide_String := ""
+      & "10010"
+      & "";
+   Key_88 : aliased constant Wide_String := ""
+      & "10037"
+      & "";
+   Key_89 : aliased constant Wide_String := ""
+      & "20000"
+      & "";
+   Key_90 : aliased constant Wide_String := ""
+      & "10026"
+      & "";
+   Key_91 : aliased constant Wide_String := ""
+      & "10009"
+      & "";
+   Key_92 : aliased constant Wide_String := ""
+      & "30021"
+      & "";
+   Key_93 : aliased constant Wide_String := ""
+      & "10005"
+      & "";
+   Key_94 : aliased constant Wide_String := ""
+      & "00009"
+      & "";
+   Key_95 : aliased constant Wide_String := ""
+      & "20012"
+      & "";
+   Key_96 : aliased constant Wide_String := ""
+      & "00032"
+      & "";
+   Key_97 : aliased constant Wide_String := ""
+      & "00015"
+      & "";
+   Key_98 : aliased constant Wide_String := ""
+      & "00013"
+      & "";
+   Key_99 : aliased constant Wide_String := ""
+      & "40020"
+      & "";
+   Key_100 : aliased constant Wide_String := ""
+      & "10031"
+      & "";
+   Key_101 : aliased constant Wide_String := ""
+      & "00012"
+      & "";
+   Key_102 : aliased constant Wide_String := ""
+      & "20015"
+      & "";
+   Key_103 : aliased constant Wide_String := ""
+      & "00036"
+      & "";
+   Key_104 : aliased constant Wide_String := ""
+      & "20009"
+      & "";
+   Key_105 : aliased constant Wide_String := ""
+      & "00024"
+      & "";
+   Key_106 : aliased constant Wide_String := ""
+      & "20001"
+      & "";
+   Key_107 : aliased constant Wide_String := ""
+      & "20022"
+      & "";
+   Key_108 : aliased constant Wide_String := ""
+      & "40012"
+      & "";
+   Key_109 : aliased constant Wide_String := ""
+      & "00021"
+      & "";
+   Key_110 : aliased constant Wide_String := ""
+      & "00029"
+      & "";
+   Key_111 : aliased constant Wide_String := ""
+      & "00020"
+      & "";
+   Key_112 : aliased constant Wide_String := ""
+      & "30000"
+      & "";
+   Key_113 : aliased constant Wide_String := ""
+      & "10004"
+      & "";
+   Key_114 : aliased constant Wide_String := ""
+      & "40017"
+      & "";
+   Key_115 : aliased constant Wide_String := ""
+      & "40018"
+      & "";
+   Key_116 : aliased constant Wide_String := ""
+      & "40023"
+      & "";
+   Key_117 : aliased constant Wide_String := ""
+      & "20007"
+      & "";
+   Key_118 : aliased constant Wide_String := ""
+      & "00017"
+      & "";
+   Key_119 : aliased constant Wide_String := ""
+      & "10023"
+      & "";
+   Key_120 : aliased constant Wide_String := ""
+      & "20017"
+      & "";
+   Key_121 : aliased constant Wide_String := ""
+      & "20018"
+      & "";
+   Key_122 : aliased constant Wide_String := ""
+      & "20023"
+      & "";
+   Key_123 : aliased constant Wide_String := ""
+      & "40000"
+      & "";
+   Key_124 : aliased constant Wide_String := ""
+      & "20020"
+      & "";
+   Key_125 : aliased constant Wide_String := ""
+      & "10024"
+      & "";
+   Key_126 : aliased constant Wide_String := ""
+      & "20021"
+      & "";
+   Key_127 : aliased constant Wide_String := ""
+      & "40014"
+      & "";
+   Key_128 : aliased constant Wide_String := ""
+      & "20016"
+      & "";
+   Key_129 : aliased constant Wide_String := ""
+      & "00034"
+      & "";
+   Key_130 : aliased constant Wide_String := ""
+      & "00025"
+      & "";
+   Key_131 : aliased constant Wide_String := ""
+      & "20013"
+      & "";
+   Key_132 : aliased constant Wide_String := ""
+      & "00035"
+      & "";
+   Key_133 : aliased constant Wide_String := ""
+      & "00027"
+      & "";
+   Key_134 : aliased constant Wide_String := ""
+      & "00028"
+      & "";
+   Key_135 : aliased constant Wide_String := ""
+      & "00037"
+      & "";
+   Key_136 : aliased constant Wide_String := ""
+      & "00026"
+      & "";
+   Key_137 : aliased constant Wide_String := ""
+      & "00014"
+      & "";
+   Key_138 : aliased constant Wide_String := ""
+      & "40015"
+      & "";
+   Key_139 : aliased constant Wide_String := ""
+      & "20002"
+      & "";
+   Key_140 : aliased constant Wide_String := ""
+      & "40016"
+      & "";
+   Key_141 : aliased constant Wide_String := ""
+      & "20005"
+      & "";
+   Key_142 : aliased constant Wide_String := ""
+      & "20008"
+      & "";
+   Key_143 : aliased constant Wide_String := ""
+      & "20004"
+      & "";
+   Key_144 : aliased constant Wide_String := ""
+      & "00006"
+      & "";
+   Key_145 : aliased constant Wide_String := ""
+      & "00005"
+      & "";
+   Key_146 : aliased constant Wide_String := ""
+      & "10008"
+      & "";
+   Key_147 : aliased constant Wide_String := ""
+      & "00004"
+      & "";
+   Key_148 : aliased constant Wide_String := ""
+      & "00033"
+      & "";
+   Key_149 : aliased constant Wide_String := ""
+      & "10017"
+      & "";
    Keys : constant ZT.Constant_String_List (1 .. 149) := (
                    1 => Key_1'Access,
                    2 => Key_2'Access,
@@ -315,7 +615,8 @@ package body ZBTest_Messages is
                    148 => Key_148'Access,
                    149 => Key_149'Access);
 
-   Locale_1 : aliased constant Wide_String := "";
+   Locale_1 : aliased constant Wide_String := ""
+      & "";
    Locales : constant ZT.Constant_String_List (1 .. 1) := (
                    1 => Locale_1'Access);
 

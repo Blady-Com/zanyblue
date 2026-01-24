@@ -53,8 +53,8 @@ begin
    Append (List, +V2);
    Append (List, +V3);
    Append (List, +V4);
-   Check_Value (R, List.Format (0, "", "", Locale, False), "٥,٥٠٠٠٠E+٠١");
-   Check_Value (R, List.Format (1, "", "", Locale, False), "٦,٦١٠٠٠E+٠١");
-   Check_Value (R, List.Format (2, "", "", Locale, False), "-٥,٥٠٠٠٠E+٠١");
-   Check_Value (R, List.Format (3, "", "", Locale, False), "-٦,٦١٠٠٠E+٠١");
+   Check_Value (R, List.Format (0, "", "", Locale, False), "٥.٥٠٠٠٠E‎+٠١");
+   Check_Value (R, List.Format (1, "", "", Locale, False), "٦.٦١٠٠٠E‎+٠١");
+   Check_Value (R, List.Format (2, "", "", Locale, False), "‎-٥.٥٠٠٠٠E‎+٠١");
+   Check_Value (R, List.Format (3, "", "", Locale, False), "‎-٦.٦١٠٠٠E‎+٠١");
 end T_0006;

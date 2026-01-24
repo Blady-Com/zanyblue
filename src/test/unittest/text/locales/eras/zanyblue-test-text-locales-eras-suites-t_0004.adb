@@ -38,8 +38,8 @@ procedure T_0004 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    L : constant Locale_Type := Make_Locale ("ja");
 
 begin
-   Check_Value (R, Era_Name (L, BCE), "BC",
+   Check_Value (R, Era_Name (L, BCE), "紀元前",
                 "ja era BC");
-   Check_Value (R, Era_Name (L, CE), "AD",
+   Check_Value (R, Era_Name (L, CE), "西暦",
                 "ja era AD");
 end T_0004;

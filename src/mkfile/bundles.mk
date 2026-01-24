@@ -39,11 +39,14 @@
 
 MKBUNDLES=$(TOP)/src/bin/mkbundles.py
 MKWEBBUNDLE=$(TOP)/src/bin/mkwebbundle.py
+MKWEBBUNDLE_OPTIONS=
 
 dist-bundles bundles: tar-bundles
 
+# The website bundle is a zip to make it easier to distinguish it from the
+# source bundle (a .tar.gz file).
 ws-bundle:
-	$(MKWEBBUNDLE) -t tar.gz
+	$(MKWEBBUNDLE) $(MKWEBBUNDLE_OPTIONS) -t zip
 
 tar-bundles:
 	$(MKBUNDLES) -t tar.gz

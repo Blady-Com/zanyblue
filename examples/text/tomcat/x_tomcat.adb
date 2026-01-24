@@ -42,12 +42,13 @@ with Ada.Command_Line;
 with Apache.Tomcat.Messages;
 with ZanyBlue.Text.Pseudo;
 with ZanyBlue.Text.Locales;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.Formatting;
+with ZanyBlue.Text.Version_Status_Arguments;
 
 procedure X_Tomcat is
 
    use ZanyBlue.Text.Formatting;
+   use ZanyBlue.Text.Version_Status_Arguments;
 
    procedure Process_Command_Line;
 
@@ -94,6 +95,9 @@ procedure X_Tomcat is
    Th_Name : constant Wide_String := "WorkerThread";
 
 begin
+   Print_Line ("This is TOMCAT, Version {0}.{1}.{2} - {3}",
+               +ZanyBlue.Version_Major, +ZanyBlue.Version_Minor,
+               +ZanyBlue.Version_Patch, +ZanyBlue.Version_Status);
    Process_Command_Line;
    Print_Line ("ajp", "ajpprotocol.endpoint.pauseerror");
    Print_Line ("authenticator", "authenticator.notContext");

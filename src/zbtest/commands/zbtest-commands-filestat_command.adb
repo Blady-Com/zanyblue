@@ -35,28 +35,17 @@
 with Ada.Directories;
 with Ada.Strings.Wide_Fixed;
 with ZanyBlue.Wide_Directories;
-with ZanyBlue.Text.Generic_Integers;
-with ZanyBlue.Text.Generic_Enumerations;
-
-pragma Elaborate_All (ZanyBlue.Text.Generic_Integers);
-pragma Elaborate_All (ZanyBlue.Text.Generic_Enumerations);
+with ZBTest.Commands.File_Size_Arguments;
+with ZBTest.Commands.File_Type_Arguments;
 
 separate (ZBTest.Commands)
 procedure Filestat_Command (State : in out State_Type;
                             Args  : in List_Type) is
 
-   package File_Size_Arguments is
-      new ZanyBlue.Text.Generic_Integers (
-            Integer_Type => ZanyBlue.Wide_Directories.Wide_File_Size);
-
-   package File_Type_Arguments is
-      new ZanyBlue.Text.Generic_Enumerations (
-            Enumeration_Type => ZanyBlue.Wide_Directories.Wide_File_Kind);
-
    use Ada.Strings.Wide_Fixed;
    use ZanyBlue.Wide_Directories;
-   use File_Size_Arguments;
-   use File_Type_Arguments;
+   use ZBTest.Commands.File_Size_Arguments;
+   use ZBTest.Commands.File_Type_Arguments;
 
    procedure File_Stat (State     : in out State_Type;
                         File_Name : in Wide_String;

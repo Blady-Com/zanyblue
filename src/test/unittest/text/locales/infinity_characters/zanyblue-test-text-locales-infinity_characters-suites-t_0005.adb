@@ -38,6 +38,6 @@ procedure T_0005 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    L : constant Locale_Type := Make_Locale ("zh");
 
 begin
-   Check_Value (R, Numeric_Item (L, Infinity_Character), "Inf",
+   Check_Value (R, Numeric_Item (L, Infinity_Character), "∞",
                 "zh Infinity");
 end T_0005;

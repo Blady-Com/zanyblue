@@ -51,18 +51,18 @@ package body ZBMCompile.Checks is
    -- Accessors_Check --
    ---------------------
 
-   procedure Accessors_Check (Handler  : in out ZBMC_Handler_Type;
-                              Verbose  : in Boolean) is
+   procedure Accessors_Check (Handler  : in out ZBMC_Handler_Type) is
       Catalog : constant Catalog_Type := Get_Catalog (Handler);
       Facility_Index : Facility_Index_Type;
       Key_Index : Key_Index_Type;
    begin
-      Print_If (Verbose, ZBMCompile_Facility, "00037");
+      Print_Line (ZBMCompile_Facility, "V00004");
       for I in 1 .. Number_Of_Facilities (Catalog) loop
          Facility_Index := I;
          if not Is_Ada_Identifier_OK (Get_Facility (Catalog,
-                                                    Facility_Index)) then
-            Print_Line (ZBMCompile_Facility, "00038",
+                                                    Facility_Index))
+         then
+            Print_Line (ZBMCompile_Facility, "E00017",
                         Argument0 => +Get_Facility (Catalog, Facility_Index));
             Handler.Increment_Errors;
          end if;
@@ -70,7 +70,7 @@ package body ZBMCompile.Checks is
       for I in 1 .. Number_Of_Keys (Catalog) loop
          Key_Index := I;
          if not Is_Ada_Identifier_OK (Get_Key (Catalog, Key_Index)) then
-            Print_Line (ZBMCompile_Facility, "00039",
+            Print_Line (ZBMCompile_Facility, "E00018",
                         Argument0 => +Get_Key (Catalog, Key_Index));
             Handler.Increment_Errors;
          end if;
@@ -83,8 +83,7 @@ package body ZBMCompile.Checks is
 
    procedure Consistency_Check (Handler     : in out ZBMC_Handler_Type;
                                 Facility    : in Wide_String;
-                                Base_Locale : in Wide_String;
-                                Verbose     : in Boolean) is
+                                Base_Locale : in Wide_String) is
 
       procedure Callback (Catalog  : in Catalog_Type;
                           Facility : in Wide_String;
@@ -115,7 +114,7 @@ package body ZBMCompile.Checks is
                 Natural (String_Vectors.Length (Element (Position).Arg_Types));
          begin
             if L > Ref_Arg_Count then
-               Print_Line (ZBMCompile_Facility, "00035",
+               Print_Line (ZBMCompile_Facility, "E00015",
                            Argument0 => +Key_Name,
                            Argument1 => +Facility,
                            Argument2 => +Key (Position));
@@ -125,7 +124,7 @@ package body ZBMCompile.Checks is
 
          procedure Report_Extra_Locales (Position : in Cursor) is
          begin
-            Print_Line (ZBMCompile_Facility, "00034",
+            Print_Line (ZBMCompile_Facility, "E00014",
                         Argument0 => +Key_Name,
                         Argument1 => +Facility,
                         Argument2 => +Key (Position));
@@ -133,7 +132,7 @@ package body ZBMCompile.Checks is
 
       begin
          if not Has_Element (Locales.Find (Base_Locale)) then
-            Print_Line (ZBMCompile_Facility, "00033",
+            Print_Line (ZBMCompile_Facility, "E00013",
                         Argument0 => +Key_Name,
                         Argument1 => +Facility);
             Locales.Iterate (Report_Extra_Locales'Access);
@@ -147,13 +146,13 @@ package body ZBMCompile.Checks is
 
    begin
       if Facility_Defines_Locale (Handler, Facility, Base_Locale) then
-         Print_If (Verbose, ZBMCompile_Facility, "00031",
-                   Argument0 => +Facility);
+         Print_Line (ZBMCompile_Facility, "V00005",
+                     Argument0 => +Facility);
          Message_Iterate (Handler, Facility, Callback'Access);
       else
-         Print_If (Verbose, ZBMCompile_Facility, "00032",
-                   Argument0 => +Facility,
-                   Argument1 => +Base_Locale);
+         Print_Line (ZBMCompile_Facility, "V00006",
+                     Argument0 => +Facility,
+                     Argument1 => +Base_Locale);
       end if;
    end Consistency_Check;
 

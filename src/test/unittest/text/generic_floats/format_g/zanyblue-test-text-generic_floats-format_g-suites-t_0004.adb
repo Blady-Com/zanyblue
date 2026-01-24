@@ -43,5 +43,5 @@ procedure T_0004 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    Arg     : constant Float_Argument_Type := Create (NaN);
 
 begin
-   Check_Value (R, Arg.Format ("float", "*^10g", Locale), "*не число*");
+   Check_Value (R, Arg.Format ("float", "*^10g", Locale), "*не число*");
 end T_0004;

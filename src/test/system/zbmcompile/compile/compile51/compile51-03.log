@@ -11,53 +11,141 @@ package body GPS_Text is
 
    subtype Z is ZTC.ZBMCompile_Definition;
 
-   Facility_1 : aliased constant Wide_String := "Aunit";
+   Facility_1 : aliased constant Wide_String := ""
+      & "Aunit"
+      & "";
    Facilities : constant ZT.Constant_String_List (1 .. 1) := (
                    1 => Facility_1'Access);
 
-   Key_1 : aliased constant Wide_String := "00001";
-   Key_2 : aliased constant Wide_String := "00002";
-   Key_3 : aliased constant Wide_String := "00003";
-   Key_4 : aliased constant Wide_String := "00004";
-   Key_5 : aliased constant Wide_String := "00005";
-   Key_6 : aliased constant Wide_String := "00006";
-   Key_7 : aliased constant Wide_String := "00007";
-   Key_8 : aliased constant Wide_String := "00008";
-   Key_9 : aliased constant Wide_String := "00009";
-   Key_10 : aliased constant Wide_String := "00010";
-   Key_11 : aliased constant Wide_String := "00011";
-   Key_12 : aliased constant Wide_String := "00012";
-   Key_13 : aliased constant Wide_String := "00013";
-   Key_14 : aliased constant Wide_String := "00014";
-   Key_15 : aliased constant Wide_String := "00015";
-   Key_16 : aliased constant Wide_String := "00016";
-   Key_17 : aliased constant Wide_String := "00017";
-   Key_18 : aliased constant Wide_String := "00018";
-   Key_19 : aliased constant Wide_String := "00019";
-   Key_20 : aliased constant Wide_String := "00020";
-   Key_21 : aliased constant Wide_String := "00021";
-   Key_22 : aliased constant Wide_String := "00022";
-   Key_23 : aliased constant Wide_String := "00023";
-   Key_24 : aliased constant Wide_String := "00024";
-   Key_25 : aliased constant Wide_String := "00025";
-   Key_26 : aliased constant Wide_String := "00026";
-   Key_27 : aliased constant Wide_String := "00027";
-   Key_28 : aliased constant Wide_String := "00028";
-   Key_29 : aliased constant Wide_String := "00029";
-   Key_30 : aliased constant Wide_String := "00030";
-   Key_31 : aliased constant Wide_String := "00031";
-   Key_32 : aliased constant Wide_String := "00032";
-   Key_33 : aliased constant Wide_String := "00033";
-   Key_34 : aliased constant Wide_String := "00034";
-   Key_35 : aliased constant Wide_String := "00035";
-   Key_36 : aliased constant Wide_String := "00036";
-   Key_37 : aliased constant Wide_String := "00037";
-   Key_38 : aliased constant Wide_String := "00038";
-   Key_39 : aliased constant Wide_String := "00039";
-   Key_40 : aliased constant Wide_String := "00040";
-   Key_41 : aliased constant Wide_String := "00041";
-   Key_42 : aliased constant Wide_String := "00042";
-   Key_43 : aliased constant Wide_String := "00043";
+   Key_1 : aliased constant Wide_String := ""
+      & "00001"
+      & "";
+   Key_2 : aliased constant Wide_String := ""
+      & "00002"
+      & "";
+   Key_3 : aliased constant Wide_String := ""
+      & "00003"
+      & "";
+   Key_4 : aliased constant Wide_String := ""
+      & "00004"
+      & "";
+   Key_5 : aliased constant Wide_String := ""
+      & "00005"
+      & "";
+   Key_6 : aliased constant Wide_String := ""
+      & "00006"
+      & "";
+   Key_7 : aliased constant Wide_String := ""
+      & "00007"
+      & "";
+   Key_8 : aliased constant Wide_String := ""
+      & "00008"
+      & "";
+   Key_9 : aliased constant Wide_String := ""
+      & "00009"
+      & "";
+   Key_10 : aliased constant Wide_String := ""
+      & "00010"
+      & "";
+   Key_11 : aliased constant Wide_String := ""
+      & "00011"
+      & "";
+   Key_12 : aliased constant Wide_String := ""
+      & "00012"
+      & "";
+   Key_13 : aliased constant Wide_String := ""
+      & "00013"
+      & "";
+   Key_14 : aliased constant Wide_String := ""
+      & "00014"
+      & "";
+   Key_15 : aliased constant Wide_String := ""
+      & "00015"
+      & "";
+   Key_16 : aliased constant Wide_String := ""
+      & "00016"
+      & "";
+   Key_17 : aliased constant Wide_String := ""
+      & "00017"
+      & "";
+   Key_18 : aliased constant Wide_String := ""
+      & "00018"
+      & "";
+   Key_19 : aliased constant Wide_String := ""
+      & "00019"
+      & "";
+   Key_20 : aliased constant Wide_String := ""
+      & "00020"
+      & "";
+   Key_21 : aliased constant Wide_String := ""
+      & "00021"
+      & "";
+   Key_22 : aliased constant Wide_String := ""
+      & "00022"
+      & "";
+   Key_23 : aliased constant Wide_String := ""
+      & "00023"
+      & "";
+   Key_24 : aliased constant Wide_String := ""
+      & "00024"
+      & "";
+   Key_25 : aliased constant Wide_String := ""
+      & "00025"
+      & "";
+   Key_26 : aliased constant Wide_String := ""
+      & "00026"
+      & "";
+   Key_27 : aliased constant Wide_String := ""
+      & "00027"
+      & "";
+   Key_28 : aliased constant Wide_String := ""
+      & "00028"
+      & "";
+   Key_29 : aliased constant Wide_String := ""
+      & "00029"
+      & "";
+   Key_30 : aliased constant Wide_String := ""
+      & "00030"
+      & "";
+   Key_31 : aliased constant Wide_String := ""
+      & "00031"
+      & "";
+   Key_32 : aliased constant Wide_String := ""
+      & "00032"
+      & "";
+   Key_33 : aliased constant Wide_String := ""
+      & "00033"
+      & "";
+   Key_34 : aliased constant Wide_String := ""
+      & "00034"
+      & "";
+   Key_35 : aliased constant Wide_String := ""
+      & "00035"
+      & "";
+   Key_36 : aliased constant Wide_String := ""
+      & "00036"
+      & "";
+   Key_37 : aliased constant Wide_String := ""
+      & "00037"
+      & "";
+   Key_38 : aliased constant Wide_String := ""
+      & "00038"
+      & "";
+   Key_39 : aliased constant Wide_String := ""
+      & "00039"
+      & "";
+   Key_40 : aliased constant Wide_String := ""
+      & "00040"
+      & "";
+   Key_41 : aliased constant Wide_String := ""
+      & "00041"
+      & "";
+   Key_42 : aliased constant Wide_String := ""
+      & "00042"
+      & "";
+   Key_43 : aliased constant Wide_String := ""
+      & "00043"
+      & "";
    Keys : constant ZT.Constant_String_List (1 .. 43) := (
                    Key_1'Access,
                    Key_2'Access,
@@ -103,7 +191,8 @@ package body GPS_Text is
                    Key_42'Access,
                    Key_43'Access);
 
-   Locale_1 : aliased constant Wide_String := "";
+   Locale_1 : aliased constant Wide_String := ""
+      & "";
    Locales : constant ZT.Constant_String_List (1 .. 1) := (
                    1 => Locale_1'Access);
 

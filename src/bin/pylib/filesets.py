@@ -1,4 +1,5 @@
-#!/usr/bin/python -tt
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
 """
 filesets: Class to collect files based on their Subversion status and
@@ -7,6 +8,7 @@ the path name.
 
 import os
 import re
+
 
 class Filesets(object):
     """
@@ -26,7 +28,7 @@ class Filesets(object):
         The rule set is iniitally empty, sending all files to the uncategoried
         category.
         """
-        self.category_files = { Filesets._UNCATEGORIZED: [] }
+        self.category_files = {Filesets._UNCATEGORIZED: []}
         self.rules = []
         self.private_dirs = []
 
@@ -37,9 +39,11 @@ class Filesets(object):
         if it doesn't already exist, i.e., initialized to the empty set
         of files.
         """
-        self.rules.append({ 'category': category,
-                            'status_rc': re.compile(status),
-                            'path_rc': re.compile(path) })
+        self.rules.append({
+            'category': category,
+            'status_rc': re.compile(status),
+            'path_rc': re.compile(path)
+        })
         if category not in self.category_files:
             self.category_files[category] = []
 

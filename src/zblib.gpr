@@ -36,13 +36,16 @@ with "zbcom";
 
 project zblib is
 
-   for Languages       use ("Ada");
+   type Tasking_Type is ("tasking", "notasking");
+   Tasking : Tasking_Type := external ("ZB_TASKING", "notasking");
 
+   for Languages       use ("Ada");
    for Source_Dirs     use ("root",
                             "os",
                             "os/" & zbcom.OS,
                             "parameters",
                             "text",
+                            "text/" & Tasking,
                             "utils");
 
    for Library_Kind    use zbcom.Library_Type;

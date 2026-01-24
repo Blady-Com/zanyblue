@@ -60,9 +60,9 @@ procedure T_0057 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    end Check;
 
 begin
-   Check ("",       "16:48 16/06/04");
-   Check ("full",   "16:48:03 +0300 יום חמישי, 16 ביוני 1904");
-   Check ("long",   "16:48:03 +0300 16 ביוני 1904");
-   Check ("medium", "16:48:03 16 ביונ 1904");
-   Check ("short",  "16:48 16/06/04");
+   Check ("",       "16.6.1904, 16:48");
+   Check ("full",   "יום חמישי, 16 ביוני 1904 בשעה 16:48:03 +0300");
+   Check ("long",   "16 ביוני 1904 בשעה 16:48:03 +0300");
+   Check ("medium", "16 ביוני 1904, 16:48:03");
+   Check ("short",  "16.6.1904, 16:48");
 end T_0057;

@@ -1,4 +1,5 @@
-#!/usr/bin/python -tt
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
 """
 mknotices: Generate the NOTICES.txt and notices.htp files containing
@@ -7,9 +8,7 @@ mknotices: Generate the NOTICES.txt and notices.htp files containing
 
 import codecs
 import os
-import re
 import sys
-import time
 from optparse import OptionParser
 from lxml import etree
 
@@ -21,12 +20,13 @@ _V_MINOR = 0
 _V_PATCH = 0
 
 _0001 = "This is MKNOTICES, V{0}.{1}.{2} on {3}."
-_0002 = "Copyright (c) {0}, Michael Rohan.  All rights reserved."
+_0002 = "Copyright © {0}, Michael Rohan.  All rights reserved."
 _0003 = "Scanning the ZanyBlue directory \"{0}\" ..."
 _0004 = "Loading the notices file \"{0}\" ..."
 _0005 = "Error, no name tag defined in the notice file \"{0}\"\n"
 _0006 = "Creating the NOTICES.txt file \"{0}\""
 _0007 = "Creating the notices.htp file \"{0}\""
+
 
 def locate_top(args):
     """
@@ -40,6 +40,7 @@ def locate_top(args):
         for i in range(3):
             top = os.path.dirname(top)
     return top
+
 
 def load_notice_file(notices, fullname):
     """
@@ -57,6 +58,7 @@ def load_notice_file(notices, fullname):
         current_list = notices.get(name, [])
         current_list.append(element)
         notices[name] = current_list
+
 
 def write_htp_file(top, notices):
     """
@@ -107,6 +109,7 @@ def write_htp_file(top, notices):
     fh.write("<file include=\"trailer.hti\">\n")
     fh.close()
 
+
 def write_txt_file(top, notices):
     """
     Write the top level NOTICES.txt file giving the notices as a plain text
@@ -137,6 +140,7 @@ def write_txt_file(top, notices):
             fh.write("\n")
     fh.close()
 
+
 def main():
     """
     Main driver function.  Setup the command line option parser,
@@ -153,7 +157,6 @@ def main():
         parser.print_help()
         sys.exit(2)
     top = os.path.abspath(locate_top(args))
-    verbose = options.verbose
     print _0003.format(top)
     notices = {}
     for path, subdirs, files in os.walk(top):

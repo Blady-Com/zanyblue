@@ -152,14 +152,11 @@ is available in the directory \texttt{examples/text/moons} and is listed here:
 with Ada.Wide_Text_IO;
 with Moons_Messages;
 with ZanyBlue.Text.Formatting;
-with ZanyBlue.Text.Generic_Enumerations;
 
 procedure Moons is
 
    type Planet_Names is (Mercury, Venus, Earth, Mars,
                          Jupiter, Saturn, Uranus, Neptune);
-   package Planet_Name_Formatting is
-      new ZanyBlue.Text.Generic_Enumerations (Planet_Names);
    package Planet_Name_IO is
       new Ada.Wide_Text_IO.Enumeration_IO (Planet_Names);
 
@@ -179,9 +176,9 @@ begin
       Planet_Name_IO.Get (Planet);
       if Moons (Planet) /= 1 then
          Print_Line ("moons", "0002", +Moons (Planet),
-                                      +Planet);
+                                      +Planet_Names'Image (Planet));
       else
-         Print_Line ("moons", "0003", +Planet);
+         Print_Line ("moons", "0003", +Planet_Names'Image (Planet));
       end if;
    end loop;
 exception
@@ -191,6 +188,9 @@ when End_Error | Data_Error =>
 end Moons;
 \end{verbatim}
 \end{xmpl}
+The example source code uses the \texttt{Generic\_Enumerations} ZanyBlue
+package for planet name arguments.  Generic ZanyBlue packages should
+be instanciated at the library level.
 
 Here the messages for the application are referred to by message id or
 key, i.e., numeric strings, e.g., ``\texttt{0001}'' for the facility
@@ -858,6 +858,9 @@ and then use this facility to generate arguments, e.g.,
 There is, of course, a lot more work if the application were to support
 input of localized enumeration names.
 
+Generic ZanyBlue text packages should be instanciated at the library
+level to prevent run time accessibility exceptions.
+
 \subsection{Generic Float Types}
 \label{sec:generic_float}
 
@@ -926,6 +929,9 @@ when formatting such values.
 The accessor argument type for floats is \texttt{Float\_Category\_Type}
 which is derived from the \texttt{Real\_Category\_Type}.
 
+Generic ZanyBlue text packages should be instanciated at the library
+level to prevent run time accessibility exceptions.
+
 \subsection{Generic Integer Types}
 \label{sec:generic_integer}
 
@@ -976,6 +982,9 @@ for the \texttt{Integer} value \verb|I := 42|:
 The accessor argument type for integers is \texttt{Integer\_Category\_Type}
 which is derived from the \texttt{Number\_Category\_Type}.
 
+Generic ZanyBlue text packages should be instanciated at the library
+level to prevent run time accessibility exceptions.
+
 \subsection{Generic Modular Types}
 
 The \verb|Generic_Modulars| package implements formatting for modular
@@ -985,6 +994,9 @@ section~\ref{sec:generic_integer}.
 
 The accessor argument type for integers is \texttt{Modular\_Category\_Type}
 which is derived from the \texttt{Integer\_Category\_Type}.
+
+Generic ZanyBlue text packages should be instanciated at the library
+level to prevent run time accessibility exceptions.
 
 \subsection{Integer Type}
 
@@ -1185,6 +1197,81 @@ earlier than GMT):
 \end{tabular}
 \end{center}
 
+\section{Message Filtering}
+
+Frequently an application has different output modes, e.g., debug, verbose,
+normal, quiet, etc.  If the various \texttt{Print} routines are used to
+generate messages for the application, these messages can be filtered using
+the tagged type \texttt{Message\_Filter\_Type} which is used by the ZanyBlue
+library to determine if a message should be really be printed.
+
+The \texttt{Message\_Filter\_Type} defines the method
+\begin{xmpl}
+\begin{verbatim}
+function Is_Filtered (Filter   : Message_Filter_Type;
+                      Facility : Wide_String;
+                      Key : Wide_String) return Boolean;
+\end{verbatim}
+\end{xmpl}
+
+An application convention can be used on the message keys to define, e.g.,
+verbose message filtering.  The example application
+\texttt{examples/text/filtering} uses the convention:
+\begin{itemize}
+\item Verbose messages begin with the letter `\texttt{V}'.
+\item Informational messages begin with the letter `\texttt{I}'.
+\item Warning messages begin with the letter `\texttt{W}'.
+\item Error messages begin with the letter `\texttt{E}'.
+\end{itemize}
+
+The declaration of a filtering type for this configuration would be
+\begin{xmpl}
+\begin{verbatim}
+type My_Filter_Type is new Message_Filter_Type with
+   record
+      Verbose : Boolean := False;
+   end record;
+
+function Is_Filtered (Filter   : My_Filter_Type;
+                      Facility : Wide_String;
+                      Key : Wide_String) return Boolean;
+\end{verbatim}
+\end{xmpl}
+with the simple implementation for this example begin
+\begin{xmpl}
+\begin{verbatim}
+function Is_Filtered (Filter   : My_Filter_Type;
+                      Facility : Wide_String;
+                      Key : Wide_String) return Boolean is
+begin
+   return Key (Key'First) = 'V' and not Filter.Verbose;
+end Is_Filtered;
+\end{verbatim}
+\end{xmpl}
+
+To enable the filtering, the filter must be registered with the ZanyBlue
+library via the \verb|Set_Filter| routine.  This routine takes an access to
+\verb|Message_Filter_Type'Class| object.  E.g., for the example filtering
+application, the filter is installed using:
+\begin{xmpl}
+\begin{verbatim}
+use ZanyBlue.Text.Formatting;
+...
+App_Filter : aliased My_Filter_Type;
+...
+Set_Filter (App_Filter'Access);
+\end{verbatim}
+\end{xmpl}
+
+There is a cost associated with filtered messages:
+\begin{itemize}
+\item The various ZanyBlue routines are called.
+\item Any arguments will be ``boxed'' and appended to an argument list.
+\item The filtering code is called for all messages.
+\end{itemize}
+This cost, however, does not included the cost associated with formatting
+the message as the filtering occurs before any message formatting happens.
+
 \section{Stub Implementations}
 \subsection{Generic\_Fixed}
 
@@ -1192,6 +1279,9 @@ The \verb|Generic_Fixed| package implemented formatting for the fixed
 floating point type.  This is a stub implementation in this version of
 the ZanyBlue library and simply dispatches to the underlying
 Ada \verb|Wide_Image| routine to format the value.
+
+Generic ZanyBlue text packages should be instanciated at the library
+level to prevent run time accessibility exceptions.
 
 \section{ZanyBlue Formatting Implementation}
 
@@ -1638,6 +1728,8 @@ locale parameter.
 
 %--------------------------------------------------------------------------
 \section{Pseudo Translations}
+\label{sec_pseudo_translation}
+\label{sec:pseudo-translation}
 
 One of the easiest mistakes to make with an internationalize application is
 to include hard-coded strings, i.e., not externalize the message text into
@@ -1686,6 +1778,36 @@ The mappings defined by the ZanyBlue library are:
 \end{enumerate}
 \textbf{Note}: The halfwidth forms and enclosed alphanumeric mappings
 require the appropriate fonts be installed.
+
+In addition to changing the characters used for the message, the Unicode
+character ``Diamond with left half black'' (U+2816) is prefixed and ``Diamond
+with right half black'' is suffixed.  This allow the visual determination
+of where message strings begin and end.  A relatively common programming
+error is to generate a message by concatenate a set of sub-messages.  This
+is apparent in a psuedo translated view of the application.
+
+Normal argument handling occurs for pseudo translated messages and the
+values are substituted into the message string.  The text of the values are
+not modified by psuedo translation.  Value are, however, delimited by
+French quotes (guillemets, chevrons).  Figure~\ref{fig:pseudo-dump}
+show the output of the \texttt{dumplocale} example application with
+half width psuedo translation enabled.  As can be seen from the message
+delimiters, the header ``Numeric Formats'' is a multi-line messages and
+is displayed using the half width font.  The Decimal, Scientific, etc,
+values are formatted arguments (as can be seen from the chevrons surrounding
+the values and are not displayed using the half width font.
+\begin{figure}
+\begin{center}
+\begin{latexonly}
+    \includegraphics[angle=90,width=4in]{images/pseudo-dump.png}
+\end{latexonly}
+\begin{htmlonly}
+    \includegraphics[width=4in]{images/pseudo-dump.png}
+\end{htmlonly}
+\end{center}
+\caption{Display of the dump locale example with psuedo translation enabled.}
+\label{fig:pseudo-dump}
+\end{figure}
 
 The example applications support pseudo translation via the \verb|-x|
 options.

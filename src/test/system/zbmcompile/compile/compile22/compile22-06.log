@@ -11,7 +11,9 @@ package body My_Package is
 
    subtype Z is ZTC.ZBMCompile_Definition;
 
-   Facility_1 : aliased constant Wide_String := "core";
+   Facility_1 : aliased constant Wide_String := ""
+      & "core"
+      & "";
    Facilities : constant ZT.Constant_String_List (1 .. 1) := (
                    1 => Facility_1'Access);
 
@@ -107,13 +109,31 @@ package body My_Package is
       & "applicationResponse"
       & ".badResponse"
       & "";
-   Key_22 : aliased constant Wide_String := "aprListener.aprInit";
-   Key_23 : aliased constant Wide_String := "aprListener.tcnInvalid";
-   Key_24 : aliased constant Wide_String := "aprListener.tcnVersion";
-   Key_25 : aliased constant Wide_String := "aprListener.aprDestroy";
-   Key_26 : aliased constant Wide_String := "aprListener.sslInit";
-   Key_27 : aliased constant Wide_String := "aprListener.tcnValid";
-   Key_28 : aliased constant Wide_String := "aprListener.flags";
+   Key_22 : aliased constant Wide_String := ""
+      & "aprListener.aprInit"
+      & "";
+   Key_23 : aliased constant Wide_String := ""
+      & "aprListener.tcnInva"
+      & "lid"
+      & "";
+   Key_24 : aliased constant Wide_String := ""
+      & "aprListener.tcnVers"
+      & "ion"
+      & "";
+   Key_25 : aliased constant Wide_String := ""
+      & "aprListener.aprDest"
+      & "roy"
+      & "";
+   Key_26 : aliased constant Wide_String := ""
+      & "aprListener.sslInit"
+      & "";
+   Key_27 : aliased constant Wide_String := ""
+      & "aprListener.tcnVali"
+      & "d"
+      & "";
+   Key_28 : aliased constant Wide_String := ""
+      & "aprListener.flags"
+      & "";
    Key_29 : aliased constant Wide_String := ""
       & "containerBase.addDe"
       & "faultMapper"
@@ -126,7 +146,10 @@ package body My_Package is
       & "containerBase.notCo"
       & "nfigured"
       & "";
-   Key_32 : aliased constant Wide_String := "containerBase.notStarted";
+   Key_32 : aliased constant Wide_String := ""
+      & "containerBase.notSt"
+      & "arted"
+      & "";
    Key_33 : aliased constant Wide_String := ""
       & "containerBase.backg"
       & "roundProcess.cluste"
@@ -157,8 +180,12 @@ package body My_Package is
       & "fastEngineMapper.no"
       & "tStarted"
       & "";
-   Key_40 : aliased constant Wide_String := "filterChain.filter";
-   Key_41 : aliased constant Wide_String := "filterChain.servlet";
+   Key_40 : aliased constant Wide_String := ""
+      & "filterChain.filter"
+      & "";
+   Key_41 : aliased constant Wide_String := ""
+      & "filterChain.servlet"
+      & "";
    Key_42 : aliased constant Wide_String := ""
       & "httpContextMapper.c"
       & "ontainer"
@@ -167,7 +194,10 @@ package body My_Package is
       & "httpEngineMapper.co"
       & "ntainer"
       & "";
-   Key_44 : aliased constant Wide_String := "httpHostMapper.container";
+   Key_44 : aliased constant Wide_String := ""
+      & "httpHostMapper.cont"
+      & "ainer"
+      & "";
    Key_45 : aliased constant Wide_String := ""
       & "interceptorValve.al"
       & "readyStarted"
@@ -184,13 +214,19 @@ package body My_Package is
       & "jreLeakListener.xml"
       & "ParseFail"
       & "";
-   Key_49 : aliased constant Wide_String := "naming.wsdlFailed";
-   Key_50 : aliased constant Wide_String := "naming.bindFailed";
+   Key_49 : aliased constant Wide_String := ""
+      & "naming.wsdlFailed"
+      & "";
+   Key_50 : aliased constant Wide_String := ""
+      & "naming.bindFailed"
+      & "";
    Key_51 : aliased constant Wide_String := ""
       & "naming.jmxRegistrat"
       & "ionFailed"
       & "";
-   Key_52 : aliased constant Wide_String := "naming.unbindFailed";
+   Key_52 : aliased constant Wide_String := ""
+      & "naming.unbindFailed"
+      & "";
    Key_53 : aliased constant Wide_String := ""
       & "naming.invalidEnvEn"
       & "tryType"
@@ -330,7 +366,10 @@ package body My_Package is
       & "standardContext.map"
       & "pingError"
       & "";
-   Key_86 : aliased constant Wide_String := "standardContext.notFound";
+   Key_86 : aliased constant Wide_String := ""
+      & "standardContext.not"
+      & "Found"
+      & "";
    Key_87 : aliased constant Wide_String := ""
       & "standardContext.not"
       & "Reloadable"
@@ -445,13 +484,22 @@ package body My_Package is
       & "standardEngine.mapp"
       & "ingError"
       & "";
-   Key_115 : aliased constant Wide_String := "standardEngine.noHost";
+   Key_115 : aliased constant Wide_String := ""
+      & "standardEngine.noHo"
+      & "st"
+      & "";
    Key_116 : aliased constant Wide_String := ""
       & "standardEngine.noHo"
       & "stHeader"
       & "";
-   Key_117 : aliased constant Wide_String := "standardEngine.notHost";
-   Key_118 : aliased constant Wide_String := "standardEngine.notParent";
+   Key_117 : aliased constant Wide_String := ""
+      & "standardEngine.notH"
+      & "ost"
+      & "";
+   Key_118 : aliased constant Wide_String := ""
+      & "standardEngine.notP"
+      & "arent"
+      & "";
    Key_119 : aliased constant Wide_String := ""
       & "standardEngine.notS"
       & "tarted"
@@ -469,13 +517,22 @@ package body My_Package is
       & "gister.mbeans.faile"
       & "d"
       & "";
-   Key_123 : aliased constant Wide_String := "standardHost.accessBase";
+   Key_123 : aliased constant Wide_String := ""
+      & "standardHost.access"
+      & "Base"
+      & "";
    Key_124 : aliased constant Wide_String := ""
       & "standardHost.alread"
       & "yStarted"
       & "";
-   Key_125 : aliased constant Wide_String := "standardHost.appBase";
-   Key_126 : aliased constant Wide_String := "standardHost.clientAbort";
+   Key_125 : aliased constant Wide_String := ""
+      & "standardHost.appBas"
+      & "e"
+      & "";
+   Key_126 : aliased constant Wide_String := ""
+      & "standardHost.client"
+      & "Abort"
+      & "";
    Key_127 : aliased constant Wide_String := ""
       & "standardHost.config"
       & "Required"
@@ -484,8 +541,14 @@ package body My_Package is
       & "standardHost.config"
       & "NotAllowed"
       & "";
-   Key_129 : aliased constant Wide_String := "standardHost.installBase";
-   Key_130 : aliased constant Wide_String := "standardHost.installing";
+   Key_129 : aliased constant Wide_String := ""
+      & "standardHost.instal"
+      & "lBase"
+      & "";
+   Key_130 : aliased constant Wide_String := ""
+      & "standardHost.instal"
+      & "ling"
+      & "";
    Key_131 : aliased constant Wide_String := ""
       & "standardHost.instal"
       & "lingWAR"
@@ -503,34 +566,78 @@ package body My_Package is
       & "dErrorReportValveCl"
       & "ass"
       & "";
-   Key_135 : aliased constant Wide_String := "standardHost.docBase";
+   Key_135 : aliased constant Wide_String := ""
+      & "standardHost.docBas"
+      & "e"
+      & "";
    Key_136 : aliased constant Wide_String := ""
       & "standardHost.mappin"
       & "gError"
       & "";
-   Key_137 : aliased constant Wide_String := "standardHost.noContext";
-   Key_138 : aliased constant Wide_String := "standardHost.noHost";
-   Key_139 : aliased constant Wide_String := "standardHost.notContext";
-   Key_140 : aliased constant Wide_String := "standardHost.notStarted";
-   Key_141 : aliased constant Wide_String := "standardHost.nullName";
-   Key_142 : aliased constant Wide_String := "standardHost.pathFormat";
-   Key_143 : aliased constant Wide_String := "standardHost.pathMatch";
-   Key_144 : aliased constant Wide_String := "standardHost.pathMissing";
+   Key_137 : aliased constant Wide_String := ""
+      & "standardHost.noCont"
+      & "ext"
+      & "";
+   Key_138 : aliased constant Wide_String := ""
+      & "standardHost.noHost"
+      & "";
+   Key_139 : aliased constant Wide_String := ""
+      & "standardHost.notCon"
+      & "text"
+      & "";
+   Key_140 : aliased constant Wide_String := ""
+      & "standardHost.notSta"
+      & "rted"
+      & "";
+   Key_141 : aliased constant Wide_String := ""
+      & "standardHost.nullNa"
+      & "me"
+      & "";
+   Key_142 : aliased constant Wide_String := ""
+      & "standardHost.pathFo"
+      & "rmat"
+      & "";
+   Key_143 : aliased constant Wide_String := ""
+      & "standardHost.pathMa"
+      & "tch"
+      & "";
+   Key_144 : aliased constant Wide_String := ""
+      & "standardHost.pathMi"
+      & "ssing"
+      & "";
    Key_145 : aliased constant Wide_String := ""
       & "standardHost.pathRe"
       & "quired"
       & "";
-   Key_146 : aliased constant Wide_String := "standardHost.pathUsed";
-   Key_147 : aliased constant Wide_String := "standardHost.removing";
-   Key_148 : aliased constant Wide_String := "standardHost.removeError";
-   Key_149 : aliased constant Wide_String := "standardHost.start";
-   Key_150 : aliased constant Wide_String := "standardHost.stop";
+   Key_146 : aliased constant Wide_String := ""
+      & "standardHost.pathUs"
+      & "ed"
+      & "";
+   Key_147 : aliased constant Wide_String := ""
+      & "standardHost.removi"
+      & "ng"
+      & "";
+   Key_148 : aliased constant Wide_String := ""
+      & "standardHost.remove"
+      & "Error"
+      & "";
+   Key_149 : aliased constant Wide_String := ""
+      & "standardHost.start"
+      & "";
+   Key_150 : aliased constant Wide_String := ""
+      & "standardHost.stop"
+      & "";
    Key_151 : aliased constant Wide_String := ""
       & "standardHost.unfoun"
       & "dContext"
       & "";
-   Key_152 : aliased constant Wide_String := "standardHost.warRequired";
-   Key_153 : aliased constant Wide_String := "standardHost.warURL";
+   Key_152 : aliased constant Wide_String := ""
+      & "standardHost.warReq"
+      & "uired"
+      & "";
+   Key_153 : aliased constant Wide_String := ""
+      & "standardHost.warURL"
+      & "";
    Key_154 : aliased constant Wide_String := ""
       & "standardHost.valida"
       & "tionEnabled"
@@ -547,7 +654,10 @@ package body My_Package is
       & "standardPipeline.no"
       & "tStarted"
       & "";
-   Key_158 : aliased constant Wide_String := "standardPipeline.noValve";
+   Key_158 : aliased constant Wide_String := ""
+      & "standardPipeline.no"
+      & "Valve"
+      & "";
    Key_159 : aliased constant Wide_String := ""
       & "standardServer.addC"
       & "ontainer.ise"
@@ -596,7 +706,10 @@ package body My_Package is
       & "standardService.sto"
       & "p.notStarted"
       & "";
-   Key_171 : aliased constant Wide_String := "standardWrapper.allocate";
+   Key_171 : aliased constant Wide_String := ""
+      & "standardWrapper.all"
+      & "ocate"
+      & "";
    Key_172 : aliased constant Wide_String := ""
       & "standardWrapper.all"
       & "ocateException"
@@ -665,13 +778,22 @@ package body My_Package is
       & "standardWrapper.mis"
       & "singLoader"
       & "";
-   Key_189 : aliased constant Wide_String := "standardWrapper.notChild";
-   Key_190 : aliased constant Wide_String := "standardWrapper.notClass";
+   Key_189 : aliased constant Wide_String := ""
+      & "standardWrapper.not"
+      & "Child"
+      & "";
+   Key_190 : aliased constant Wide_String := ""
+      & "standardWrapper.not"
+      & "Class"
+      & "";
    Key_191 : aliased constant Wide_String := ""
       & "standardWrapper.not"
       & "Context"
       & "";
-   Key_192 : aliased constant Wide_String := "standardWrapper.notFound";
+   Key_192 : aliased constant Wide_String := ""
+      & "standardWrapper.not"
+      & "Found"
+      & "";
    Key_193 : aliased constant Wide_String := ""
       & "standardWrapper.not"
       & "Servlet"
@@ -708,7 +830,10 @@ package body My_Package is
       & "standardWrapper.unl"
       & "oading"
       & "";
-   Key_202 : aliased constant Wide_String := "standardWrapper.waiting";
+   Key_202 : aliased constant Wide_String := ""
+      & "standardWrapper.wai"
+      & "ting"
+      & "";
    Key_203 : aliased constant Wide_String := ""
       & "standardWrapper.res"
       & "trictedServletsReso"
@@ -931,7 +1056,8 @@ package body My_Package is
                    Key_204'Access,
                    Key_205'Access);
 
-   Locale_1 : aliased constant Wide_String := "";
+   Locale_1 : aliased constant Wide_String := ""
+      & "";
    Locales : constant ZT.Constant_String_List (1 .. 1) := (
                    1 => Locale_1'Access);
 

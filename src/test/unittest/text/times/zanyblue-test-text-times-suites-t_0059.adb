@@ -60,9 +60,9 @@ procedure T_0059 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    end Check;
 
 begin
-   Check ("",       "下午4:48 04-6-16");
-   Check ("full",   "+0800下午4时48分03秒1904年6月16日星期四");
-   Check ("long",   "+0800下午4时48分03秒1904年6月16日");
-   Check ("medium", "下午4:48:03 1904-6-16");
-   Check ("short",  "下午4:48 04-6-16");
+   Check ("",       "04/6/16 下午4:48");
+   Check ("full",   "1904年6月16日星期四 +0800下午4:48:03");
+   Check ("long",   "1904年6月16日 +0800下午4:48:03");
+   Check ("medium", "1904年6月16日 下午4:48:03");
+   Check ("short",  "04/6/16 下午4:48");
 end T_0059;

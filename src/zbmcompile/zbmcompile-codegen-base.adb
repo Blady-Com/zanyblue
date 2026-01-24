@@ -223,10 +223,10 @@ package body ZBMCompile.Codegen.Base is
       Print_Line (File, ZBMBase_Facility, "10030",
                   Argument0 => +Package_Name);
       Close_And_Update (File, Updated);
-      Print_If (Options.Get_Boolean ("verbose"), ZBMCompile_Facility,
-                Select_Message (Updated, "00022", "00040"),
-                Argument0 => +Package_Name,
-                Argument1 => +File_Name);
+      Print_Line (ZBMCompile_Facility,
+                  Select_Message (Updated, "V00012", "V00013"),
+                  Argument0 => +Package_Name,
+                  Argument1 => +File_Name);
    end Create_Root_Body;
 
    ----------------------
@@ -272,10 +272,10 @@ package body ZBMCompile.Codegen.Base is
       Print_Line (File, ZBMBase_Facility, "00011",
                   Argument0 => +Package_Name);
       Close_And_Update (File, Updated);
-      Print_If (Options.Get_Boolean ("verbose"), ZBMCompile_Facility,
-                Select_Message (Updated, "00021", "00047"),
-                Argument0 => +Package_Name,
-                Argument1 => +File_Name);
+      Print_Line (ZBMCompile_Facility,
+                  Select_Message (Updated, "V00014", "V00015"),
+                  Argument0 => +Package_Name,
+                  Argument1 => +File_Name);
    end Create_Root_Spec;
 
    ---------------------
@@ -367,8 +367,6 @@ package body ZBMCompile.Codegen.Base is
 
       use Ada.Wide_Characters.Unicode;
 
-      Semicolon        : constant Wide_Character := ';';
-      Empty_String     : constant Wide_String := "";
       Buffer           : Wide_String (1 .. Width);
       Current_Position : Natural := Value'First;
 
@@ -420,29 +418,15 @@ package body ZBMCompile.Codegen.Base is
       end Finished;
 
    begin
-      if Value'Length < 25 then
-         --  Small string, just write a single liner
-         Print_Line (File, ZBMBase_Facility, "10004",
-                     Argument0 => +Name,
-                     Argument1 => +Decl_Index,
-                     Argument2 => +Value,
-                     Argument3 => +Semicolon);
-         return;
-      else
-         Print_Line (File, ZBMBase_Facility, "10004",
-                     Argument0 => +Name,
-                     Argument1 => +Decl_Index,
-                     Argument2 => +Empty_String,
-                     Argument3 => +Empty_String);
-      end if;
+      Print_Line (File, ZBMBase_Facility, "10004", +Name, +Decl_Index);
       while not Finished loop
          if Is_Non_Graphic (Current_Character) then
             Print_Line (File, ZBMBase_Facility, "10005",
-                        Argument0 => +Current_Character_Pos);
+                        +Current_Character_Pos);
             Advance;
          else
             Print_Line (File, ZBMBase_Facility, "10006",
-                        Argument0 => +Buffered_Data);
+                        +Buffered_Data);
          end if;
       end loop;
       Print_Line (File, ZBMBase_Facility, "10007");

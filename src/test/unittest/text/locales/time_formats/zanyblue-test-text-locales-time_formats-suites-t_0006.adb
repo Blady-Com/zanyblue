@@ -38,9 +38,9 @@ procedure T_0006 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    L : constant Locale_Type := Make_Locale ("ar");
 
 begin
-   Check_Value (R, Time_Format (L, Full), "zzzz h:mm:ss a",
+   Check_Value (R, Time_Format (L, Full), "h:mm:ss a zzzz",
                 "ar full time format");
-   Check_Value (R, Time_Format (L, Long), "z h:mm:ss a",
+   Check_Value (R, Time_Format (L, Long), "h:mm:ss a z",
                 "ar long time format");
    Check_Value (R, Time_Format (L, Medium), "h:mm:ss a",
                 "ar medium time format");

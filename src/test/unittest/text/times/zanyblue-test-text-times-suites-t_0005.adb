@@ -50,7 +50,7 @@ procedure T_0005 (R : in out AUnit.Test_Cases.Test_Case'Class) is
 
 begin
    Check_Value (R, Arg1.Format ("", "", Locale),
-                   "16:48 1904/06/16");
+                   "1904/06/16 16:48");
    Check_Value (R, Arg1.Format ("", "long", Locale),
-                   "16:48:03 +0900 1904年6月16日");
+                   "1904年6月16日 16:48:03 +0900");
 end T_0005;

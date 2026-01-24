@@ -38,28 +38,28 @@ procedure T_0006 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    L : constant Locale_Type := Make_Locale ("ar");
 
 begin
-   Check_Value (R, Short_Month_Name (L, Jan), "Jan",
+   Check_Value (R, Short_Month_Name (L, Jan), "يناير",
                 "ar short month name, Jan");
-   Check_Value (R, Short_Month_Name (L, Feb), "Feb",
+   Check_Value (R, Short_Month_Name (L, Feb), "فبراير",
                 "ar short month name, Feb");
-   Check_Value (R, Short_Month_Name (L, Mar), "Mar",
+   Check_Value (R, Short_Month_Name (L, Mar), "مارس",
                 "ar short month name, Mar");
-   Check_Value (R, Short_Month_Name (L, Apr), "Apr",
+   Check_Value (R, Short_Month_Name (L, Apr), "أبريل",
                 "ar short month name, Apr");
-   Check_Value (R, Short_Month_Name (L, May), "May",
+   Check_Value (R, Short_Month_Name (L, May), "مايو",
                 "ar short month name, May");
-   Check_Value (R, Short_Month_Name (L, Jun), "Jun",
+   Check_Value (R, Short_Month_Name (L, Jun), "يونيو",
                 "ar short month name, Jun");
-   Check_Value (R, Short_Month_Name (L, Jul), "Jul",
+   Check_Value (R, Short_Month_Name (L, Jul), "يوليو",
                 "ar short month name, Jul");
-   Check_Value (R, Short_Month_Name (L, Aug), "Aug",
+   Check_Value (R, Short_Month_Name (L, Aug), "أغسطس",
                 "ar short month name, Aug");
-   Check_Value (R, Short_Month_Name (L, Sep), "Sep",
+   Check_Value (R, Short_Month_Name (L, Sep), "سبتمبر",
                 "ar short month name, Sep");
-   Check_Value (R, Short_Month_Name (L, Oct), "Oct",
+   Check_Value (R, Short_Month_Name (L, Oct), "أكتوبر",
                 "ar short month name, Oct");
-   Check_Value (R, Short_Month_Name (L, Nov), "Nov",
+   Check_Value (R, Short_Month_Name (L, Nov), "نوفمبر",
                 "ar short month name, Nov");
-   Check_Value (R, Short_Month_Name (L, Dec), "Dec",
+   Check_Value (R, Short_Month_Name (L, Dec), "ديسمبر",
                 "ar short month name, Dec");
 end T_0006;

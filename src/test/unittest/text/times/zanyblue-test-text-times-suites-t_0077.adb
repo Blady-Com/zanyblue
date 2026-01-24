@@ -64,14 +64,14 @@ procedure T_0077 (R : in out AUnit.Test_Cases.Test_Case'Class) is
 
 begin
    Args.Append (Arg1);
-   Check ("",        "下午4:48 04-6-16");
-   Check ("*",       "4:48 PM 6/16/04");
-   Check ("full",    "+0800下午4时48分03秒1904年6月16日星期四");
-   Check ("full*",   "4:48:03 PM +0800 Thursday, June 16, 1904");
-   Check ("long",    "+0800下午4时48分03秒1904年6月16日");
-   Check ("long*",   "4:48:03 PM +0800 June 16, 1904");
-   Check ("medium",  "下午4:48:03 1904-6-16");
-   Check ("medium*", "4:48:03 PM Jun 16, 1904");
-   Check ("short",   "下午4:48 04-6-16");
-   Check ("short*",  "4:48 PM 6/16/04");
+   Check ("",        "04/6/16 下午4:48");
+   Check ("*",       "6/16/04 4:48 PM");
+   Check ("full",    "1904年6月16日星期四 +0800下午4:48:03");
+   Check ("full*",   "Thursday, June 16, 1904 4:48:03 PM +0800");
+   Check ("long",    "1904年6月16日 +0800下午4:48:03");
+   Check ("long*",   "June 16, 1904 4:48:03 PM +0800");
+   Check ("medium",  "1904年6月16日 下午4:48:03");
+   Check ("medium*", "Jun 16, 1904 4:48:03 PM");
+   Check ("short",   "04/6/16 下午4:48");
+   Check ("short*",  "6/16/04 4:48 PM");
 end T_0077;

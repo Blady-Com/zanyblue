@@ -44,7 +44,7 @@ procedure T_0033 (R : in out AUnit.Test_Cases.Test_Case'Class) is
                              Value        : Wide_String) is
    begin
       Check_Value (R, Language_Name (Abbreviation, Locale => zh), Value,
-                      "Expected: " & Value);
+                      "Mis-match for " & Abbreviation);
    end Check_Language;
 
 begin
@@ -59,14 +59,14 @@ begin
    Check_Language ("el", "希腊文");
    Check_Language ("fa", "波斯文");
    Check_Language ("ga", "爱尔兰文");
-   Check_Language ("ha", "豪撒文");
-   Check_Language ("ia", "国际语");
+   Check_Language ("ha", "豪萨文");
+   Check_Language ("ia", "国际文字");
    Check_Language ("ja", "日文");
    Check_Language ("ka", "格鲁吉亚文");
    Check_Language ("la", "拉丁文");
    Check_Language ("mad", "马都拉文");
    Check_Language ("na", "瑙鲁文");
-   Check_Language ("oc", "奥克西唐语");
+   Check_Language ("oc", "奥克西唐文");
    Check_Language ("pa", "旁遮普文");
    Check_Language ("qu", "盖丘亚文");
    Check_Language ("raj", "拉贾斯坦文");
@@ -77,5 +77,5 @@ begin
    Check_Language ("wa", "瓦隆文");
    Check_Language ("xal", "卡尔梅克文");
    Check_Language ("yao", "瑶族文");
-   Check_Language ("za", "壮语");
+   Check_Language ("za", "壮文");
 end T_0033;

@@ -43,6 +43,6 @@ procedure T_0054 (R : in out AUnit.Test_Cases.Test_Case'Class) is
 
 begin
    Check_Value (R, To_String (To_Time_Value (T), "xmpl"),
-                   "4:48 PM 10/31/11",
+                   "10/31/11, 4:48 PM",
                 "To_String from Time");
 end T_0054;

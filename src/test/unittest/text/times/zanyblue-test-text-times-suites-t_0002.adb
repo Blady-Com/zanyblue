@@ -49,6 +49,6 @@ procedure T_0002 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    Arg2      : constant Time_Argument_Type := +V2;
 
 begin
-   Check_Value (R, Arg1.Format ("", "", Locale), "4:48 PM 4/17/08");
-   Check_Value (R, Arg2.Format ("", "", Locale), "4:48 AM 4/17/08");
+   Check_Value (R, Arg1.Format ("", "", Locale), "4/17/08, 4:48 PM");
+   Check_Value (R, Arg2.Format ("", "", Locale), "4/17/08, 4:48 AM");
 end T_0002;

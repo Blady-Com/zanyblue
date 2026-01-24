@@ -61,11 +61,11 @@ begin
    Check_Value (R, Args.Format (1, "", "integer,o", Locale, False),
                    "٣٧٣١");
    Check_Value (R, Args.Format (2, "", "integer,o", Locale, False),
-                   "-٣٧٣١");
+                   "‎-٣٧٣١");
    Check_Value (R, Args.Format (3, "", "integer,o", Locale, False),
                    "١٧٧٧٧٧٧٧٧٧٧");
    Check_Value (R, Args.Format (4, "", "integer,o", Locale, False),
-                   "-١٧٧٧٧٧٧٧٧٧٧");
+                   "‎-١٧٧٧٧٧٧٧٧٧٧");
    Check_Value (R, Args.Format (0, "", "integer,o*", Locale, False),
                    "0");
    Check_Value (R, Args.Format (1, "", "integer,o*", Locale, False),

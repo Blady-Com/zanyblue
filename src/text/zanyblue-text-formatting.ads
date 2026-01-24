@@ -39,13 +39,14 @@ with Ada.Wide_Text_IO;
 with Ada.Strings.Unbounded;
 with Ada.Strings.Wide_Unbounded;
 with ZanyBlue.Text.Pseudo;
-with ZanyBlue.Text.Catalogs;
+with ZanyBlue.Text.Filter;
 with ZanyBlue.Text.Times;
 with ZanyBlue.Text.Floats;
 with ZanyBlue.Text.Locales;
 with ZanyBlue.Text.Strings;
 with ZanyBlue.Text.Integers;
 with ZanyBlue.Text.Booleans;
+with ZanyBlue.Text.Catalogs;
 with ZanyBlue.Text.Durations;
 with ZanyBlue.Text.Characters;
 with ZanyBlue.Text.Exceptions;
@@ -82,6 +83,7 @@ package ZanyBlue.Text.Formatting is
    use Ada.Strings.Unbounded;
    use Ada.Strings.Wide_Unbounded;
    use ZanyBlue.Text.Pseudo;
+   use ZanyBlue.Text.Filter;
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Catalogs;
    use ZanyBlue.Text.Arguments;
@@ -164,6 +166,10 @@ package ZanyBlue.Text.Formatting is
 
    function Source_Locales_Enabled return Boolean;
    --  Are source locales for message argument formatting enabled.
+
+   procedure Set_Filter (Filter   : in Message_Filter_Access;
+                         Catalog  : in Catalog_Type := Standard_Catalog);
+   --  Set the filter associated with the standard catalog, can be null.
 
    function Format (Facility  : in Wide_String;
                     Key       : in Wide_String;
@@ -435,22 +441,20 @@ package ZanyBlue.Text.Formatting is
                             Facility     : in Wide_String;
                             Key          : in Wide_String;
                             Arguments    : in Argument_List;
-                            Text         : in Wide_String;
                             With_NL      : in Boolean;
                             Locale       : in Locale_Type;
                             Catalog      : in Catalog_Type);
-   --  Format and write a message to the given destination file.  The
-   --  print rountines call this procedure to do the actual write.
+   --  If not filtered, format the message and write to the underlying
+   --  file.
 
    procedure Write_Message (Destination  : in Ada.Text_IO.File_Type;
                             Facility     : in Wide_String;
                             Key          : in Wide_String;
                             Arguments    : in Argument_List;
-                            Text         : in Wide_String;
                             With_NL      : in Boolean;
                             Locale       : in Locale_Type;
                             Catalog      : in Catalog_Type);
-   --  Format and write a message to the given destination file.  The
-   --  print rountines call this procedure to do the actual write.
+   --  If not filtered, format the message and write to the underlying
+   --  file.
 
 end ZanyBlue.Text.Formatting;

@@ -10,6 +10,7 @@ string corresponding to the index value.
 
 from .zbmsg import *
 
+
 class StringPool(object):
     """
     Class accumulating strings with index mapping.
@@ -40,7 +41,7 @@ class StringPool(object):
         Return the index associated with a string.  If the string is not
         already present, add it.
         """
-        if not self.string_mapping.has_key(val):
+        if val not in self.string_mapping:
             index = len(self.index_addresses) + 1
             start = self.pool.find(val)
             if start == -1:
@@ -75,12 +76,12 @@ class StringPool(object):
         result = [''.join(x) for x in zip(*[list(s[z::n]) for z in range(n)])]
         n_consumed = n * len(result)
         if len(s) > n_consumed:
-           result.append(s[n_consumed:])
+            result.append(s[n_consumed:])
         return result
 
     def sort(self):
         self.index_addresses.sort(key=lambda v: self.pool[v[0] - 1:v[1]])
-        mapping = [ 0 for i in range(len(self.index_addresses)) ]
+        mapping = [0 for i in range(len(self.index_addresses))]
         for address, value in enumerate(self.index_addresses):
             mapping[value[2] - 1] = address + 1
         return mapping
@@ -101,7 +102,26 @@ class StringPool(object):
         last_index = len(self.index_addresses) - 1
         for index, address in enumerate(self.index_addresses):
             code = ZBMSG0005 if index < last_index else ZBMSG0006
-            text = self.pool[address[0]-1:address[1]]
+            text = self.pool[address[0] - 1:address[1]]
+            zbm_write(fp, ZBMSG0054, index + 1, text)
+            zbm_write(fp, code, index + 1, *address)
+        zbm_new_line(fp)
+
+    def write_pool(self, fp):
+        """
+        Generate the Ada code corresponding the the accumulated string data.
+        """
+        zbm_write(fp, ZBMSG0001)
+        for block in self._splitCount(self.pool, 60):
+            zbm_write(fp, ZBMSG0002, block)
+        zbm_write(fp, ZBMSG0003)
+
+    def write_string_addresses(self, fp):
+        zbm_write(fp, ZBMSG0004)
+        last_index = len(self.index_addresses) - 1
+        for index, address in enumerate(self.index_addresses):
+            code = ZBMSG0005 if index < last_index else ZBMSG0006
+            text = self.pool[address[0] - 1:address[1]]
             zbm_write(fp, ZBMSG0054, index + 1, text)
             zbm_write(fp, code, index + 1, *address)
         zbm_new_line(fp)

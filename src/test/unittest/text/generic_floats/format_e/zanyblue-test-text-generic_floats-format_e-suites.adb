@@ -90,7 +90,7 @@ package body ZanyBlue.Test.Text.Generic_Floats.Format_E.Suites is
       Add_Routine (T, T_0017'Access, "T_0017, E format, 9.9999999999e10");
       Add_Routine (T, T_0018'Access, "T_0018, E format, 9.9990000000e10");
       Add_Routine (T, T_0019'Access, "T_0019 E format, multiple precisions");
-      Add_Routine (T, T_0020'Access, "T_0019 E format, ar digits");
+      Add_Routine (T, T_0020'Access, "T_0020 E format, ar digits");
    end Register_Tests;
 
    function Suite return Access_Test_Suite is

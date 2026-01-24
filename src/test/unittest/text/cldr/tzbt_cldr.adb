@@ -33,7 +33,6 @@
 --
 
 with AUnit.Run;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.CLDR;
 with ZanyBlue.Test;
 with ZanyBlue.Test.Text.CLDR.Suites;

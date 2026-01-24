@@ -62,6 +62,10 @@ package ZBTest.States is
    --  Define the initial parameters on startup.  This is called one to
    --  initialize the root parameter set.
 
+   procedure Define_XML_Initial_Parameters (State : in out State_Type);
+   --  Define the initial parameter required to support the XML summary
+   --  document created at the end of the test run.
+
    procedure Setup_Test_Area (State : in out State_Type);
    --  Setup for testing, create the test area directory
 
@@ -111,7 +115,6 @@ package ZBTest.States is
 
    procedure Initialize_Scope (State          : in out State_Type;
                                Script_Dir     : in Wide_String;
-                               Script         : in Wide_String;
                                Implicit_Scope : in Boolean := False);
    --  Initialize a new scope on starting a new test script.
 
@@ -229,9 +232,15 @@ package ZBTest.States is
                        Value  : in Ada.Calendar.Time);
    --  Set a time value.
 
-   procedure Dump (State       : in State_Type;
-                   File_Name   : in Wide_String;
-                   All_Scopes  : in Boolean);
+   procedure Set_XML_Elapsed_Time (State : in out State_Type);
+   --  The elapsed time attribute for the XML document for the current test.
+
+   procedure Register_XML_Scope (State : in out State_Type);
+   --  Register a new scope in the XML document.
+
+   procedure Dump (State       : State_Type;
+                   File_Name   : Wide_String;
+                   All_Scopes  : Boolean);
    --  Dump the parameters defined as a simple XML document to the named file.
    --  NOTE: value are not currently XML quoted!
 
@@ -240,8 +249,7 @@ package ZBTest.States is
                    All_Scopes  : in Boolean);
    --  Dump the parameters defined as a simple XML document to the open file.
 
-   procedure Write_XML_Report (State     : in State_Type;
-                               File_Name : in Wide_String);
+   procedure Write_XML_Report (State     : State_Type);
    --  Write the XML summary report of the testing.
 
 private

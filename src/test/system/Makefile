@@ -33,10 +33,14 @@
 #
 
 TOP=../../..
-ZBTESTFLAGS+=-N zanyblue
+ZBTESTFLAGS+=-N zanyblue -X summary.xml
 
 include $(TOP)/src/test/system/t_system.mk
 
 # Check with coverage
 gcheck:
 	$(ZBTEST) -d build_opt -XBUILD=Coverage $(ZBTESTFLAGS) system
+
+# Check with production build
+pcheck:
+	$(ZBTEST) -d build_opt -XBUILD=Production $(ZBTESTFLAGS) system

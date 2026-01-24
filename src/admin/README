@@ -1,9 +1,0 @@
-This directory contains development support files.  The files here are
-
-authors.xml
-  The the control file mapping Subversion check-in names to real names and
-  addresses used when creating the ChangeLog file.
-
-rLast
-  The file containing the Subversion revision of the last release branch,
-  used to limit the ChangeLog generation.

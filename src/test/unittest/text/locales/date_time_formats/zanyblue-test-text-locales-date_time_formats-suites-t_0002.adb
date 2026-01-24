@@ -38,12 +38,12 @@ procedure T_0002 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    L : constant Locale_Type := Make_Locale ("de");
 
 begin
-   Check_Value (R, Date_Time_Format (L, Full), "{1} {0}",
+   Check_Value (R, Date_Time_Format (L, Full), "{1} 'um' {0}",
                 "de full date/time format");
-   Check_Value (R, Date_Time_Format (L, Long), "{1} {0}",
+   Check_Value (R, Date_Time_Format (L, Long), "{1} 'um' {0}",
                 "de long date/time format");
-   Check_Value (R, Date_Time_Format (L, Medium), "{1} {0}",
+   Check_Value (R, Date_Time_Format (L, Medium), "{1}, {0}",
                 "de medium date/time format");
-   Check_Value (R, Date_Time_Format (L, Short), "{1} {0}",
+   Check_Value (R, Date_Time_Format (L, Short), "{1}, {0}",
                 "de short date/time format");
 end T_0002;

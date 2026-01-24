@@ -11,36 +11,90 @@ package body Xmpl is
 
    subtype Z is ZTC.ZBMCompile_Definition;
 
-   Facility_1 : aliased constant Wide_String := "xmpl";
+   Facility_1 : aliased constant Wide_String := ""
+      & "xmpl"
+      & "";
    Facilities : constant ZT.Constant_String_List (1 .. 1) := (
                    1 => Facility_1'Access);
 
-   Key_1 : aliased constant Wide_String := "0001";
-   Key_2 : aliased constant Wide_String := "0002";
-   Key_3 : aliased constant Wide_String := "0003";
-   Key_4 : aliased constant Wide_String := "0004";
-   Key_5 : aliased constant Wide_String := "0005";
-   Key_6 : aliased constant Wide_String := "0006";
-   Key_7 : aliased constant Wide_String := "0007";
-   Key_8 : aliased constant Wide_String := "0008";
-   Key_9 : aliased constant Wide_String := "0009";
-   Key_10 : aliased constant Wide_String := "0010";
-   Key_11 : aliased constant Wide_String := "0011";
-   Key_12 : aliased constant Wide_String := "0012";
-   Key_13 : aliased constant Wide_String := "0013";
-   Key_14 : aliased constant Wide_String := "0014";
-   Key_15 : aliased constant Wide_String := "0015";
-   Key_16 : aliased constant Wide_String := "0016";
-   Key_17 : aliased constant Wide_String := "0017";
-   Key_18 : aliased constant Wide_String := "0018";
-   Key_19 : aliased constant Wide_String := "0019";
-   Key_20 : aliased constant Wide_String := "0020";
-   Key_21 : aliased constant Wide_String := "0021";
-   Key_22 : aliased constant Wide_String := "0022";
-   Key_23 : aliased constant Wide_String := "0023";
-   Key_24 : aliased constant Wide_String := "0024";
-   Key_25 : aliased constant Wide_String := "0025";
-   Key_26 : aliased constant Wide_String := "0026";
+   Key_1 : aliased constant Wide_String := ""
+      & "0001"
+      & "";
+   Key_2 : aliased constant Wide_String := ""
+      & "0002"
+      & "";
+   Key_3 : aliased constant Wide_String := ""
+      & "0003"
+      & "";
+   Key_4 : aliased constant Wide_String := ""
+      & "0004"
+      & "";
+   Key_5 : aliased constant Wide_String := ""
+      & "0005"
+      & "";
+   Key_6 : aliased constant Wide_String := ""
+      & "0006"
+      & "";
+   Key_7 : aliased constant Wide_String := ""
+      & "0007"
+      & "";
+   Key_8 : aliased constant Wide_String := ""
+      & "0008"
+      & "";
+   Key_9 : aliased constant Wide_String := ""
+      & "0009"
+      & "";
+   Key_10 : aliased constant Wide_String := ""
+      & "0010"
+      & "";
+   Key_11 : aliased constant Wide_String := ""
+      & "0011"
+      & "";
+   Key_12 : aliased constant Wide_String := ""
+      & "0012"
+      & "";
+   Key_13 : aliased constant Wide_String := ""
+      & "0013"
+      & "";
+   Key_14 : aliased constant Wide_String := ""
+      & "0014"
+      & "";
+   Key_15 : aliased constant Wide_String := ""
+      & "0015"
+      & "";
+   Key_16 : aliased constant Wide_String := ""
+      & "0016"
+      & "";
+   Key_17 : aliased constant Wide_String := ""
+      & "0017"
+      & "";
+   Key_18 : aliased constant Wide_String := ""
+      & "0018"
+      & "";
+   Key_19 : aliased constant Wide_String := ""
+      & "0019"
+      & "";
+   Key_20 : aliased constant Wide_String := ""
+      & "0020"
+      & "";
+   Key_21 : aliased constant Wide_String := ""
+      & "0021"
+      & "";
+   Key_22 : aliased constant Wide_String := ""
+      & "0022"
+      & "";
+   Key_23 : aliased constant Wide_String := ""
+      & "0023"
+      & "";
+   Key_24 : aliased constant Wide_String := ""
+      & "0024"
+      & "";
+   Key_25 : aliased constant Wide_String := ""
+      & "0025"
+      & "";
+   Key_26 : aliased constant Wide_String := ""
+      & "0026"
+      & "";
    Keys : constant ZT.Constant_String_List (1 .. 26) := (
                    Key_1'Access,
                    Key_2'Access,
@@ -69,7 +123,8 @@ package body Xmpl is
                    Key_25'Access,
                    Key_26'Access);
 
-   Locale_1 : aliased constant Wide_String := "";
+   Locale_1 : aliased constant Wide_String := ""
+      & "";
    Locales : constant ZT.Constant_String_List (1 .. 1) := (
                    1 => Locale_1'Access);
 

@@ -38,25 +38,17 @@
 --
 
 with Ada.Command_Line;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.Pseudo;
 with ZanyBlue.Text.Locales;
 with ZanyBlue.Text.Formatting;
-with ZanyBlue.Text.Generic_Enumerations;
-with ZanyBlue.Text.Generic_Floats;
+with ZanyBlue.Text.Version_Status_Arguments;
+with Definitions;
 
 procedure X_Simple is
 
-   type Release_Status_Type is (Alpha, Beta, Production);
-
-   package Status_Args is
-      new ZanyBlue.Text.Generic_Enumerations (Release_Status_Type);
-   package Long_Long_Float_Arguments is
-      new ZanyBlue.Text.Generic_Floats (Long_Long_Float);
-
    use ZanyBlue.Text.Formatting;
-   use Status_Args;
-   use Long_Long_Float_Arguments;
+   use ZanyBlue.Text.Version_Status_Arguments;
+   use Definitions.Long_Long_Float_Arguments;
 
    function Get_NaN return Float;
    procedure Process_Command_Line;
@@ -99,17 +91,13 @@ procedure X_Simple is
       end loop;
    end Process_Command_Line;
 
-   Version_Major  : constant := 1;
-   Version_Minor  : constant := 0;
-   Version_Patch  : constant := 0;
-   Version_Status : constant Release_Status_Type := Alpha;
    X              : constant Long_Long_Float := 3.21e+505;
 
 begin
    Process_Command_Line;
-   Print_Line ("This is TEXT_XMPL V{0}.{1}.{2}, {3}",
-               +Version_Major, +Version_Minor,
-               +Version_Patch, +Version_Status);
+   Print_Line ("This is SIMPLE_FORMAT, Version {0}.{1}.{2} - {3}",
+               +ZanyBlue.Version_Major, +ZanyBlue.Version_Minor,
+               +ZanyBlue.Version_Patch, +ZanyBlue.Version_Status);
    Print_Line ("X is {0,f}", +X);
    Print_Line ("Here is an ""{0}"" embedded string", +String'("a value"));
    Print_Line ("{1} base 16 in a field of width {0} is |{1:>{0,*}x}|",

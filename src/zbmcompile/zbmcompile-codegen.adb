@@ -192,7 +192,7 @@ package body ZBMCompile.Codegen is
       begin
          if Previous_Locale /= New_Locale then
             if Previous_Locale /= 0 then
-               Print_Line (ZBMCompile_Facility, "00024",
+               Print_Line (ZBMCompile_Facility, "I00005",
                            Argument0 => +Locale_Name (Get_Locale (Catalog,
                                                          Previous_Locale)),
                            Argument1 => +Message_Count);
@@ -204,7 +204,7 @@ package body ZBMCompile.Codegen is
       end Summarize_Locale;
 
    begin    --  Optimize
-      Print_If (Options.Get_Boolean ("verbose"), ZBMCompile_Facility, "00023");
+      Print_Line (ZBMCompile_Facility, "V00011");
       Use_Single_Pool (Result);
       Reserve (Result, Pool_Size => Pool_Size (Catalog),
                        Messages  => Number_Of_Messages (Catalog));
@@ -215,7 +215,7 @@ package body ZBMCompile.Codegen is
       end loop;
       Summarize_Locale (Result, Previous_Locale, Message_Count, 0);
       if Options.Get_Boolean ("debug") then
-         Print_Line ("zbmcompile", "00056");
+         Print_Line ("zbmcompile", "D00001");
          Dump (Result, "optimized.dump");
       end if;
       return Result;

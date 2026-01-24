@@ -61,11 +61,11 @@ begin
    Check_Value (R, Args.Format (1, "", "integer,b", Locale, False),
                    "١١١١١٠١١٠٠١");
    Check_Value (R, Args.Format (2, "", "integer,b", Locale, False),
-                   "-١١١١١٠١١٠٠١");
+                   "‎-١١١١١٠١١٠٠١");
    Check_Value (R, Args.Format (3, "", "integer,b", Locale, False),
                    "١١١١١١١١١١١١١١١١١١١١١١١١١١١١١١١");
    Check_Value (R, Args.Format (4, "", "integer,b", Locale, False),
-                   "-١١١١١١١١١١١١١١١١١١١١١١١١١١١١١١١");
+                   "‎-١١١١١١١١١١١١١١١١١١١١١١١١١١١١١١١");
    Check_Value (R, Args.Format (0, "", "integer,b*", Locale, False),
                    "0");
    Check_Value (R, Args.Format (1, "", "integer,b*", Locale, False),

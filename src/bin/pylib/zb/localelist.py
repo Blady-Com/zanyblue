@@ -1,13 +1,11 @@
-#!/usr/bin/python -tt
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 
 """
-Representation of a list of locales: 
+Representation of a list of locales
 """
 
 import codecs
-import os
-import sys
 
 from copy import deepcopy
 from xml.dom import minidom
@@ -19,6 +17,14 @@ from .zbxmlsupp import parse_element
 
 _END_CLDR_DATA = "END-CLDR-DATA"
 _BEGIN_CLDR_DATA = "BEGIN-CLDR-DATA"
+
+
+def info(fmt, *args):
+    """
+    Print an informational message.
+    """
+    print unicode(fmt).format(*args)
+
 
 class LocaleList(object):
 
@@ -39,18 +45,16 @@ class LocaleList(object):
         self.numbering_systems = {}
         numberingfile = "common/supplemental/numberingSystems.xml"
         xmlfile = "{0}/{1}".format(self.cldr_dir, numberingfile)
-        print "Loading the numbering systems definitions from \"{0}\"".format(xmlfile)
+        info("Loading the numbering systems definitions from \"{0}\"", xmlfile)
         dom = self.load_dom(xmlfile)
-        parse_element(self.numbering_systems, dom,
-                           "{0}",
-                           [ { "name": "numberingSystem",
-                               "type": "numeric",
-                               "id": "#0",
-                               "digits": "*" },
-                             { "name": "numberingSystems", },
-                             { "name": "supplementalData", } ])
+        parse_element(self.numbering_systems, dom, "{0}", [
+            {"name": "numberingSystem", "type": "numeric",
+             "id": "#0", "digits": "*"},
+            {"name": "numberingSystems"},
+            {"name": "supplementalData"}
+        ])
         for name in self.numbering_systems.keys():
-            print "Loaded numbering system \"{0}\"".format(name)
+            info("Loaded numbering system \"{0}\"", name)
 
     def set_root_values(self, index):
         day_period_file = "common/supplemental/dayPeriods.xml"
@@ -68,14 +72,13 @@ class LocaleList(object):
         xmlfile = "{0}/common/main/{1}.xml".format(self.cldr_dir, name)
         dom = self.load_dom(xmlfile)
         if dom is None:
-            print "Skipping missing locale definition file \"{0}\"".format(xmlfile)
+            info("Skipping missing locale definition file \"{0}\"", xmlfile)
             return
         index = self.add_locale(name)
         locale = self.locales[index]
         n_defs = locale.parse(dom)
         if verbose:
-            print "Loaded {0} definitions from \"{1}\"".format(n_defs,
-                                                               xmlfile)
+            info("Loaded {0} definitions from \"{1}\"", n_defs, xmlfile)
         self.loaded_locales[name] = index
         return index
 
@@ -88,22 +91,22 @@ class LocaleList(object):
         fp.close()
         return minidom.parseString(xmldata.encode("utf-8"))
 
-    def find (self, level, l, s, t):
+    def find(self, level, l, s, t):
         name = "{0:<3}{1:<4}{2:<3}".format(l, s, t)
         for locale in self.locales:
             if locale.tag == name and locale.level < level:
                 return locale
         return None
 
-    def find_parent (self, name, level):
+    def find_parent(self, name, level):
         l, s, t = name[0:3], name[3:7], name[7:10]
-        return (self.find (level, l, s, "")
-               or self.find (level, l, "", t)
-               or self.find (level, l, "", "")
-               or self.find (level, "", "", ""))
+        return (self.find(level, l, s, "")
+               or self.find(level, l, "", t)
+               or self.find(level, l, "", "")
+               or self.find(level, "", "", ""))
 
     def resolve_locale_aliases(self, verbose):
-        print "Loading alias support locales"
+        info("Loading alias support locales")
         while True:
             alias_locales = []
             for locale in self.locales:
@@ -119,7 +122,9 @@ class LocaleList(object):
             alias = locale.get_value("naming/alias")
             if alias is not None:
                 parent = self.locales[self.loaded_locales[alias]]
-                print "Transferring aliased locale from \"{0}\" to \"{1}\"".format(parent.tag, locale.tag)
+                info("Transferring aliased locale from \"{0}\" to \"{1}\"",
+                    parent.tag, locale.tag
+                )
                 locale.locale_data = deepcopy(parent.locale_data)
 
     def resolve_locales(self, verbose):
@@ -129,18 +134,19 @@ class LocaleList(object):
         for i in range(1, 5):
             for locale in self.locales:
                 if locale.level == i:
-                    parent = self.find_parent (locale.tag, locale.level)
+                    parent = self.find_parent(locale.tag, locale.level)
                     if parent is not None:
                         n_resolutions += locale.resolve_locale(parent, verbose)
-        print "Resolved total of {0} items".format(n_resolutions)
+        info("Resolved total of {0} items", n_resolutions)
 
     def apply_numbering_systems(self):
         for locale in self.locales:
             system = locale.get_value('*numberingSystem')
             if system is not None:
                 value = self.numbering_systems[system]
-                print "Applying the numbering system \"{0}\" to locale \"{1}\"".format(system,
-                                                               locale.name)
+                info("Applying the numbering system \"{0}\" to locale \"{1}\"",
+                    system, locale.name
+                )
                 locale.set_value("naming/numeric/numericDigits", value)
                 locale.set_value("naming/numeric/nativeZeroDigit", value[0])
 
@@ -153,45 +159,55 @@ class LocaleList(object):
             if rules is not None:
                 locale.apply_day_period_rules(rules)
 
-    def embed(self, embed_name):
+    def write_code(self):
         strpool = StringPool()
         for ns in self.numbering_systems.keys():
-            print "Adding digits for \"{0}\" numbering system:".format(
-                  ns), self.numbering_systems[ns]
+            info("Adding digits for \"{0}\" numbering system: {1}",
+                  ns, self.numbering_systems[ns]
+            )
             strpool.index(self.numbering_systems[ns])
-        tmp_name = "{0}.zbtmp".format(embed_name)
-        wfp = codecs.open(tmp_name, "w", "utf-8")
-        rfp = codecs.open(embed_name, "r", "utf-8")
         for locale in self.locales:
             locale.apply_locale_fn(strpool.accumulate)
         strpool.resolve_strings()
         for locale in self.locales:
             locale.apply_locale_fn(strpool.index)
-        in_data_block = False
-        for line in rfp.readlines():
-            if _END_CLDR_DATA in line:
-                in_data_block = False
-            if not in_data_block:
-                wfp.write(line)
-            if _BEGIN_CLDR_DATA in line:
-                zbm_new_line(wfp)
-                zbm_write(wfp, ZBMSG0041, len(self.locales))
-                zbm_new_line(wfp)
-                last_index = len(self.locales) - 1
-                self.locales.sort(key=lambda l: l.tag)
-                for index, locale in enumerate(self.locales):
-                    locale.write(wfp, index + 1, strpool, index == last_index)
-                zbm_new_line(wfp)
-                strpool.write(wfp)
-                in_data_block = True;
-        wfp.close()
-        rfp.close()
-        os.remove(embed_name)
-        os.rename(tmp_name, embed_name)
-        print "Embedded locale data into the file \"{0}\"".format(embed_name)
+        self.locales.sort(key=lambda l: l.tag)
+        self.write_locale_data(strpool)
+        self.write_pool(strpool)
+        self.write_string_addresses(strpool)
         stored, saved = strpool.stats()
-        print "Stored {0} char, saved {1} char, {2:.2f}% savings".format(
-            stored, saved, 100.0*saved/(stored + saved))
+        info("Stored {0} char, saved {1} char, {2:.2f}% savings",
+            stored, saved, 100.0 * saved / (stored + saved)
+        )
+
+    def write_locale_data(self, strpool):
+        fp = codecs.open("zanyblue-text-locales-locale_data.adb", "w", "utf-8")
+        zbm_write(fp, ZBMSG1001, len(self.locales))
+        last_index = len(self.locales) - 1
+        for index, locale in enumerate(self.locales):
+            locale.write(fp, index + 1, strpool, index == last_index)
+        zbm_new_line(fp)
+        zbm_write(fp, ZBMSG1002, "Locale_Data")
+        fp.close()
+
+    def write_pool(self, strpool):
+        fp = codecs.open("zanyblue-text-locales-pool.adb", "w", "utf-8")
+        zbm_write(fp, ZBMSG1003)
+        strpool.write_pool(fp)
+        zbm_new_line(fp)
+        zbm_write(fp, ZBMSG1002, "Pool")
+        fp.close()
+
+    def write_string_addresses(self, strpool):
+        fp = codecs.open(
+            "zanyblue-text-locales-string_addresses.adb",
+            "w",
+            "utf-8"
+        )
+        zbm_write(fp, ZBMSG1004)
+        strpool. write_string_addresses(fp)
+        zbm_write(fp, ZBMSG1002, "String_Addresses")
+        fp.close()
 
     def write(self, fp, package):
         zbm_write(fp, ZBMSG0040, package)

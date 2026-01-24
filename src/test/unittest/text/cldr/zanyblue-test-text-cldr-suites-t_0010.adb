@@ -38,6 +38,6 @@ procedure T_0010 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    ru : constant Locale_Type := Make_Locale ("ru");
 
 begin
-   Check_Value (R, Script_Name ("Cyrl", Locale => ru), "Кириллица",
+   Check_Value (R, Script_Name ("Cyrl", Locale => ru), "кириллица",
                 "Script Name Cyrl/ru");
 end T_0010;

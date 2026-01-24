@@ -37,3 +37,4 @@ desc Test the zbtest delenv command
 run delenv01
 run delenv02
 run delenv03
+run delenv04

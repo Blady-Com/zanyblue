@@ -1,4 +1,6 @@
 <file include="defs.hti">
+<set page_title="ZanyBlue Project: Ada Electromagnetics Finite Elements">
+<set page_keywords="Ada, documentation">
 <file include="header.hti" name="Documentation">
 
 <file include="title.hti">

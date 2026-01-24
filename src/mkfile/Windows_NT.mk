@@ -44,20 +44,20 @@ PYTHON=python
 
 # This is a real hack to get the year and probably doesn't work on non-English
 # systems!
-CURRENT_YEAR=$(notdir $(lastword $(shell echo %DATE%)))
+CURRENT_YEAR=$(notdir $(lastword $(shell cmd.exe /c "date /t")))
 
 define COPY
-copy $(subst /,\,$1) $(subst /,\,$2)
+cmd.exe /c "copy $(subst /,\,$1) $(subst /,\,$2)"
 endef
 
 define DELETE
-del /f $(subst /,\,$1)
+cmd.exe /c "del /f $(subst /,\,$1)"
 endef
 
 define MKDIR
-mkdir $(subst /,\,$1)
+cmd.exe /c "mkdir $(subst /,\,$1)"
 endef
 
 define RMDIR
-rmdir /s /q $(subst /,\,$1)
+cmd.exe /c "rmdir /s /q $(subst /,\,$1)"
 endef

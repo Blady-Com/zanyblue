@@ -215,7 +215,7 @@ package body ZBMCompile.Parser_Handler is
          pragma Unreferenced (Raise_Errors);
       begin
          if not Handler.Unchecked then
-            Print_Line (ZBMCompile_Facility, "00028",
+            Print_Line (ZBMCompile_Facility, "E00011",
                         Argument0 => +File_Name,
                         Argument1 => +Line_Number,
                         Argument2 => +Key,
@@ -241,7 +241,7 @@ package body ZBMCompile.Parser_Handler is
 
       begin
          if not Handler.Unchecked then
-            Print_Line (ZBMCompile_Facility, "00029",
+            Print_Line (ZBMCompile_Facility, "E00012",
                         Argument0 => +File_Name,
                         Argument1 => +Line_Number,
                         Argument2 => +Key,
@@ -277,7 +277,7 @@ package body ZBMCompile.Parser_Handler is
          if Element (V_Handler.Arg_Types, Position) = "" then
             Replace_Element (V_Handler.Arg_Types, Position, Type_Category);
          elsif Element (V_Handler.Arg_Types, Position) /= Type_Category then
-            Print_Line (ZBMCompile_Facility, "00058",
+            Print_Line (ZBMCompile_Facility, "E00027",
                             +File_Name, +Line_Number, +Position,
                             +Element (V_Handler.Arg_Types, Position),
                             +Type_Category);
@@ -329,11 +329,8 @@ package body ZBMCompile.Parser_Handler is
       pragma Unreferenced (Facility);
       pragma Unreferenced (Locale);
    begin
-      Print_Line (ZBMCompile_Facility, "00014",
-                  Argument0 => +File_Name,
-                  Argument1 => +Current_Line,
-                  Argument2 => +Key,
-                  Argument3 => +Previous_Line);
+      Print_Line (ZBMCompile_Facility, "E00004",
+                  +File_Name, +Current_Line, +Key, +Previous_Line);
    end Duplicate_Key;
 
    -----------------------------
@@ -392,7 +389,7 @@ package body ZBMCompile.Parser_Handler is
       pragma Unreferenced (Facility);
       pragma Unreferenced (Ch);
    begin
-      Print_Line (ZBMCompile_Facility, "00059",
+      Print_Line (ZBMCompile_Facility, "E00028",
                   Argument0 => +File_Name,
                   Argument1 => +Current_Line);
    end Invalid_Character;
@@ -413,7 +410,7 @@ package body ZBMCompile.Parser_Handler is
       pragma Unreferenced (Locale);
 
    begin
-      Print_Line (ZBMCompile_Facility, "00013",
+      Print_Line (ZBMCompile_Facility, "E00003",
                   Argument0 => +File_Name,
                   Argument1 => +Current_Line,
                   Argument2 => +Additional_Info);

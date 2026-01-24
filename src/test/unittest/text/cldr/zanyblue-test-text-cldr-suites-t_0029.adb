@@ -44,7 +44,7 @@ procedure T_0029 (R : in out AUnit.Test_Cases.Test_Case'Class) is
                              Value        : Wide_String) is
    begin
       Check_Value (R, Language_Name (Abbreviation, Locale => fr), Value,
-                      "Expected: " & Value);
+                      "Mis-match for " & Abbreviation);
    end Check_Language;
 
 begin
@@ -68,7 +68,7 @@ begin
    Check_Language ("na", "nauruan");
    Check_Language ("oc", "occitan");
    Check_Language ("pa", "pendjabi");
-   Check_Language ("qu", "langue quechua");
+   Check_Language ("qu", "quechua");
    Check_Language ("raj", "rajasthani");
    Check_Language ("sa", "sanskrit");
    Check_Language ("ta", "tamoul");

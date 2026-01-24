@@ -38,6 +38,6 @@ procedure T_0007 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    ru : constant Locale_Type := Make_Locale ("ru");
 
 begin
-   Check_Value (R, Territory_Name ("US", Locale => ru), "США",
+   Check_Value (R, Territory_Name ("US", Locale => ru), "Соединенные Штаты",
                 "Territory Name US/ru");
 end T_0007;

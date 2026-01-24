@@ -9,12 +9,15 @@
         content="text/html; charset=utf-8"/>
   <meta http-equiv="Content-Language"
         content="en-us" />
+  <if page_title><meta name="title" contents="${page_title}"></if>
+  <if page_keywords><meta name="keywords" contents="${page_keywords}"></if>
+  <meta name="robots" contents="index, follow">
   <link rel="shortcut icon"
         type="image/x-icon"
-        href="/favicon.ico"/>
+        href="favicon.ico"/>
   <link rel="stylesheet"
         type="text/css"
-        href="/zanyblue.css"/>
+        href="zanyblue.css"/>
   <title>ZanyBlue: <use name></title>
 </head>
 

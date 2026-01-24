@@ -55,6 +55,12 @@ CLEAN_FILES+=$(wildcard bin/pylib/zb/*.pyc)
 CLEAN_FILES+=$(wildcard gnatcheck.out)
 CLEAN_FILES+=$(wildcard obj/*)
 CLEAN_FILES+=$(wildcard ../lib/b~*)
+CLEAN_FILES+=$(wildcard ../zanyblue-*)
+CLEAN_FILES+=$(wildcard ../doc/*.*)
+CLEAN_FILES+=$(wildcard ../doc/.htaccess)
+CLEAN_DIRS+=$(wildcard ../doc/zanyblue)
+CLEAN_DIRS+=$(STAGEDIR)
+CLEAN_DEPS+=../examples.clean
 
 # Include configuration definitions
 include $(TOP)/src/mkfile/conf.mk
@@ -76,6 +82,15 @@ website:
 
 changelog:
 	$(SRCDIR)/bin/mkchangelog
+
+distribution: clean all xcheck docs test.clean bundles website ws-bundle
+
+verify-distribution:
+	rm -rf $(STAGEDIR)
+	mkdir -p $(STAGEDIR)
+	tar -C $(STAGEDIR) -xvf $(DISTRIBUTION)
+	cd $(STAGEDIR); md5sum --check --quiet */MANIFEST.txt
+	cd $(DISTRIBDIR)/src; make distribution
 
 %.app:
 	$(MAKE) -C $*

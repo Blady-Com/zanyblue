@@ -38,6 +38,6 @@ procedure T_0006 (R : in out AUnit.Test_Cases.Test_Case'Class) is
    L : constant Locale_Type := Make_Locale ("ar");
 
 begin
-   Check_Value (R, Numeric_Item (L, Group_Character), ".",
+   Check_Value (R, Numeric_Item (L, Group_Character), ",",
                 "ar numeric grouping character");
 end T_0006;

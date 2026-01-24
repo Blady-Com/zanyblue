@@ -1,4 +1,4 @@
-This is ZBTest, Version [0-9]+.[0-9]+.[0-9]+ .* \(.*\) at .* on .*
+This is ZBTest, Version [0-9]+.[0-9]+.[0-9]+ .* \(.*\) on .* at .*
 Copyright \(c\) 2009-.*, Michael Rohan.  All rights reserved
 Setting the parameter "mydir" to the value ".*zbtest.commands.delete.delete02"
 Creating test area directory ".*test-area.test-area"
@@ -22,4 +22,4 @@ Generated status report on the file "xmpl" (non-existent) to "log3.log"
 Executing the "end scope" action: delete -r xmpl
 Warning, failed to delete "xmpl": "xmpl" not a directory
 Status for "zbtest.delete02": 0 failures, 0 OK
-ZBTest completed at .* on .*, elapsed time .*
+ZBTest completed on .* at .*, elapsed time .*

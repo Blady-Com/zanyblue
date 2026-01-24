@@ -34,7 +34,7 @@
 
 # Regeneration of the CLDR data
 TOP=../..
-ZBMCOMPILE=$(TOP)/bin/zbmcompile$E
+ZBMCOMPILE=$(realpath $(TOP)/bin/zbmcompile$E)
 CLDR2LOCALES=$(TOP)/src/bin/cldr2locales.py
 CLDR_PACKAGE=ZanyBlue.Text.CLDR_Data
 LOCALES_SOURCE=zanyblue-text-locales.adb

@@ -7,20 +7,14 @@
 
 <h1>Downloads</h1>
 
-The current release is v<use version> <use status>.  There are two source
-distributions available:
-<ol>
-  <li> Unix gzipped tar ball:
-       <a href="http://sourceforge.net/projects/zanyblue/files/${tarname}/download">
-         <use tarname>
+The current release is v<use version> <use status>.  The package is available
+as a Unix gzipped tar file (Windows users can use 7-Zip to extract):
+<ul>
+  <li> <a href="$downloadurl$tarname">
+         Latest Unix gzipped tar ball
        </a>
   </li>
-  <li> Windows zip:
-       <a href="http://sourceforge.net/projects/zanyblue/files/$zipname/download">
-         <use zipname>
-       </a>
-  </li>
-</ol>
+</ul>
 You can also browse
 <ul>
   <li>
@@ -30,7 +24,7 @@ You can also browse
   <li>
     Or checkout the latest Subversion source
 <pre>
-    $ svn co <use svnurl>
+    $ svn co <use svnurl> zanyblue
 </pre>
   </li>
 </ul>

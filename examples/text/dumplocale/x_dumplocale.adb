@@ -33,54 +33,32 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Containers;
 with Ada.Command_Line;
-with DL_Messages;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.Pseudo;
 with ZanyBlue.Text.Locales;
 with ZanyBlue.Text.Arguments;
 with ZanyBlue.Text.Formatting;
-with ZanyBlue.Text.Generic_Modulars;
-with ZanyBlue.Text.Generic_Enumerations;
+with ZanyBlue.Text.Version_Status_Arguments;
+with Definitions;
+with DL_Messages;
 
 procedure X_DumpLocale is
 
-   use Ada.Containers;
    use Ada.Command_Line;
    use ZanyBlue.Text;
    use ZanyBlue.Text.Locales;
    use ZanyBlue.Text.Arguments;
    use ZanyBlue.Text.Formatting;
-
-   package Hash_Type_Arguments is
-      new ZanyBlue.Text.Generic_Modulars (Hash_Type);
-   package Date_Time_Style_Arguments is
-      new ZanyBlue.Text.Generic_Enumerations (Date_Time_Style_Type);
-   package Day_Period_Arguments is
-      new ZanyBlue.Text.Generic_Enumerations (Day_Period_Type);
-   package Day_Arguments is
-      new ZanyBlue.Text.Generic_Enumerations (Day_Type);
-   package Era_Arguments is
-      new ZanyBlue.Text.Generic_Enumerations (Era_Type);
-   package Month_Arguments is
-      new ZanyBlue.Text.Generic_Enumerations (Month_Type);
-   package Numeric_Style_Arguments is
-      new ZanyBlue.Text.Generic_Enumerations (Numeric_Style_Type);
-   package Numeric_Item_Arguments is
-      new ZanyBlue.Text.Generic_Enumerations (Numeric_Item_Type);
-   package Text_Layout_Arguments is
-      new ZanyBlue.Text.Generic_Enumerations (Text_Layout_Type);
-
-   use Day_Arguments;
-   use Era_Arguments;
-   use Month_Arguments;
-   use Hash_Type_Arguments;
-   use Day_Period_Arguments;
-   use Text_Layout_Arguments;
-   use Numeric_Item_Arguments;
-   use Numeric_Style_Arguments;
-   use Date_Time_Style_Arguments;
+   use ZanyBlue.Text.Version_Status_Arguments;
+   use Definitions.Day_Arguments;
+   use Definitions.Era_Arguments;
+   use Definitions.Month_Arguments;
+   use Definitions.Hash_Type_Arguments;
+   use Definitions.Day_Period_Arguments;
+   use Definitions.Text_Layout_Arguments;
+   use Definitions.Numeric_Item_Arguments;
+   use Definitions.Numeric_Style_Arguments;
+   use Definitions.Date_Time_Style_Arguments;
 
    type Mode_Type is (Normal, Help);
 
@@ -129,6 +107,13 @@ procedure X_DumpLocale is
       Print_Line ("dl", "0007");
       for Period in Day_Period_Type loop
          Print_Line ("dl", "0003", +Period, +Day_Period_Name (Locale, Period));
+      end loop;
+      Print_Line ("dl", "0018");
+      for Hour in Integer range 0 .. 23 loop
+         Print_Line ("dl", "0019",
+            +Hour,
+            +Day_Period_For_Time (Locale, Hour, 0, 0),
+            +Day_Period_For_Time (Locale, Hour, 30, 0));
       end loop;
       Print_Line ("dl", "0008");
       for Era in Era_Type loop
@@ -191,6 +176,10 @@ procedure X_DumpLocale is
    Mode : Mode_Type := Normal;
 
 begin
+   Print_Line ("dl", "0000", +ZanyBlue.Version_Major,
+                             +ZanyBlue.Version_Minor,
+                             +ZanyBlue.Version_Patch,
+                             +ZanyBlue.Version_Status);
    Process_Command_Line (Mode);
    case Mode is
    when Normal =>

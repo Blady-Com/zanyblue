@@ -54,11 +54,11 @@ begin
    Append (List, +V3);
    Append (List, +V4);
    Check_Value (R, List.Format (0, "", "", Locale, False),
-                   "٥,٥٠٠٠٠٠٠٠٠٠٠٠٠٠E+٠١");
+                   "٥.٥٠٠٠٠٠٠٠٠٠٠٠٠٠E‎+٠١");
    Check_Value (R, List.Format (1, "", "", Locale, False),
-                   "٦,٦١٠٠٠٠٠٠٠٠٠٠٠٠E+٠١");
+                   "٦.٦١٠٠٠٠٠٠٠٠٠٠٠٠E‎+٠١");
    Check_Value (R, List.Format (2, "", "", Locale, False),
-                   "-٥,٥٠٠٠٠٠٠٠٠٠٠٠٠٠E+٠١");
+                   "‎-٥.٥٠٠٠٠٠٠٠٠٠٠٠٠٠E‎+٠١");
    Check_Value (R, List.Format (3, "", "", Locale, False),
-                   "-٦,٦١٠٠٠٠٠٠٠٠٠٠٠٠E+٠١");
+                   "‎-٦.٦١٠٠٠٠٠٠٠٠٠٠٠٠E‎+٠١");
 end T_0006;

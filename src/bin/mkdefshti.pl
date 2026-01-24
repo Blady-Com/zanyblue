@@ -11,8 +11,7 @@
 use strict;
 use FileHandle;
 
-#my $SFLOGO = "http://sflogo.sourceforge.net/sflogo.php?group_id=225351&amp;type=11";
-my $SFLOGO = "/favicon.ico";
+my $SFLOGO = "http://sflogo.sourceforge.net/sflogo.php?group_id=225351&amp;type=11";
 my $DOWNLOADURL = "http://sourceforge.net/projects/zanyblue/files/";
 my $TRACKERURL = "http://sourceforge.net/tracker/?group_id=225351";
 my $PROJECTURL = "http://sourceforge.net/projects/zanyblue/";
@@ -23,6 +22,8 @@ my $labelspl = shift (@ARGV) || Usage ();
 my $version = shift (@ARGV) || Usage ();
 my $status = shift (@ARGV) || Usage ();
 my $revision = shift (@ARGV) || Usage ();
+
+$SFLOGO = "/nosuchfile.jpg" if ($revision =~ /[MX]/);
 
 # The LaTeX2HTML generated "labels.pl" assumes the following variables
 # are already defined.
@@ -79,9 +80,11 @@ sub write_general_defs {
     write_def ($fh, "projecturl", $PROJECTURL);
     write_def ($fh, "svnurl", $SVNURL);
     write_def ($fh, "tarname", $tarname);
+    write_def ($fh, "downloadtar", "$DOWNLOADURL/$tarname");
     write_def ($fh, "zipname", $zipname);
     write_def ($fh, "version", $version);
     write_def ($fh, "status", $status);
+    write_def ($fh, "year", (localtime())[5] + 1900);
 }
 
 sub write_label_defs {

@@ -42,8 +42,8 @@ begin
                 "ar full date format");
    Check_Value (R, Date_Format (L, Long), "d MMMM، y",
                 "ar long date format");
-   Check_Value (R, Date_Format (L, Medium), "dd‏/MM‏/yyyy",
+   Check_Value (R, Date_Format (L, Medium), "dd‏/MM‏/y",
                 "ar medium date format");
-   Check_Value (R, Date_Format (L, Short), "d‏/M‏/yyyy",
+   Check_Value (R, Date_Format (L, Short), "d‏/M‏/y",
                 "ar short date format");
 end T_0006;

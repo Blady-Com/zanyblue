@@ -37,7 +37,6 @@ with Ada.Wide_Text_IO;
 with Ada.Command_Line;
 with Ada.Strings.Wide_Fixed;
 with ZanyBlue.Utils;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.Formatting;
 with ZanyBlue.Wide_Command_Line;
 with ZBTest.States;
@@ -47,7 +46,6 @@ with ZBTest_Messages.ZBTest_Wide_Prints;
 procedure ZBTest.Main is
 
    use Ada.Wide_Text_IO;
-   use ZanyBlue.OS;
    use ZanyBlue.Text;
    use ZanyBlue.Utils;
    use ZanyBlue.Text.Formatting;
@@ -133,6 +131,7 @@ procedure ZBTest.Main is
       while Index <= Wide_Argument_Count loop
          Handle_Argument (Wide_Argument (Index), Index);
       end loop;
+      State.Set_Boolean ("_xml_p", State.Is_Defined ("_xml_file"));
    end Process_Command_Line;
 
    Start_Time : Ada.Calendar.Time;
@@ -143,9 +142,7 @@ begin
    Start_Time := Banner ("ZBTest");
    State.Define_Initial_Parameters;
    Process_Command_Line (State);
-   if not State.Is_Defined ("_xml_file") then
-      State.Set_String ("_xml_file", State.Get_String ("_testname") & ".xml");
-   end if;
+   Define_XML_Initial_Parameters (State);
    if not State.Get_Boolean ("_terminate") then
       State.Setup_Test_Area;
       if State.Is_Defined ("_testscript") then
@@ -154,7 +151,7 @@ begin
          State.Read_Eval_Loop (Standard_Input, True);
       end if;
    end if;
-   State.Write_XML_Report (State.Get_String ("_xml_file"));
+   State.Write_XML_Report;
    Trailer ("ZBTest", Start_Time);
 exception
 when E : Usage_Error =>

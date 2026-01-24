@@ -91,21 +91,10 @@ package ZBMCompile is
    --  success, False for failure.
 
    function Select_Message (Condition  : Boolean;
-                            True_Id    : Message_Id_Type;
-                            False_Id   : Message_Id_Type)
-      return Message_Id_Type;
+                            True_Id    : Wide_String;
+                            False_Id   : Wide_String) return Wide_String;
    --  Depending on Condition, return either the true or false message
    --  id.  This is a simple utility function.
-
-   procedure Print_If (Condition  : in Boolean;
-                       Facility   : in Wide_String;
-                       Key        : in Wide_String;
-                       Argument0  : in Argument_Type'Class := Null_Argument;
-                       Argument1  : in Argument_Type'Class := Null_Argument;
-                       Argument2  : in Argument_Type'Class := Null_Argument;
-                       Argument3  : in Argument_Type'Class := Null_Argument;
-                       Argument4  : in Argument_Type'Class := Null_Argument);
-   --  Print a message if the given condition is true.
 
    procedure Print_If (Condition  : in Boolean;
                        File       : in File_Type;

@@ -51,11 +51,11 @@ procedure T_0015 (R : in out AUnit.Test_Cases.Test_Case'Class) is
 
 begin
    Check_Value (R, Arg1.Format ("float", "*=6.2f", ar),
-                   "٥٥٠,٠٠");
+                   "٥٥٠.٠٠");
    Check_Value (R, Arg2.Format ("float", "*=6.2f", ar),
-                   "٦٦١,٠٠");
+                   "٦٦١.٠٠");
    Check_Value (R, Arg3.Format ("float", "*=6.2f", ar),
-                   "-٥٥٠,٠٠");
+                   "‎-٥٥٠.٠٠");
    Check_Value (R, Arg4.Format ("float", "*=6.2f", ar),
-                   "-٦٦١,٠٠");
+                   "‎-٦٦١.٠٠");
 end T_0015;

@@ -61,11 +61,11 @@ begin
    Check_Value (R, Args.Format (1, "", "integer,X", Locale, False),
                    "٧D٩");
    Check_Value (R, Args.Format (2, "", "integer,X", Locale, False),
-                   "-٧D٩");
+                   "‎-٧D٩");
    Check_Value (R, Args.Format (3, "", "integer,X", Locale, False),
                    "٧FFFFFFF");
    Check_Value (R, Args.Format (4, "", "integer,X", Locale, False),
-                   "-٧FFFFFFF");
+                   "‎-٧FFFFFFF");
    Check_Value (R, Args.Format (0, "", "integer,X*", Locale, False),
                    "0");
    Check_Value (R, Args.Format (1, "", "integer,X*", Locale, False),

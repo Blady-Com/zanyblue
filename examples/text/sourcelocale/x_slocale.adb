@@ -37,14 +37,15 @@ with Ada.Calendar;
 with Ada.Command_Line;
 with ZanyBlue.Text.Pseudo;
 with ZanyBlue.Text.Locales;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.Formatting;
+with ZanyBlue.Text.Version_Status_Arguments;
 with SLocale_Messages.Day_Wide_Prints;
 
 procedure X_SLocale is
 
    use Ada.Calendar;
    use ZanyBlue.Text.Formatting;
+   use ZanyBlue.Text.Version_Status_Arguments;
    use SLocale_Messages.Day_Wide_Prints;
 
    procedure Process_Command_Line;
@@ -80,9 +81,11 @@ procedure X_SLocale is
    Now : constant Time := Clock;
 
 begin
+   Print_0001 (+ZanyBlue.Version_Major, +ZanyBlue.Version_Minor,
+               +ZanyBlue.Version_Patch, +ZanyBlue.Version_Status);
    Process_Command_Line;
    Enable_Source_Locales;
-   Print_0001 (+Now);
-   Disable_Source_Locales;
    Print_0002 (+Now);
+   Disable_Source_Locales;
+   Print_0003 (+Now);
 end X_SLocale;

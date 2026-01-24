@@ -37,9 +37,9 @@ with Ada.Exceptions;
 with Ada.Command_Line;
 with ZanyBlue.OS;
 with ZanyBlue.Utils;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Text.Formatting;
 with ZBMCompile.Messages;
+with ZBMCompile.Message_Filter;
 
 procedure ZBMCompile.Main is
 
@@ -50,8 +50,9 @@ procedure ZBMCompile.Main is
    use ZanyBlue.Text;
    use ZanyBlue.Text.Formatting;
    use ZBMCompile;
+   use ZBMCompile.Message_Filter;
 
-   Usage : exception;
+   Usage   : exception;
 
    procedure Process_Command_Line (Options : in out Parameter_Set_Type);
    --  Process the command line arguments.
@@ -81,7 +82,7 @@ procedure ZBMCompile.Main is
       begin
          Index := Index + 1;
          if Index > Argument_Count then
-            Raise_Exception (Usage'Identity, ZBMCompile_Facility, "00016",
+            Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00001",
                              Argument0 => +Ch);
          end if;
          return From_UTF8 (Argument (Index));
@@ -97,7 +98,7 @@ procedure ZBMCompile.Main is
          return Natural'Wide_Value (Buffer);
       exception
       when Constraint_Error =>
-         Raise_Exception (Usage'Identity, ZBMCompile_Facility, "00053",
+         Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00024",
                           Argument0 => +Buffer);
       end Get_Option_Value;
 
@@ -112,7 +113,7 @@ procedure ZBMCompile.Main is
             end if;
          end loop;
          Raise_Exception (Usage'Identity,
-                          ZBMCompile_Facility, "00055",
+                          ZBMCompile_Facility, "E00025",
                           Argument0 => +Type_Name);
       end Set_Accessor_Type;
 
@@ -153,7 +154,7 @@ procedure ZBMCompile.Main is
                Seen_a_Option := True;
                if Seen_G_Option then
                   Raise_Exception (Usage'Identity,
-                                   ZBMCompile_Facility, "00057");
+                                   ZBMCompile_Facility, "E00026");
                end if;
             elsif Value = "-B" then
                Options.Set_Boolean ("base_locale", True);
@@ -175,7 +176,7 @@ procedure ZBMCompile.Main is
                Seen_G_Option := True;
                if Seen_a_Option then
                   Raise_Exception (Usage'Identity,
-                                   ZBMCompile_Facility, "00057");
+                                   ZBMCompile_Facility, "E00026");
                end if;
             elsif Value = "-i" then
                Options.Set_Boolean ("body_initialize", True);
@@ -204,7 +205,7 @@ procedure ZBMCompile.Main is
                begin
                   if not Options.Is_Defined (Target & "_size") then
                      Raise_Exception (Usage'Identity,
-                                      ZBMCompile_Facility, "00052",
+                                      ZBMCompile_Facility, "E00023",
                                       Argument0 => +Target);
                   end if;
                   Options.Set_Integer (Target & "_size",
@@ -218,8 +219,9 @@ procedure ZBMCompile.Main is
                Options.Set_Boolean ("use_export_name", True);
                Options.Set_String ("export_name", Get_Option_Value ('x'));
             elsif Value'Length > 0
-              and then Value (Value'First) = '-' then
-               Raise_Exception (Usage'Identity, ZBMCompile_Facility, "00044",
+              and then Value (Value'First) = '-'
+            then
+               Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00020",
                                 Argument0 => +Value);
             elsif not Options.Is_Defined ("package") then
                Options.Set_String ("package", From_UTF8 (Value));
@@ -233,17 +235,17 @@ procedure ZBMCompile.Main is
       end loop;
       if not Options.Is_Defined ("package") then
          Raise_Exception (Usage'Identity,
-                          ZBMCompile_Facility, "00017");
+                          ZBMCompile_Facility, "E00006");
       end if;
       if Options.Get_Integer ("n_facilities") = 0 then
          Raise_Exception (Usage'Identity,
-                          ZBMCompile_Facility, "00018");
+                          ZBMCompile_Facility, "E00007");
       end if;
       if Options.Get_Boolean ("disable_checks")
         and then Options.Get_Boolean ("generate_accessors")
       then
          Raise_Exception (Usage'Identity,
-                          ZBMCompile_Facility, "00036");
+                          ZBMCompile_Facility, "E00016");
       end if;
       if not Options.Get_Boolean ("base_locale")
         and then not Options.Is_Defined ("locales")
@@ -253,9 +255,18 @@ procedure ZBMCompile.Main is
       if Options.Get_Boolean ("debug") then
          Options.Dump (Standard_Output);
       end if;
+      if Options.Get_Boolean ("debug") then
+         Filters.Output_Level := Debug;
+      elsif Options.Get_Boolean ("verbose") then
+         Filters.Output_Level := Verbose;
+      elsif Options.Get_Boolean ("quiet") then
+         Filters.Output_Level := Quiet;
+      else
+         Filters.Output_Level := Normal;
+      end if;
    exception
    when E : others =>
-      Raise_Exception (Usage'Identity, ZBMCompile_Facility, "00051",
+      Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00022",
                        Argument0 => +E);
    end Process_Command_Line;
 
@@ -264,24 +275,21 @@ procedure ZBMCompile.Main is
 
 begin
    ZBMCompile.Messages.Initialize;
+   Set_Filter (Filters'Access);
    Options.Set_Name ("OPTIONS");
    Process_Command_Line (Options);
-   if not Options.Get_Boolean ("quiet") then
-      Start_Time := Banner ("zbmcompile");
-   end if;
+   Start_Time := Banner (ZBMCompile_Facility, "I00001", "I00002");
    if ZBMCompile.Process (Options) then
       Set_Exit_Status (Success);
    else
       Set_Exit_Status (Failure);
    end if;
-   if not Options.Get_Boolean ("quiet") then
-      Trailer ("zbmcompile", Start_Time);
-   end if;
+   Trailer (ZBMCompile_Facility, Start_Time, "I00003");
 exception
 when E : Usage =>
-   Start_Time := Banner ("zbmcompile");
-   Print_Line ("zbmcompile", "00019",
+   Start_Time := Banner (ZBMCompile_Facility, "I00001", "I00002");
+   Print_Line (ZBMCompile_Facility, "E00008",
                Argument0 => +Exception_Message (E));
-   Print_Line ("zbmcompile", "00004");
+   Print_Line (ZBMCompile_Facility, "E00002");
    Set_Exit_Status (Failure);
 end ZBMCompile.Main;

@@ -1,5 +1,5 @@
 <file include="defs.hti">
-<file include="header.hti" name="Examples">
+<file include="header.hti" name="Examples<!-- TITLE -->">
 
 <file include="title.hti">
 
@@ -10,7 +10,7 @@ The simple text example application can be executed from this page.  These
 are the example the generate text to standard output and do not require input.
 <p />
 The examples that require input and the Gtk based examples, in particular the
-patched version of GPS 5.0.1, are not available via this interface.  The
+patched version of GPS 5.2.1, are not available via this interface.  The
 distribution bundle should be downloaded and built for these examples.
 <p />
 Please note, some of the examples, especially when pseudo-translation is
@@ -20,12 +20,15 @@ enabled on a system with the required fonts.
 <p />
 Please select an example:
 <form method="POST" name="examples" action="">
+<label for="application">Example:</label>
 <select name="application">
 <!-- EXAMPLE_OPTIONS -->
 </select>
+<label for="locale">Locale:</label>
 <select name="locale">
 <!-- LANGUAGE_OPTIONS -->
 </select>
+<label for="pseudo"><a href="${sec:pseudo-translation:url}">Pseudo-Translation:</a></label>
 <select name="pseudo">
 <!-- PSEUDO_OPTIONS -->
 </select>

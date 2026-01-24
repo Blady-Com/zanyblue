@@ -33,7 +33,6 @@
 --
 
 with AUnit.Run;
-with ZanyBlue.OS.Ld_Run_Path;
 with ZanyBlue.Test;
 with ZanyBlue.Test.Text.Locales.Decimal_Formats.Suites;
 

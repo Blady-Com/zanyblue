@@ -50,6 +50,7 @@ LABELSPL=$(TOP)/doc/zanyblue/labels.pl
 DOCSUBSTFLAGS+=ZB_VERSION=$(VERSION)
 DOCSUBSTFLAGS+=ZB_STATUS=$(V_STATUS)
 DOCSUBSTFLAGS+=SVN_VERSION=$(SVN_VERSION)
+DOCSUBSTFLAGS+=COPYRIGHT_YEAR=$(COPYRIGHT_YEAR)
 ZBFILES+=$(patsubst $(INCDIR)/%,%,$(wildcard $(INCDIR)/*.ads))
 CLEAN_FILES+=$(wildcard *.aux)
 CLEAN_FILES+=$(wildcard *.log)
@@ -64,14 +65,18 @@ CLEAN_FILES+=$(wildcard *.out)
 CLEAN_FILES+=$(wildcard *.pdf)
 CLEAN_FILES+=$(wildcard zbdefs.tex)
 CLEAN_FILES+=$(wildcard $(TOP)/NOTICES.txt)
-CLEAN_FILES+=$(wildcard $(TOP)/src/doc/website/notices.htp)
+CLEAN_FILES+=$(wildcard website/notices.htp)
+CLEAN_FILES+=$(wildcard website/ganalytics.hti)
 CLEAN_FILES+=$(wildcard $(DEFSHTI))
 
 all::	pdffile html notices $(DEFSHTI)
 	cp zanyblue.pdf $(DOCDIR)/zanyblue.pdf
 
-defs $(DEFSHTI):	$(LABELSPL)
+defs defs.hti $(DEFSHTI):	$(LABELSPL)
 	$(MKDEFSHTI) $(DEFSHTI) $(LABELSPL) $(VERSION) $(V_STATUS) $(SVN_VERSION)
+
+$(LABELSPL):
+	$(error Please compile the LaTeX docs first)
 
 pdffile:	zbdefs.tex
 	pdflatex zanyblue.tex

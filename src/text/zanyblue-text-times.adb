@@ -61,6 +61,10 @@ package body ZanyBlue.Text.Times is
    --------------------
    -- Compose_Values --
    --------------------
+   --
+   --  Since the values composed are already formatted, the quote characters
+   --  in the format string can simply be ignored.
+   --
 
    function Compose_Values (Format_String : in Wide_String;
                             Date_String   : in Wide_String;
@@ -72,18 +76,19 @@ package body ZanyBlue.Text.Times is
       I      : Positive := Format_String'First;
 
    begin
+      Debug;
       while I <= Last loop
-         if I <= Last - 2 then
-            if Format_String (I .. I + 2) = "{0}" then
-               Append (Result, Date_String);
-               I := I + 2;
-            elsif Format_String (I .. I + 2) = "{1}" then
-               Append (Result, Time_String);
-               I := I + 2;
-            else
-               Append (Result, Format_String (I));
-            end if;
-         else
+         if I <= Last - 2
+           and then Format_String (I .. I + 2) = "{0}"
+         then
+            Append (Result, Time_String);
+            I := I + 2;
+         elsif I <= Last - 2
+           and then Format_String (I .. I + 2) = "{1}"
+         then
+            Append (Result, Date_String);
+            I := I + 2;
+         elsif Format_String (I) /= ''' then
             Append (Result, Format_String (I));
          end if;
          I := I + 1;
@@ -239,6 +244,7 @@ package body ZanyBlue.Text.Times is
                           TZ_Offset     : in Time_Offset;
                           Locale        : in Locale_Type) return Wide_String is
 
+      Quote_Ch : constant Wide_Character := ''';
       Year     : Year_Number;
       Month    : Month_Number;
       Day      : Day_Number;
@@ -263,7 +269,7 @@ package body ZanyBlue.Text.Times is
          Ch := Format_String (Position);
          Position := Position + 1;
          if Quoted then
-            if Ch = ''' then
+            if Ch = Quote_Ch then
                Quoted := False;
             else
                Add (Buffer, Ch);
@@ -368,7 +374,7 @@ package body ZanyBlue.Text.Times is
                                 (abs Integer (TZ_Offset)) mod 60,
                                 Locale,
                                 Width => 2);
-            when ''' =>
+            when Quote_Ch =>
                Quoted := True;
             when others =>
                Add (Buffer, Ch);

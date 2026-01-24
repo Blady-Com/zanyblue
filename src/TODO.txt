@@ -1,7 +1,3 @@
-* Add ability to disable built-in locales, e.g., if an app support en and fr
-  disable any non-en, non-fr locales to prevent mixed language outputs.
-* Investigate BiDi issues, e.g., "make run_ar" or "make run_he" for
-  the examples/text/gtk directory.
 * Should CLDR defined defaults be applied to locales?  E.g., the set currently
   defined by the CLDR data (see cldr/common/supplemental/likelySubtags.xml) is
       az_AZ=az_Latn_AZ
@@ -36,3 +32,6 @@
       zh_SG=zh_Hans_SG
       zh_TW=zh_Hant_TW
   Maybe via an "normalize locale" routine?
+* Should regions be handled, e.g., es_149 would cover Latin America.  Would
+  need to determine if the current territory, e.g., AR, is with the region
+  defined by 419.
