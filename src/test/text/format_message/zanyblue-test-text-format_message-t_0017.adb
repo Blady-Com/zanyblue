@@ -1,0 +1,50 @@
+--
+--  ZanyBlue, an Ada library and framework for finite element analysis.
+--  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
+--
+--  This program is free software; you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation; either version 2 of the License, or
+--  (at your option) any later version.
+--
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with this program; if not, write to the Free Software
+--  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+--
+
+with ZanyBlue.Text.Strings;
+
+separate (ZanyBlue.Test.Text.Format_Message)
+procedure T_0017 (R : in out AUnit.Test_Cases.Test_Case'Class) is
+
+   use ZanyBlue.Text.Strings;
+
+   function Format (Text : Wide_String;
+                    Arg1 : Argument_Type'Class;
+                    Map  : Pseudo_Map_Access) return Wide_String;
+
+   function Format (Text : Wide_String;
+                    Arg1 : Argument_Type'Class;
+                    Map  : Pseudo_Map_Access) return Wide_String is
+      Locale    : constant Locale_Type := Make_Locale ("en_US");
+      Arguments : Argument_List;
+   begin
+      Arguments.Append (Arg1);
+      return Format_Message (Text, Arguments, Map, Locale, False);
+   end Format;
+
+   Mapping : Pseudo_Map_Access;
+   Value   : constant String := "xyz";
+
+begin
+   Mapping := new Pseudo_Map_Type;
+   Add_Mapping (Mapping.all, Halfwidth_Forms_Map);
+   Check_Value (R, Format ("This is a test: {0}", +Value, Mapping),
+                "⬖Ｔｈｉｓ ｉｓ ａ ｔｅｓｔ： «xyz»⬗",
+                "Format with pseudo translation");
+end T_0017;

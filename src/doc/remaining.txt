@@ -1,0 +1,360 @@
+The explanation of this listing is
+\begin{enumerate}
+\item Line 1 includes the standard \lstinline|Ada.Wide_Text_IO| package for
+\Findex{Ada!Wide\_Text\_IO}
+      input procedures and functions (\lstinline|ZanyBlue.Text| only supplies
+      output procedures).
+\item Line 2 includes the generated package containing the message strings
+      for this \texttt{moons} application.
+\item Line 3 includes the \lstinline|ZanyBlue.Text.Formatting| package which
+\Findex{ZanyBlue!Text!Formatting}
+      is primary text formatting package
+      containing the definition for the standard output procedures
+      \lstinline|Print_Line|\Findex{ZanyBlue!Text!Formatting!Print\_Line}
+      \Findex{Print\_Line}
+      and
+      \lstinline|Print|\Findex{ZanyBlue!Text!Formatting!Print}\Findex{Print}
+      and the general
+      \lstinline|Format|\Findex{ZanyBlue|Text|Formatting|Format}\Findex{Format}
+      function.
+\item Line 4 includes the \lstinline|ZanyBlue.Text.Generic_Enumerations|
+      \Findex{ZanyBlue!Text!Generic\_Enumerations} package which, similiar to
+      the standard \lstinline|Wide_Text_IO| package, is a generic package used
+      to handle the output and formatting of enumeration types.  The planet
+      names in this example is defined as a simple enumeration type.
+\item Lines 8--24 is straightforward code defining the planet enumeration
+      type, it's IO packages, a table of the number of moons associated with
+      each planet and a local variable for user input.
+\item Line 28 prints the localized prompt asking the user for the planet name.
+      This is defined externally in the \texttt{moons.properties} file with the
+      key value ``\texttt{0001}.''  The key is a simple name, but the
+      \lstinline|ZanyBlue| code and this document normally used numeric style
+      strings.
+\item Line 29 is the standard \lstinline|Ada.Wide_Text_IO| generic input
+      procedure call for the planet enumeration type.  Note, the Zany Blue
+      text package only provided output functionality.
+\item The message printed giving the number of moons depends on whether or
+      not the requested moon has one moon (singular message string) or
+      zero/multiple moons (plural message string).  This line 31 for the
+      plural message and line 34 for singular message.
+\item Line 40 is a simple ``good bye'' message. 
+\end{enumerate}
+
+The example source does not include the text of the strings printed.  These
+are defined in external ``\texttt{.properties}'' files, one file for each
+supported locale, which need to be compiled into an Ada source package using the
+\texttt{zbmcompile}\Findex{zbmcompile} ZanyBlue utility.
+
+The format of the properties files follows the Java syntax for such files:
+\begin{itemize}
+\item	Comments are introduced using the `\lstinline|#|' character.
+\item	Message are defined on a single line as a key name and message string
+        pair separated by the `\lstinline|=|' character.  The standard C/Java
+        convention of continuing lines by using the `\lstinline|\|' character
+        as the last character on a line is supported.
+\item	Non ASCII characters are reference using the synax `\lstinline|\uWXYZ|'
+        syntax where `\lstinline|WXYZ|' is the four digit hexadecimal value
+        for the Unicode character to include.
+\item	Message arguments are referenced by including the argument index in
+	braces.  Message indexes start at zero.  E.g., the text of argument
+        three in the message text is references as `\lstinline|{2}|'.
+\end{itemize}
+
+For the \texttt{moons} example, there are only four messsages defined, three of
+which contain references arguments.  The source for this file,
+``\texttt{moons.properties}'' is
+\begin{small}
+\begin{quote}
+\begin{verbatim}
+# Messages used by the moon application
+0001=Please enter a planet: 
+0002=There are {0} known moons orbiting "{1}".
+0003=There is 1 known moon orbiting "{0}".
+0004=OK, goodbye.
+\end{verbatim}
+\end{quote}
+\end{small}
+This is the properties file corresponding to the base locale, if no other locale
+specific file matches the current locale, the contents of the base locale are used.
+In this case, the base locale corresponds to English.
+
+To support additional locales, the base locale's \texttt{.properties} file is
+translated (or localized).  The locale name is included in the file name using
+the ISO abbreviation for the language and, optionally, the ISO abbreviation for
+the territory.  E.g., the French localization for the example application would
+be stored in the file ``\texttt{moons\_fr.properties}.  If a more customized
+localization were required for Canadian French, then it would be stored in the
+file ``\texttt{moons\_fr\_CA.properties}.''
+
+The \texttt{zbmcompile} utility generates an Ada package containing the localized
+messages defined by a set of \texttt{.properties} files.  The utility requires the
+name of Ada package to generate and the base name (or facility name) of the
+\texttt{.properties} files.  For the \texttt{moons} example, the example source
+includes the package ``\lstinline|Moons_Messages|'', which is the package the
+\texttt{zbmcompile} utility should generate.  The facility is ``\texttt{moons}''.
+The generation of the package is simply,
+\begin{small}
+\begin{verbatim}
+$ zbmcompile -i -v Moons_Messages moons
+This is ZBMCompile, Version 0.1.0 ALPHA (r1026) at 08:49:56 on 5/12/2010
+Copyright (c) 2009-2010, Michael Rohan.  All rights reserved
+Loaded 16 messages for the facility "moons" (4 locales)
+Loaded 1 facilities, 4 keys, 4 locales and 16 messages
+Generated source spec file "moons_messages.ads"
+Generated source body file "moons_messages.adb"
+ZBMCompile completed at 08:49:56 on 5/12/2010, elapsed time 0:00:00.194
+\end{verbatim}
+\end{small}
+The ``\texttt{-i}'' \texttt{zbmcompile} option causes a a call to the
+``\lstinline|Initialize|'' to be included in the generated body (simply
+with'ing the spec is sufficient to initialize the messages) and the
+``\texttt{-v}'' option enables verbose mode which prints some additional
+\texttt{zbmcompile} status messages.
+
+With the message sources generated, the moons application can be built.  The
+utility \texttt{zbconfig}\Findex{zbconfig} can used to print the compilation
+and linking options needed to build againt the ZanyBlue libraries.  This
+utility takes the standard options used by such config utilities:
+\begin{description}
+\item[\texttt{--cflags}] Print the flags to use when compiling.
+\item[\texttt{--libs}]      Print the libraries to link against
+\item[\texttt{--bflags}]    Print the flags to use when building ZanyBlue
+\item[\texttt{--version}]   Print the ZanyBlue version information
+\item[\texttt{--vnumber}]   Print the ZanyBlue version number
+\item[\texttt{--vstatus}]   Print the ZanyBlue version number
+\item[\texttt{--vscm}]      Print the ZanyBlue source control number
+\end{description}
+Normally, only the `\texttt{--cflags}'' and ``\texttt{--libs}'' are used to
+build applications.  The ``\texttt{--bflags}'' includes the stricter GNAT
+compiler options used when build the ZanyBlue libraries, e.g., enforce source
+code style checks, treat warnings as errors, etc.
+
+For the \texttt{moons} application, the build command line is (on an
+Ubunutu system):
+\begin{small}
+\begin{verbatim}
+$ CFLAGS=`zbconfig --cflags`
+$ LIBS=`zbconfig --libs`
+$ gnatmake $CFLAGS` -gnatW8 -gnat05 moons -largs $LIBS
+gcc-4.4 -c -I/usr/zb/include -gnatW8 -gnat05 moons.adb
+gcc-4.4 -c -I/usr/zb/include -gnatW8 -gnat05 moons_messages.adb
+gnatbind -aO/usr/zb/include -aI/usr/zb/include -x moons.ali
+gnatlink moons.ali -L/usr/zb/lib -lzanyblue -lzb3rd
+\end{verbatim}
+\end{small}
+
+The localized application ``\texttt{moons}'' has been generated.  The
+example directory contains localized versions of the messages for the
+languages German (\texttt{de}), French (\texttt{fr}) and Spanish (\texttt{es})
+generated using Google Translate.  The language used for messages is
+controlled by the environment variable \lstinline|ZB_LANG| or, if that
+is not defined, the variable \lstinline|LANG|.
+
+Typical interactions with the ``\texttt{moons}'' application:
+\begin{itemize}
+\item	Running in the default locale, e.g., \lstinline|en_US|:
+\begin{quote}
+\begin{small}
+\begin{verbatim}
+$ moons
+Please enter a planet: mars
+There are 2 known moons orbiting "MARS".
+Please enter a planet: earth
+There is 1 known moon orbiting "EARTH".
+Please enter a planet: jupiter
+There are 63 known moons orbiting "JUPITER".
+Please enter a planet: 
+OK, goodbye.
+\end{verbatim}
+\end{small}
+\end{quote}
+\item	Running in a German locale:
+\begin{quote}
+\begin{small}
+\begin{verbatim}
+$ ZB_LANG=de ./moons
+Bitte geben Sie einen Planeten: mars
+Es gibt 2 bekannte Monde umkreisen "MARS".
+Bitte geben Sie einen Planeten: jupiter
+Es gibt 63 bekannte Monde umkreisen "JUPITER".
+Bitte geben Sie einen Planeten: 
+OK, auf Wiedersehen.
+\end{verbatim}
+\end{small}
+\end{quote}
+\end{itemize}
+
+A more involved example would allow the localization of the planet
+names.
+
+\section{The zbmcompile Utility}
+
+The \texttt{zbmcompile} utility, as seen in the example, is used to
+generate the Ada source for the application messages.  The simplest
+usage gives the name of the Ada package to generate and the the name
+of the facility which corresponds to the file name for the messages
+without the \texttt{.properties} extension.  From the \texttt{moons}
+example, the command line is
+\begin{quote}
+\begin{small}
+\begin{verbatim}
+$ zbmcompile Moons_Messages moons
+\end{verbatim}
+\end{small}
+\end{quote}
+The Ada package name is used as is preserving casing in the generated
+sources and all \texttt{.properties} files corresponding the the
+\texttt{moons} facility are included.
+
+The generated source files follow the GNAT naming conventions with
+package separators (periods) replaced with dashes and the package
+name converted to lower case.  The extension \texttt{.ads} is used
+for the package specification file and the extension \texttt{.adb}
+is used for the package body.
+
+For the \texttt{moons} example, the generated source files are
+\begin{enumerate}
+\item \texttt{moons\_messages.ads} for the package specification.
+\item \texttt{moons\_messages.adb} for the package body.
+\end{enumerate}
+
+The argument to the message, referred to in the message text as 
+\lstinline|"{0}"|,
+is included in the \lstinline|Put_Line| procedure call by using the
+\lstinline|ZanyBlue|
+supplied unitary function \lstinline|"+"|.  This function is simply a renaming
+of the
+various \lstinline|Create|
+\Findex{ZanyBlue!Text\_IO!Create}
+\Findex{ZanyBlue!Arguments!Create}
+functions for different parameter types, e.g., as in this
+case, \lstinline|Integers|, or \lstinline|Strings| or \lstinline|Wide_Strings|,
+etc.  The \lstinline|Put_Line|
+convenience
+procedures
+defined by the \lstinline|Text_IO| package define up to ten parameters.
+If more than ten parameters are needed, the lower level
+\lstinline|Argument_List|
+\Findex{ZanyBlue!Text!Arguments!Argument\_List}
+style \lstinline|Put_Line| procedures need to be used.
+
+The standard types have \lstinline|"+"| function definitions in the
+\lstinline|ZanyBlue.Text_IO| package:
+\Findex{ZanyBlue!Text\_IO}
+\begin{lstlisting}[frame=single]
+package ZanyBlue.Text_IO is
+
+   function "+" (String_Value : String) return ...;
+   function "+" (Wide_Value : Wide_String) return ...;
+   function "+" (Float_Value : Float) return ...;
+   function "+" (Integer_Value : Integer) return ...;
+   function "+" (Time_Value : Ada.Calendar.Time) return ...;
+   function "+" (Duration_Value : Duration) return ...;
+   function "+" (Value : Character) return ...;
+   function "+" (Wide_Value : Wide_Character) return ...;
+   function "+" (Boolean_Value : Boolean) return ...;
+
+end ZanyBlue.Text_IO;
+\end{lstlisting}
+
+For enumeration types, the generic \lstinline|Text| package
+\lstinline|Generic_Enumerations| can be used, e.g.,
+\Findex{ZanyBlue!Text!Generic\_Enumerations}
+\begin{lstlisting}[frame=single]
+type Colour is (Red, Orange, Yellow, Green
+                Blue, Indigo, Violet);
+
+package Colour_Arguments is
+   new ZanyBlue.Text.Generic_Enumerations (Colour);
+\end{lstlisting}
+
+To access the messages defined by a properties file, e.g.
+\texttt{xmpl.properties}, the application has two choices:
+\begin{enumerate}
+\item Compile the properties files into Ada source and compile in the
+      text strings using the \texttt{zbmcompile}
+      \Findex{zbmcompile}
+      utility.
+\item Load the properties files at run time using the
+      \lstinline|Load_Facility|
+      \Findex{ZanyBlue!Text\_IO!Load\_Facility}
+      \Findex{ZanyBlue!Facilities!Load\_Facility}
+      procedure.
+\end{enumerate}
+
+\section{Run Time Message Loading}
+
+Messages can be loaded from \texttt{.properties} files using the
+\lstinline|Load_Facility|
+procedure.  This procedure takes the facility name, the file
+extension, the directory containing the messages (defaults to the current
+directory) and the locale to load (defaults to the current locale)
+\Cindex{Locale}
+as parameters.
+
+Normally, the messages are loaded into the set managed by the 
+\lstinline|ZanyBlue.Text|
+package.  The properties files loaded are those needed to support the argument
+locale and any fallback locales.  E.g., when loading Simplified Chinese,
+\texttt{zh\_CN}, the \lstinline|Local_Facility| procedure attempts to load
+properties files for \texttt{zh\_CN}, \texttt{zh} and the base locale file.
+This makes the messages
+available by naming the facility and message key.  Alternatively, the messages
+could be loaded into a private message bundle rather than the common, centrally
+managed, bundle.  See later on managing facility bundles.
+\Findex{ZanyBlue!Text!Facility\_Bundles!Bundle\_Type}
+
+The definition of load procedure is
+\begin{lstlisting}[frame=single]
+package ZanyBlue.Text_IO is
+
+   Default_Extension : constant String := "properties";
+
+   procedure Load_Facility
+      (Facility  : String;
+       Directory : String := Current_Directory;
+       Extension : String := Default_Extension;
+       Locale    : Locale_Type := Current_Locale);
+
+end ZanyBlue.Text_IO;
+\end{lstlisting}
+\Findex{ZanyBlue!Text\_IO!Default\_Extension}
+Note, this procedure is also available as a renaming in the utility package
+\lstinline|ZanyBlue.Text_IO|
+\Findex{ZanyBlue!Text\_IO!Load\_Facility}
+
+An individual file, e.g., a bug fix message file, can be loaded using the
+\lstinline|Load_File| procedure.  It's definition is
+\begin{lstlisting}[frame=single]
+package ZanyBlue.Text_IO is
+
+   procedure Load_File (Number_Of_Messages : out Natural;
+                        File_Name          : String;
+                        Facility           : String;
+                        Locale             : Locale_Type);
+
+end ZanyBlue.Text_IO;
+\end{lstlisting}
+\Findex{ZanyBlue!Text\_IO!Load\_File}
+
+\section{Compiling Messages}
+
+The floating point algorithm should be based on \cite{*} but is currently
+used the standard \lstinline|Ada.Text_IO.Float_IO| formatting.
+\Findex{Ada!Text\_IO!Float\_IO}
+
+\begin{figure}
+\begin{center}
+\mbox{\subfigure{\includegraphics[height=4in]{ex_gtk-main-en.png}}
+      \quad
+      \subfigure{\includegraphics[height=4in]{ex_gtk-text-zh_CN.png}}}
+\end{center}
+\caption{The ex\_gtk main and Simplified Chinese in the display windows.}
+\label{fig:exgtk}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\end{center}
+\end{figure}
+

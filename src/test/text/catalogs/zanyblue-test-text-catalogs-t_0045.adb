@@ -1,0 +1,70 @@
+--
+--  ZanyBlue, an Ada library and framework for finite element analysis.
+--  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
+--
+--  This program is free software; you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation; either version 2 of the License, or
+--  (at your option) any later version.
+--
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with this program; if not, write to the Free Software
+--  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+--
+
+separate (ZanyBlue.Test.Text.Catalogs)
+procedure T_0045 (R : in out AUnit.Test_Cases.Test_Case'Class) is
+
+   Facility     : constant Wide_String := "xstrings";
+   Dir_Name     : constant Wide_String := Test_Src_Directory (Test_Area);
+   Catalog      : Catalog_Type;
+   N_Locales    : Natural;
+   N_Messages   : Natural;
+
+   procedure Check (Locale           : Wide_String;
+                    Value            : Wide_String;
+                    Expect_Exception : Boolean := False);
+
+   procedure Check (Locale           : Wide_String;
+                    Value            : Wide_String;
+                    Expect_Exception : Boolean := False) is
+      L : constant Locale_Type := Make_Locale (Locale);
+   begin
+      Check_Value (R, Get_Text (Catalog, Facility, "reboot.title", L), Value);
+      R.Assert (not Expect_Exception,
+                "Expected No_Such_Message_Error exception");
+   exception
+   when No_Such_Message_Error =>
+      R.Assert (Expect_Exception, "Expected No_Such_Message_Error exception");
+   end Check;
+
+begin
+   Catalog := Create;
+   Load_Facility (Catalog, Facility, N_Locales, N_Messages, Dir_Name);
+   R.Assert (N_Locales = 9, "Expected 9 locales");
+   R.Assert (N_Messages = 189,
+             "Expected 189 messages: " & Natural'Image (N_Messages));
+   Check ("de", "Neustart");
+   Check ("de_DE", "Neustart");
+   Check ("es", "Reiniciar");
+   Check ("es_ES", "Reiniciar");
+   Check ("fr", "Redémarrer");
+   Check ("fr_FR", "Redémarrer");
+   Check ("it", "Riavvia");
+   Check ("it_IT", "Riavvia");
+   Check ("ja", "再起動");
+   Check ("ja_JP", "再起動");
+   Check ("ko", "다시 시작");
+   Check ("ko_KR", "다시 시작");
+   Check ("sv", "Starta om");
+   Check ("sv_SE", "Starta om");
+   Check ("zh", "*", True);
+   Check ("zh_CN", "重新启动");
+   Check ("zh_TW", "重新啟動");
+   Check ("", "*", True);
+end T_0045;

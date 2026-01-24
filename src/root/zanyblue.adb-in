@@ -1,0 +1,59 @@
+pragma License (Modified_GPL);
+
+package body ZanyBlue is
+
+   --------------------
+   -- Copyright_Year --
+   --------------------
+
+   function Copyright_Year return Positive is
+   begin
+      return $COPYRIGHT_YEAR;
+   end Copyright_Year;
+
+   --------------
+   -- Revision --
+   --------------
+
+   function Revision return Wide_String is
+   begin
+      return $SVN_VERSION;
+   end Revision;
+
+   -------------------
+   -- Version_Major --
+   -------------------
+
+   function Version_Major return Natural is
+   begin
+      return $V_MAJOR;
+   end Version_Major;
+
+   -------------------
+   -- Version_Minor --
+   -------------------
+
+   function Version_Minor return Natural is
+   begin
+      return $V_MINOR;
+   end Version_Minor;
+
+   -------------------
+   -- Version_Patch --
+   -------------------
+
+   function Version_Patch return Natural is
+   begin
+      return $V_PATCH;
+   end Version_Patch;
+
+   --------------------
+   -- Version_Status --
+   --------------------
+
+   function Version_Status return Version_Status_Type is
+   begin
+      return $V_STATUS;
+   end Version_Status;
+
+end ZanyBlue;

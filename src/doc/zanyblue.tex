@@ -1,0 +1,44 @@
+\documentclass[11pt,titlepage]{report}
+
+\input{zbdefs}
+\usepackage{makeidx}
+
+\title{ZanyBlue}
+\date{Version: \Version}
+\author{Michael Rohan}
+
+\newenvironment{xmpl}{\begin{footnotesize}}{\end{footnotesize}}
+
+\makeindex
+
+\begin{document}
+\pagenumbering{roman}
+\maketitle
+\clearpage
+\begin{titlepage}
+Copyright \copyright{} 2009-2010, Michael Rohan.
+
+This document may be copied, in whole or in part, in any form or by any
+means, as is or with alterations, provided that (1) alterations are clearly
+marked as alterations and (2) this copyright notice is included
+unmodified in any copy.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.1 or
+any later version published by the Free Software Foundation; with the
+Invariant Sections being ``GNU Free Documentation License'', with the
+Front-Cover Texts being ``ZanyBlue Manual'', and with no Back-Cover Texts.
+A copy of the license is included in the section entitled ``GNU Free
+Documentation License''.
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\input{introduction}
+\input{text}
+\input{gfdl}
+
+\printindex
+\end{document}

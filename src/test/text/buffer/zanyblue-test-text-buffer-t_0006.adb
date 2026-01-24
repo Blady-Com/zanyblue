@@ -1,0 +1,38 @@
+--
+--  ZanyBlue, an Ada library and framework for finite element analysis.
+--  Copyright (C) 2009  Michael Rohan <michael@zanyblue.com>
+--
+--  This program is free software; you can redistribute it and/or modify
+--  it under the terms of the GNU General Public License as published by
+--  the Free Software Foundation; either version 2 of the License, or
+--  (at your option) any later version.
+--
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+--  You should have received a copy of the GNU General Public License
+--  along with this program; if not, write to the Free Software
+--  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+--
+
+separate (ZanyBlue.Test.Text.Buffer)
+procedure T_0006 (R : in out AUnit.Test_Cases.Test_Case'Class) is
+
+   Buffer : Buffer_Type (10);
+
+begin
+   Add_Right (Buffer, "0123456789");
+   begin
+      Add_Right (Buffer, 'x');
+   exception
+      when Overflow =>
+         R.Assert (True, "Add_Right raised expected Overflow");
+         return;
+      when others =>
+         R.Assert (False, "Add_Right raised unexpected exception");
+         return;
+   end;
+   R.Assert (False, "Add_Right did not raise an exception");
+end T_0006;
