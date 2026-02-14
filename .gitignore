@@ -1,5 +1,5 @@
 alire/
 config/
-/lib/
-/src/obj/
-/bin/
+lib/
+bin/
+obj/
