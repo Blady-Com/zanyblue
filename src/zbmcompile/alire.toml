@@ -16,4 +16,4 @@ executables = ["zbmcompile"]
 zblib = "1.4.0"
 
 [[pins]]
-zanyblue = { path = ".." }
+zblib = { path = ".." }
