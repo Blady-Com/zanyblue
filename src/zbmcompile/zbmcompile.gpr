@@ -39,9 +39,20 @@ with "../zbcom";
 
 project zbmcompile is
 
+   type Alire_Type is ("True", "False");
+   Alire : Alire_Type := External ("ALIRE", "False");
+
    for Languages   use ("Ada");
-   for Object_Dir  use "../obj";
-   for Exec_Dir    use "../../bin";
+
+   case Alire is
+      when "True" =>
+         for Object_Dir  use "obj";
+         for Exec_Dir    use "bin";
+      when "False" =>
+         for Object_Dir  use "../obj";
+         for Exec_Dir    use "../../bin";
+   end case;
+
    for Main        use ("zbmcompile-main.adb");
    for Source_Dirs use (".", "bootstrap");
 

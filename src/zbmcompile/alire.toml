@@ -13,7 +13,7 @@ project-files = ["zbmcompile.gpr"]
 executables = ["zbmcompile"]
 
 [[depends-on]]
-zanyblue = "1.5.0"
+zblib = "1.5.0"
 
 [[pins]]
-zanyblue = { path = ".." }
+zblib = { path = ".." }
