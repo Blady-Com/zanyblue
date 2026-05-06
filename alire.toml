@@ -10,3 +10,6 @@ website = "https://sourceforge.net/projects/zanyblue"
 tags = ["localization", "l10n", "international", "i18n"]
 
 project-files = ["src/zanyblue.gpr"]
+
+[gpr-set-externals]
+BUILD = "Production"
