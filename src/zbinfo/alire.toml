@@ -1,6 +1,6 @@
 name = "zbinfo"
 description = "Display localization information for ZanyBlue Ada Localization"
-version = "1.4.0"
+version = "1.4.1"
 
 authors = ["Michael Rohan"]
 maintainers = ["Pascal Pignard <blady.net@orange.fr>"]
