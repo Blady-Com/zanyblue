@@ -43,19 +43,22 @@
 --      ZBTest> set project_dir $(dirname $(dirname $(which zbmcompile)))\n
 --
 
-with ZanyBlue.Wide_Directories;
+with ZanyBlue.Directories;
 
 separate (ZBTest.Functions)
-function Dirname_Function (State : access State_Type;
-                           Args  : List_Type) return Wide_String is
+function Dirname_Function
+  (State : access State_Type;
+   Args  : List_Type)
+   return String
+is
 
    pragma Unreferenced (State);
 
-   use ZanyBlue.Wide_Directories;
+   use ZanyBlue.Directories;
 
 begin
    if Length (Args) = 2 then
-      return Wide_Containing_Directory (Value (Args, 2));
+      return Containing_Directory (Value (Args, 2));
    else
       raise Function_Usage_Error;
    end if;

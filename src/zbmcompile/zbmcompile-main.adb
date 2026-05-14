@@ -36,20 +36,22 @@
 with Ada.Calendar;
 with Ada.Exceptions;
 with Ada.Command_Line;
+with ZanyBlue.Command_Line;
 with ZanyBlue.Text.Formatting;
 with ZBMCompile.Messages;
 with ZBMCompile.Message_Filter;
+with UXStrings.Conversions;
 
 procedure ZBMCompile.Main is
 
    use Ada.Calendar;
    use Ada.Exceptions;
-   use Ada.Command_Line;
+   use ZanyBlue.Command_Line;
    use ZanyBlue.Text;
    use ZanyBlue.Text.Formatting;
    use ZBMCompile.Message_Filter;
 
-   Usage   : exception;
+   Usage : exception;
 
    function Banner return Time;
    procedure Process_Command_Line (Options : in out Parameter_Set_Type);
@@ -61,7 +63,7 @@ procedure ZBMCompile.Main is
    ------------
 
    function Banner return Time is
-      Arguments : Argument_List;
+      Arguments  : Argument_List;
       Start_Time : constant Time := Clock;
    begin
       Append (Arguments, +ZanyBlue.Version_Major);
@@ -81,46 +83,62 @@ procedure ZBMCompile.Main is
    procedure Process_Command_Line (Options : in out Parameter_Set_Type) is
 
       Index         : Positive := 1;
-      Seen_a_Option : Boolean := False;
-      Seen_G_Option : Boolean := False;
+      Seen_a_Option : Boolean  := False;
+      Seen_G_Option : Boolean  := False;
 
-      function Get_Option_Value (Ch : Character) return Natural;
+      function Get_Option_Value
+        (Ch : Character)
+         return Natural;
 
-      function Get_Option_Value (Ch : Character) return Wide_String;
+      function Get_Option_Value
+        (Ch : Character)
+         return String;
 
-      procedure Set_Accessor_Type (Type_Name : Wide_String;
-                                   On_Off    : Boolean);
+      procedure Set_Accessor_Type
+        (Type_Name : String;
+         On_Off    : Boolean);
 
       ----------------------
       -- Get_Option_Value --
       ----------------------
 
-      function Get_Option_Value (Ch : Character) return Wide_String is
+      function Get_Option_Value
+        (Ch : Character)
+         return String
+      is
       begin
          Index := Index + 1;
          if Index > Argument_Count then
-            Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00001",
-                             Argument0 => +Ch);
+            Raise_Exception
+              (Usage'Identity, ZBMCompile_Facility, "E00001",
+               Argument0 => +Ch);
          end if;
-         return From_UTF8 (Argument (Index));
+         return Argument (Index);
       end Get_Option_Value;
 
       ----------------------
       -- Get_Option_Value --
       ----------------------
 
-      function Get_Option_Value (Ch : Character) return Natural is
-         Buffer : constant Wide_String := Get_Option_Value (Ch);
+      function Get_Option_Value
+        (Ch : Character)
+         return Natural
+      is
+         Buffer : constant String := Get_Option_Value (Ch);
+         function Value is new UXStrings.Conversions.Integer_Value (Natural);
       begin
-         return Natural'Wide_Value (Buffer);
+         return Value (Buffer);
       exception
-      when Constraint_Error =>
-         Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00024",
-                          Argument0 => +Buffer);
+         when Constraint_Error =>
+            Raise_Exception
+              (Usage'Identity, ZBMCompile_Facility, "E00024",
+               Argument0 => +Buffer);
       end Get_Option_Value;
 
-      procedure Set_Accessor_Type (Type_Name : Wide_String;
-                                   On_Off    : Boolean) is
+      procedure Set_Accessor_Type
+        (Type_Name : String;
+         On_Off    : Boolean)
+      is
       begin
          for I in Accessor_Types'Range loop
             if Type_Name = Accessor_Types (I).all then
@@ -129,39 +147,39 @@ procedure ZBMCompile.Main is
                return;
             end if;
          end loop;
-         Raise_Exception (Usage'Identity,
-                          ZBMCompile_Facility, "E00025",
-                          Argument0 => +Type_Name);
+         Raise_Exception
+           (Usage'Identity, ZBMCompile_Facility, "E00025",
+            Argument0 => +Type_Name);
       end Set_Accessor_Type;
 
    begin
-      Options.Set_Boolean ("accessor_comments",    True);
-      Options.Set_Boolean ("ascii_only",           False);
-      Options.Set_Boolean ("base_locale",          False);
-      Options.Set_Boolean ("body_initialize",      False);
-      Options.Set_Boolean ("debug",                False);
-      Options.Set_Boolean ("disable_checks",       False);
-      Options.Set_Boolean ("force",                False);
-      Options.Set_Boolean ("generate_accessors",   False);
-      Options.Set_Boolean ("optimize",             False);
-      Options.Set_Boolean ("parameter_modes",      False);
-      Options.Set_Boolean ("positional_elements",  False);
-      Options.Set_Boolean ("quiet",                False);
-      Options.Set_Boolean ("use_export_name",      False);
-      Options.Set_Boolean ("usage",                False);
-      Options.Set_Boolean ("verbose",              False);
+      Options.Set_Boolean ("accessor_comments", True);
+      Options.Set_Boolean ("ascii_only", False);
+      Options.Set_Boolean ("base_locale", False);
+      Options.Set_Boolean ("body_initialize", False);
+      Options.Set_Boolean ("debug", False);
+      Options.Set_Boolean ("disable_checks", False);
+      Options.Set_Boolean ("force", False);
+      Options.Set_Boolean ("generate_accessors", False);
+      Options.Set_Boolean ("optimize", False);
+      Options.Set_Boolean ("parameter_modes", False);
+      Options.Set_Boolean ("positional_elements", False);
+      Options.Set_Boolean ("quiet", False);
+      Options.Set_Boolean ("use_export_name", False);
+      Options.Set_Boolean ("usage", False);
+      Options.Set_Boolean ("verbose", False);
       for I in Accessor_Types'Range loop
          Set_Accessor_Type (Accessor_Types (I).all, False);
       end loop;
-      Options.Set_Integer ("comment_size",           Output_Comment_Size);
-      Options.Set_Integer ("n_facilities",           0);
-      Options.Set_Integer ("pool_size",              Output_Pool_Size);
-      Options.Set_String ("extension",               "properties");
-      Options.Set_String ("output_directory",        ".");
-      Options.Set_String ("reference_locale",        "");
-      Options.Set_String ("source_root_locale",      "");
+      Options.Set_Integer ("comment_size", Output_Comment_Size);
+      Options.Set_Integer ("n_facilities", 0);
+      Options.Set_Integer ("pool_size", Output_Pool_Size);
+      Options.Set_String ("extension", "properties");
+      Options.Set_String ("output_directory", ".");
+      Options.Set_String ("reference_locale", "");
+      Options.Set_String ("source_root_locale", "");
       Options.Set_String ("invalid_ada_key_handler", "error");
-      Options.Set_String ("cur_dir",                 ".");
+      Options.Set_String ("cur_dir", ".");
       while Index <= Argument_Count loop
          declare
             Value : constant String := Argument (Index);
@@ -173,8 +191,8 @@ procedure ZBMCompile.Main is
                end loop;
                Seen_a_Option := True;
                if Seen_G_Option then
-                  Raise_Exception (Usage'Identity,
-                                   ZBMCompile_Facility, "E00026");
+                  Raise_Exception
+                    (Usage'Identity, ZBMCompile_Facility, "E00026");
                end if;
             elsif Value = "-A" then
                Options.Set_Boolean ("ascii_only", True);
@@ -197,8 +215,8 @@ procedure ZBMCompile.Main is
                Set_Accessor_Type (Get_Option_Value ('G'), True);
                Seen_G_Option := True;
                if Seen_a_Option then
-                  Raise_Exception (Usage'Identity,
-                                   ZBMCompile_Facility, "E00026");
+                  Raise_Exception
+                    (Usage'Identity, ZBMCompile_Facility, "E00026");
                end if;
             elsif Value = "-h" then
                Options.Set_Boolean ("usage", True);
@@ -219,21 +237,21 @@ procedure ZBMCompile.Main is
             elsif Value = "-r" then
                Options.Set_String ("reference_locale", Get_Option_Value ('r'));
             elsif Value = "-s" then
-               Options.Set_String ("source_root_locale",
-                                   Get_Option_Value ('R'));
+               Options.Set_String
+                 ("source_root_locale", Get_Option_Value ('R'));
             elsif Value = "-S" then
                Options.Set_String ("stamp_file", Get_Option_Value ('S'));
             elsif Value = "-T" then
                declare
-                  Target : constant Wide_String := Get_Option_Value ('T');
+                  Target : constant String := Get_Option_Value ('T');
                begin
                   if not Options.Is_Defined (Target & "_size") then
-                     Raise_Exception (Usage'Identity,
-                                      ZBMCompile_Facility, "E00023",
-                                      Argument0 => +Target);
+                     Raise_Exception
+                       (Usage'Identity, ZBMCompile_Facility, "E00023",
+                        Argument0 => +Target);
                   end if;
-                  Options.Set_Integer (Target & "_size",
-                                       Get_Option_Value ('T'));
+                  Options.Set_Integer
+                    (Target & "_size", Get_Option_Value ('T'));
                end;
             elsif Value = "-u" then
                Options.Set_Boolean ("disable_checks", True);
@@ -244,28 +262,27 @@ procedure ZBMCompile.Main is
                Options.Set_String ("export_name", Get_Option_Value ('x'));
             elsif Value = "-X" then
                declare
-                  Handling : constant Wide_String := Get_Option_Value ('X');
+                  Handling : constant String := Get_Option_Value ('X');
                begin
                   if Handling = "ignore" then
                      Options.Set_String ("invalid_ada_key_handler", "ignore");
                   elsif Handling = "error" then
                      Options.Set_String ("invalid_ada_key_handler", "error");
                   else
-                     Raise_Exception (Usage'Identity,
-                                      ZBMCompile_Facility, "E00029",
-                                      Argument0 => +Handling);
+                     Raise_Exception
+                       (Usage'Identity, ZBMCompile_Facility, "E00029",
+                        Argument0 => +Handling);
                   end if;
                end;
-            elsif Value'Length > 0
-              and then Value (Value'First) = '-'
-            then
-               Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00020",
-                                Argument0 => +Value);
+            elsif Value.Length > 0 and then Value (Value.First) = '-' then
+               Raise_Exception
+                 (Usage'Identity, ZBMCompile_Facility, "E00020",
+                  Argument0 => +Value);
             elsif not Options.Is_Defined ("package") then
-               Options.Set_String ("package", From_UTF8 (Value));
+               Options.Set_String ("package", Value);
             else
                Options.Append ("mesg_dirs", Options.Get_String ("cur_dir"));
-               Options.Append ("facilities", From_UTF8 (Value));
+               Options.Append ("facilities", Value);
                Options.Increment ("n_facilities");
             end if;
          end;
@@ -277,18 +294,15 @@ procedure ZBMCompile.Main is
          return;
       end if;
       if not Options.Is_Defined ("package") then
-         Raise_Exception (Usage'Identity,
-                          ZBMCompile_Facility, "E00006");
+         Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00006");
       end if;
       if Options.Get_Integer ("n_facilities") = 0 then
-         Raise_Exception (Usage'Identity,
-                          ZBMCompile_Facility, "E00007");
+         Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00007");
       end if;
       if Options.Get_Boolean ("disable_checks")
         and then Options.Get_Boolean ("generate_accessors")
       then
-         Raise_Exception (Usage'Identity,
-                          ZBMCompile_Facility, "E00016");
+         Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00016");
       end if;
       if not Options.Get_Boolean ("base_locale")
         and then not Options.Is_Defined ("locales")
@@ -308,9 +322,9 @@ procedure ZBMCompile.Main is
          Filters.Output_Level := Normal;
       end if;
    exception
-   when E : others =>
-      Raise_Exception (Usage'Identity, ZBMCompile_Facility, "E00022",
-                       Argument0 => +E);
+      when E : others =>
+         Raise_Exception
+           (Usage'Identity, ZBMCompile_Facility, "E00022", Argument0 => +E);
    end Process_Command_Line;
 
    -------------
@@ -318,19 +332,19 @@ procedure ZBMCompile.Main is
    -------------
 
    procedure Trailer (Start_Time : Time) is
-      Now : constant Time := Clock;
+      Now     : constant Time     := Clock;
       Elapsed : constant Duration := Now - Start_Time;
    begin
       Print_Line (ZBMCompile_Facility, "I00003", +Now, +Elapsed);
    end Trailer;
 
-   Start_Time   : Ada.Calendar.Time;
-   Options      : Parameter_Set_Type;
+   Start_Time : Ada.Calendar.Time;
+   Options    : Parameter_Set_Type;
+   use Ada.Command_Line;
 
 begin
    ZBMCompile.Messages.Initialize;
    Set_Filter (Filters'Access);
-   Disable_Wide_IO;
    Options.Set_Name ("OPTIONS");
    Process_Command_Line (Options);
    Start_Time := Banner;
@@ -341,10 +355,11 @@ begin
    end if;
    Trailer (Start_Time);
 exception
-when E : Usage =>
-   Start_Time := Banner;
-   Print_Line (ZBMCompile_Facility, "E00008", +Exception_Message (E));
-   Print_Line (ZBMCompile_Facility, "E00002");
-   Trailer (Start_Time);
-   Set_Exit_Status (Failure);
+   when E : Usage =>
+      Start_Time := Banner;
+      Print_Line
+        (ZBMCompile_Facility, "E00008", +From_Latin_1 (Exception_Message (E)));
+      Print_Line (ZBMCompile_Facility, "E00002");
+      Trailer (Start_Time);
+      Set_Exit_Status (Failure);
 end ZBMCompile.Main;

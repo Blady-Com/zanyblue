@@ -1,6 +1,6 @@
 name = "zbmcompile"
 description = "Message compiler for ZanyBlue Ada Localization"
-version = "1.5.0"
+version = "2.0.0"
 
 authors = ["Michael Rohan"]
 maintainers = ["Pascal Pignard <blady.net@orange.fr>"]
@@ -13,7 +13,7 @@ project-files = ["zbmcompile.gpr"]
 executables = ["zbmcompile"]
 
 [[depends-on]]
-zblib = "1.5.0"
+zblib = "2.0.0"
 
 [[pins]]
 zblib = { path = ".." }

@@ -39,15 +39,13 @@
 --  Set the test description
 --
 
-with Ada.Strings.Wide_Unbounded;
-
 separate (ZBTest.Commands)
-procedure Desc_Command (State : in out State_Type;
-                        Args  : List_Type) is
+procedure Desc_Command
+  (State : in out State_Type;
+   Args  :        List_Type)
+is
 
-   use Ada.Strings.Wide_Unbounded;
-
-   Buffer : Unbounded_Wide_String;
+   Buffer : String;
 
 begin
    if Length (Args) = 1 then
@@ -59,6 +57,6 @@ begin
          Append (Buffer, " ");
       end if;
    end loop;
-   State.Set_String ("_desc", To_Wide_String (Buffer));
-   Print_00015 (+To_Wide_String (Buffer));
+   State.Set_String ("_desc", Buffer);
+   Print_00015 (+Buffer);
 end Desc_Command;

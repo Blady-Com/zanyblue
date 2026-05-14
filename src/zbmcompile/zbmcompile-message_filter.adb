@@ -45,56 +45,58 @@ package body ZBMCompile.Message_Filter is
    --      V00000 - V99999   Verbose
    --      D00000 - D99999   Debug
 
-   overriding
-   function Is_Filtered (Filter    : Verbose_Filter_Type;
-                         Facility  : Wide_String;
-                         Key       : Wide_String) return Boolean is
+   overriding function Is_Filtered
+     (Filter   : Verbose_Filter_Type;
+      Facility : String;
+      Key      : String)
+      return Boolean
+   is
       Result        : Boolean := False;
-      Key_Character : Wide_Character;
+      Key_Character : Unicode_Character;
    begin
-      if Facility /= ZBMCompile_Facility or Key'Length < 1 then
+      if Facility /= ZBMCompile_Facility or Key.Length < 1 then
          --  Non user message or degenerate key, print the message
          Result := False;
       else
-         Key_Character := Key (Key'First);
+         Key_Character := Key (Key.First);
          case Filter.Output_Level is
-         when Silent  =>
+            when Silent =>
             --  Silent, nothing is printed, everything is filtered
-            return True;
-         when Quiet =>
-            case Key_Character is
-            when 'E' | 'W' | 'S' =>
-               Result := False;
-            when 'I' | 'V' | 'D' =>
-               Result := True;
-            when others =>
-               Result := False;
-            end case;
-         when Normal =>
-            case Key_Character is
-            when 'E' | 'W' | 'S' | 'I' =>
-               Result := False;
-            when 'V' | 'D' =>
-               Result := True;
-            when others =>
-               Result := False;
-            end case;
-         when Verbose =>
-            case Key_Character is
-            when 'E' | 'W' | 'S' | 'I' | 'V' =>
-               Result := False;
-            when 'D' =>
-               Result := True;
-            when others =>
-               Result := False;
-            end case;
-         when Debug =>
-            case Key_Character is
-            when 'E' | 'W' | 'S' | 'I' | 'V' | 'D' =>
-               Result := False;
-            when others =>
-               Result := False;
-            end case;
+               return True;
+            when Quiet =>
+               case Key_Character is
+                  when 'E' | 'W' | 'S' =>
+                     Result := False;
+                  when 'I' | 'V' | 'D' =>
+                     Result := True;
+                  when others =>
+                     Result := False;
+               end case;
+            when Normal =>
+               case Key_Character is
+                  when 'E' | 'W' | 'S' | 'I' =>
+                     Result := False;
+                  when 'V' | 'D' =>
+                     Result := True;
+                  when others =>
+                     Result := False;
+               end case;
+            when Verbose =>
+               case Key_Character is
+                  when 'E' | 'W' | 'S' | 'I' | 'V' =>
+                     Result := False;
+                  when 'D' =>
+                     Result := True;
+                  when others =>
+                     Result := False;
+               end case;
+            when Debug =>
+               case Key_Character is
+                  when 'E' | 'W' | 'S' | 'I' | 'V' | 'D' =>
+                     Result := False;
+                  when others =>
+                     Result := False;
+               end case;
          end case;
       end if;
       return Result;

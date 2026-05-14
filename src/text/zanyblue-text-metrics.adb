@@ -33,48 +33,53 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Integer_Wide_Text_IO;
-with ZanyBlue.OS;
+with UXStrings.Conversions;
 
 package body ZanyBlue.Text.Metrics is
-
-   use Ada.Integer_Wide_Text_IO;
-   use ZanyBlue.OS;
 
    -----------------
    -- Write_Usage --
    -----------------
 
-   procedure Write_Usage (Destination : Ada.Wide_Text_IO.File_Type;
-                          Catalog     : Catalog_Type := Standard_Catalog) is
+   procedure Write_Usage
+     (Destination : UXStrings.Text_IO.File_Type;
+      Catalog     : Catalog_Type := Standard_Catalog)
+   is
+      use UXStrings.Text_IO;
 
-      procedure Iterator (Facility      : Facility_Index_Type;
-                          Key           : Key_Index_Type;
-                          Locale        : Locale_Index_Type;
-                          Source_Locale : Locale_Index_Type;
-                          First         : Positive;
-                          Last          : Natural;
-                          Count         : Natural);
+      procedure Iterator
+        (Facility      : Facility_Index_Type;
+         Key           : Key_Index_Type;
+         Locale        : Locale_Index_Type;
+         Source_Locale : Locale_Index_Type;
+         First         : Positive;
+         Last          : Natural;
+         Count         : Natural);
 
-      procedure Iterator (Facility      : Facility_Index_Type;
-                          Key           : Key_Index_Type;
-                          Locale        : Locale_Index_Type;
-                          Source_Locale : Locale_Index_Type;
-                          First         : Positive;
-                          Last          : Natural;
-                          Count         : Natural) is
+      procedure Iterator
+        (Facility      : Facility_Index_Type;
+         Key           : Key_Index_Type;
+         Locale        : Locale_Index_Type;
+         Source_Locale : Locale_Index_Type;
+         First         : Positive;
+         Last          : Natural;
+         Count         : Natural)
+      is
          pragma Unreferenced (Source_Locale);
          pragma Unreferenced (First);
          pragma Unreferenced (Last);
+         function Image is new UXStrings.Conversions.Integer_Image (Natural);
       begin
-         Put (Destination, "  <message facility=" &
-                   """" & Get_Facility (Catalog, Facility) & """");
-         Put (Destination, " locale=" &
-                   """" & Get_Locale_Name (Catalog, Locale) & """");
-         Put (Destination, " key=" &
-                   """" & Get_Key (Catalog, Key) & """");
+         Put
+           (Destination,
+            "  <message facility=" & """" & Get_Facility (Catalog, Facility) &
+            """");
+         Put
+           (Destination,
+            " locale=" & """" & Get_Locale_Name (Catalog, Locale) & """");
+         Put (Destination, " key=" & """" & Get_Key (Catalog, Key) & """");
          Put (Destination, " count=""");
-         Put (Destination, Count, Width => 0);
+         Put (Destination, Image (Count));
          Put_Line (Destination, """ />");
       end Iterator;
 
@@ -89,23 +94,18 @@ package body ZanyBlue.Text.Metrics is
    -- Write_Usage --
    -----------------
 
-   procedure Write_Usage (File_Name   : Wide_String;
-                          Catalog     : Catalog_Type := Standard_Catalog) is
-      Destination : Ada.Wide_Text_IO.File_Type;
+   procedure Write_Usage
+     (File_Name : String;
+      Catalog   : Catalog_Type := Standard_Catalog)
+   is
+      use UXStrings.Text_IO;
+
+      Destination : File_Type;
    begin
-      Wide_Create (Destination, File_Name);
+      Create
+        (Destination, Name => File_Name, Scheme => UTF_8, Ending => LF_Ending);
       Write_Usage (Destination, Catalog);
       Close (Destination);
-   end Write_Usage;
-
-   -----------------
-   -- Write_Usage --
-   -----------------
-
-   procedure Write_Usage (File_Name : String;
-                          Catalog   : Catalog_Type := Standard_Catalog) is
-   begin
-      Write_Usage (From_UTF8 (File_Name), Catalog);
    end Write_Usage;
 
 end ZanyBlue.Text.Metrics;

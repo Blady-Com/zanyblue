@@ -33,27 +33,24 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Strings.Wide_Fixed;
-
-procedure ZanyBlue.Text.Generic_Printer (
-             Destination : File_Type;
-             Facility    : Wide_String;
-             Key         : Wide_String;
-             Locale      : ZanyBlue.Text.Locales.Locale_Type;
-             Arguments   : ZanyBlue.Text.Arguments.Argument_List;
-             Message     : Wide_String;
-             With_NL     : Boolean) is
+procedure ZanyBlue.Text.Generic_Printer
+  (Destination : File_Type;
+   Facility    : String;
+   Key         : String;
+   Locale      : ZanyBlue.Text.Locales.Locale_Type;
+   Arguments   : ZanyBlue.Text.Arguments.Argument_List;
+   Message     : String;
+   With_NL     : Boolean)
+is
 
    pragma Unreferenced (Facility);
    pragma Unreferenced (Key);
    pragma Unreferenced (Locale);
    pragma Unreferenced (Arguments);
 
-   use Ada.Strings.Wide_Fixed;
-
-   NL     : constant Wide_String := "" & Wide_Character'Val (10);
-   Done   : Boolean := False;
-   Start  : Positive := Message'First;
+   NL     : constant String := "" & Unicode_Character'Val (10);
+   Done   : Boolean         := False;
+   Start  : Positive        := Message.First;
    Finish : Natural;
 
 begin
@@ -62,10 +59,10 @@ begin
    while not Done loop
       Finish := Index (Message, NL, Start);
       if Finish = 0 then
-         Done := True;
-         Finish := Message'Last + 1;
+         Done   := True;
+         Finish := Message.Last + 1;
       end if;
-      Put (Destination, Message (Start .. Finish - 1));
+      Put (Destination, Message.Slice (Start, Finish - 1));
       if not Done then
          New_Line (Destination);
       end if;

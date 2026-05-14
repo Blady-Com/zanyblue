@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2017, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -34,46 +34,31 @@
 --
 
 --
---  This is a simple wrapper package around the standard Ada.Command_Line
---  package with Wide_String arguments and functions.  The underlying
---  Strings from Ada.Command_Line are simply interpreted as UTF-8 encoded
---  strings and are decoded to Wide_Strings.  This, obviously, does not
---  support UTF-8 encoded Wide_Wide_Strings.
+--  This is a simple wrapper package around the GNAT GNAT.Regexp
+--  package with String arguments and functions.  The underlying
+--  Strings to/from GNAT.Regexp are simply interpreted as UTF-8 encoded
+--  strings.
 --
 
-with Ada.Command_Line;
-with ZanyBlue.Text;
+with GNAT.Regexp;
 
-package body ZanyBlue.Wide_Command_Line is
+package ZanyBlue.Regexp is
 
-   use ZanyBlue.Text;
-   use Ada.Command_Line;
+   subtype Regexp is GNAT.Regexp.Regexp;
 
-   -------------------
-   -- Wide_Argument --
-   -------------------
+   function Compile
+     (Pattern        : String;
+      Glob           : Boolean := False;
+      Case_Sensitive : Boolean := True)
+      return Regexp;
+   --  Compiles a regular expression S.
 
-   function Wide_Argument (Number : Positive) return Wide_String is
-   begin
-      return From_UTF8 (Argument (Number));
-   end Wide_Argument;
+   function Match
+     (S : String;
+      R : Regexp)
+      return Boolean;
+   --  True if S matches R, otherwise False.
 
-   -------------------------
-   -- Wide_Argument_Count --
-   -------------------------
+   Error_In_Regexp : exception renames GNAT.Regexp.Error_In_Regexp;
 
-   function Wide_Argument_Count return Natural is
-   begin
-      return Argument_Count;
-   end Wide_Argument_Count;
-
-   -----------------------
-   -- Wide_Command_Name --
-   -----------------------
-
-   function Wide_Command_Name return Wide_String is
-   begin
-      return From_UTF8 (Command_Name);
-   end Wide_Command_Name;
-
-end ZanyBlue.Wide_Command_Line;
+end ZanyBlue.Regexp;

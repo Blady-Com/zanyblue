@@ -43,10 +43,11 @@ package ZanyBlue.Text.CLDR is
    --  Initialize the CLDR database.  This routine must be called prior to
    --  using any of the other rountines defined in here.
 
-   function Language_Name (Code    : Wide_String;
-                           Unknown : Wide_String := "";
-                           Locale  : Locale_Type := Current_Locale)
-      return Wide_String;
+   function Language_Name
+     (Code    : String;
+      Unknown : String      := "";
+      Locale  : Locale_Type := Current_Locale)
+      return String;
    --
    --  Return the language name associated with an ISO language code, e.g.,
    --  in an English locale,
@@ -58,10 +59,11 @@ package ZanyBlue.Text.CLDR is
    --     Language_Name ("xx", "UNKNOWN") = "UNKNOWN"
    --
 
-   function Script_Name (Code    : Wide_String;
-                         Unknown : Wide_String := "";
-                         Locale  : Locale_Type := Current_Locale)
-      return Wide_String;
+   function Script_Name
+     (Code    : String;
+      Unknown : String      := "";
+      Locale  : Locale_Type := Current_Locale)
+      return String;
    --
    --  Return the  name associated with an ISO script code, e.g.,
    --  in an English locale,
@@ -73,10 +75,11 @@ package ZanyBlue.Text.CLDR is
    --     Script_Name ("xx", "UNKNOWN") = "UNKNOWN"
    --
 
-   function Territory_Name (Code    : Wide_String;
-                            Unknown : Wide_String := "";
-                            Locale  : Locale_Type := Current_Locale)
-      return Wide_String;
+   function Territory_Name
+     (Code    : String;
+      Unknown : String      := "";
+      Locale  : Locale_Type := Current_Locale)
+      return String;
    --
    --  Return the territory name associated with an ISO two letter territory
    --  code, e.g., in an English locale,
@@ -88,9 +91,10 @@ package ZanyBlue.Text.CLDR is
    --     Territory_Name ("xx", "UNKNOWN") = "UNKNOWN"
    --
 
-   function Full_Locale_Name (Value  : Locale_Type;
-                              Locale : Locale_Type := Current_Locale)
-      return Wide_String;
+   function Full_Locale_Name
+     (Value  : Locale_Type;
+      Locale : Locale_Type := Current_Locale)
+      return String;
    --
    --  Return the full locale name, language and territory
    --

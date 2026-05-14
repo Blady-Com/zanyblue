@@ -34,6 +34,7 @@
 --
 
 with "zbcom";
+with "lib_uxstrings";
 
 project ZanyBlue is
 
@@ -74,5 +75,7 @@ project ZanyBlue is
       for Artifacts ("share/doc/zanyblue") use ("../doc/");
       for Artifacts ("share/examples/zanyblue") use ("../examples/");
    end Install;
+
+   package Pretty_Printer renames zbcom.Pretty_Printer;
 
 end ZanyBlue;

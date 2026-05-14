@@ -33,7 +33,6 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Strings.Wide_Unbounded;
 with ZanyBlue.Text.Locales;
 
 generic
@@ -44,40 +43,42 @@ package ZanyBlue.Text.Generic_Buffer is
 
    type Buffer_Type is private;
 
-   Null_Character : constant Wide_Character := Wide_Character'Val (0);
+   Null_Character : constant Unicode_Character := Unicode_Character'Val (0);
    --  Utility character value used to indicate no character.
 
-   procedure Add (Buffer : in out Buffer_Type;
-                  Data   : Wide_Character;
-                  Count  : Positive := 1);
+   procedure Add
+     (Buffer : in out Buffer_Type;
+      Data   :        Unicode_Character;
+      Count  :        Positive := 1);
    --  Append a character to left side of the buffer.
 
-   procedure Add (Buffer : in out Buffer_Type;
-                  Data   : Wide_String);
+   procedure Add
+     (Buffer : in out Buffer_Type;
+      Data   :        String);
    --  Append a string to left side of the buffer.
 
-   procedure Accumulate (Buffer     : in out Buffer_Type;
-                         Value      : Integer_Type;
-                         Locale     : Locale_Type;
-                         Width      : Natural := 1;
-                         Fill       : Wide_String := "";
-                         Base       : Positive := 10;
-                         Lowercase  : Boolean := True);
+   procedure Accumulate
+     (Buffer    : in out Buffer_Type;
+      Value     :        Integer_Type;
+      Locale    :        Locale_Type;
+      Width     :        Natural  := 1;
+      Fill      :        String   := "";
+      Base      :        Positive := 10;
+      Lowercase :        Boolean  := True);
    --  Add (accumulate a numeric value to the left side of the buffer.
    --  The number is formatted with a field width of "Width" character
    --  filled to the left with the first character of the fill string
    --  or the locale "0" character if the fill string is empty.
 
-   function To_String (Buffer : Buffer_Type) return Wide_String;
+   function To_String
+     (Buffer : Buffer_Type)
+      return String;
    --  Return the value generated on the left.
 
 private
 
-   use Ada.Strings.Wide_Unbounded;
-
-   type Buffer_Type is
-      record
-         Data : Unbounded_Wide_String;
-      end record;
+   type Buffer_Type is record
+      Data : String;
+   end record;
 
 end ZanyBlue.Text.Generic_Buffer;

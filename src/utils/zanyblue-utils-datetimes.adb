@@ -35,7 +35,8 @@
 
 package body ZanyBlue.Utils.DateTimes is
 
-   function Determine_Day_In_Week (Self : in out DateTime_Type)
+   function Determine_Day_In_Week
+     (Self : in out DateTime_Type)
       return Day_Type;
    procedure Make_HMS (Self : in out DateTime_Type);
    procedure Split_Time (Self : in out DateTime_Type);
@@ -44,7 +45,10 @@ package body ZanyBlue.Utils.DateTimes is
    -- Day --
    ---------
 
-   function Day (Self : in out DateTime_Type) return Day_Number is
+   function Day
+     (Self : in out DateTime_Type)
+      return Day_Number
+   is
    begin
       if not Self.Have_Split then
          Split_Time (Self);
@@ -56,11 +60,14 @@ package body ZanyBlue.Utils.DateTimes is
    -- Day_In_Week --
    -----------------
 
-   function Day_In_Week (Self : in out DateTime_Type) return Day_Type is
+   function Day_In_Week
+     (Self : in out DateTime_Type)
+      return Day_Type
+   is
    begin
       if not Self.Have_Day_In_Week then
          Self.Day_In_Week_Value := Determine_Day_In_Week (Self);
-         Self.Have_Day_In_Week := True;
+         Self.Have_Day_In_Week  := True;
       end if;
       return Self.Day_In_Week_Value;
    end Day_In_Week;
@@ -72,7 +79,8 @@ package body ZanyBlue.Utils.DateTimes is
    --  TODO: Implement!
    --
 
-   function Day_Of_Week_In_Month (Self : in out DateTime_Type)
+   function Day_Of_Week_In_Month
+     (Self : in out DateTime_Type)
       return Day_Of_Week_In_Month_Type
    is
       pragma Unreferenced (Self);
@@ -87,14 +95,16 @@ package body ZanyBlue.Utils.DateTimes is
    --  Calculate the number of days since Jan 1.
    --
 
-   function Day_Of_Year (Self : in out DateTime_Type) return Day_Of_Year_Type
+   function Day_Of_Year
+     (Self : in out DateTime_Type)
+      return Day_Of_Year_Type
    is
    begin
       if not Self.Have_Day_Of_Year then
          declare
-            Jan1_Date : constant Time := Time_Of (Self.Year, 1, 1);
-            S_In_Year : constant Float := Float (Self.Time_Value - Jan1_Date);
-            Days_Float : constant Float := S_In_Year / (24.0 * 3600.0);
+            Jan1_Date  : constant Time  := Time_Of (Self.Year, 1, 1);
+            S_In_Year  : constant Float := Float (Self.Time_Value - Jan1_Date);
+            Days_Float : constant Float := S_In_Year / (24.0 * 3_600.0);
          begin
             Self.Day_Of_Year_Value := Integer (Float'Floor (Days_Float)) + 1;
          end;
@@ -112,39 +122,27 @@ package body ZanyBlue.Utils.DateTimes is
    --      http://en.wikipedia.org/wiki/Calculating_the_day_of_the_week
    --
 
-   function Determine_Day_In_Week (Self : in out DateTime_Type)
+   function Determine_Day_In_Week
+     (Self : in out DateTime_Type)
       return Day_Type
    is
 
       subtype Leap_Year_P is Boolean;
       subtype Day_Number_Type is Natural range 0 .. 6;
       type Month_Map_Type is
-         array (Month_Number, Leap_Year_P) of Day_Number_Type;
+        array (Month_Number, Leap_Year_P) of Day_Number_Type;
       type Num_To_Day_Type is array (Day_Number_Type) of Day_Type;
       Month_Map : constant Month_Map_Type :=
-                  (1  => (True => 6, False => 0),
-                   2  => (True => 2, False => 3),
-                   3  => (others => 3),
-                   4  => (others => 6),
-                   5  => (others => 1),
-                   6  => (others => 4),
-                   7  => (others => 6),
-                   8  => (others => 2),
-                   9  => (others => 5),
-                   10 => (others => 0),
-                   11 => (others => 3),
-                   12 => (others => 5));
+        (1  => (True => 6, False => 0), 2 => (True => 2, False => 3),
+         3  => (others => 3), 4 => (others => 6), 5 => (others => 1),
+         6  => (others => 4), 7 => (others => 6), 8 => (others => 2),
+         9  => (others => 5), 10 => (others => 0), 11 => (others => 3),
+         12 => (others => 5));
       Num_To_Day : constant Num_To_Day_Type :=
-                   (0 => Sun,
-                    1 => Mon,
-                    2 => Tue,
-                    3 => Wed,
-                    4 => Thu,
-                    5 => Fri,
-                    6 => Sat);
-      Is_Leap       : constant Leap_Year_P :=
-                         (Self.Year rem 4 = 0 and then Self.Year rem 100 /= 0)
-                         or else Self.Year rem 400 = 0;
+        (0 => Sun, 1 => Mon, 2 => Tue, 3 => Wed, 4 => Thu, 5 => Fri, 6 => Sat);
+      Is_Leap : constant Leap_Year_P :=
+        (Self.Year rem 4 = 0 and then Self.Year rem 100 /= 0)
+        or else Self.Year rem 400 = 0;
       CC   : constant Day_Number_Type := 2 * (3 - ((Self.Year / 100) mod 4));
       YY   : constant Natural         := Self.Year mod 100;
       YY_4 : constant Natural         := YY / 4;
@@ -158,7 +156,10 @@ package body ZanyBlue.Utils.DateTimes is
    -- Fraction_Seconds --
    ----------------------
 
-   function Fraction_Seconds (Self : in out DateTime_Type) return Float is
+   function Fraction_Seconds
+     (Self : in out DateTime_Type)
+      return Float
+   is
    begin
       if not Self.Have_HMS then
          Make_HMS (Self);
@@ -170,7 +171,10 @@ package body ZanyBlue.Utils.DateTimes is
    -- Hour --
    ----------
 
-   function Hour (Self : in out DateTime_Type) return Hour_Type is
+   function Hour
+     (Self : in out DateTime_Type)
+      return Hour_Type
+   is
    begin
       if not Self.Have_HMS then
          Make_HMS (Self);
@@ -182,8 +186,11 @@ package body ZanyBlue.Utils.DateTimes is
    -- Is_Noon --
    -------------
 
-   function Is_Noon (Self : in out DateTime_Type) return Boolean is
-      Hour   : constant Hour_Type := Self.Hour;
+   function Is_Noon
+     (Self : in out DateTime_Type)
+      return Boolean
+   is
+      Hour   : constant Hour_Type   := Self.Hour;
       Minute : constant Minute_Type := Self.Minute;
       Second : constant Second_Type := Self.Second;
    begin
@@ -194,7 +201,10 @@ package body ZanyBlue.Utils.DateTimes is
    -- Make_DateTime --
    -------------------
 
-   function Make_DateTime (Time_Value : Time) return DateTime_Type is
+   function Make_DateTime
+     (Time_Value : Time)
+      return DateTime_Type
+   is
    begin
       return Result : DateTime_Type do
          Result.Time_Value := Time_Value;
@@ -207,21 +217,24 @@ package body ZanyBlue.Utils.DateTimes is
 
    procedure Make_HMS (Self : in out DateTime_Type) is
       Seconds_Duration : constant Day_Duration := Seconds (Self);
-      Sec_Float : constant Float := Float (Seconds_Duration);
-      Sec_Int : constant Integer := Integer (Seconds_Duration);
+      Sec_Float        : constant Float        := Float (Seconds_Duration);
+      Sec_Int          : constant Integer      := Integer (Seconds_Duration);
    begin
       Self.Fraction_Seconds_Value := Sec_Float - Float'Floor (Sec_Float);
-      Self.Second_Value := Sec_Int rem 60;
-      Self.Minute_Value := (Sec_Int / 60) rem 60;
-      Self.Hour_Value := Sec_Int / 3600;
-      Self.Have_HMS := True;
+      Self.Second_Value           := Sec_Int rem 60;
+      Self.Minute_Value           := (Sec_Int / 60) rem 60;
+      Self.Hour_Value             := Sec_Int / 3_600;
+      Self.Have_HMS               := True;
    end Make_HMS;
 
    ------------
    -- Minute --
    ------------
 
-   function Minute (Self : in out DateTime_Type) return Minute_Type is
+   function Minute
+     (Self : in out DateTime_Type)
+      return Minute_Type
+   is
    begin
       if not Self.Have_HMS then
          Make_HMS (Self);
@@ -235,17 +248,23 @@ package body ZanyBlue.Utils.DateTimes is
    --
    --  TODO: Implement!
 
-   function Modified_Julian_Day (Self : in out DateTime_Type) return Natural is
+   function Modified_Julian_Day
+     (Self : in out DateTime_Type)
+      return Natural
+   is
       pragma Unreferenced (Self);
    begin
-      return 2451334;
+      return 2_451_334;
    end Modified_Julian_Day;
 
    -----------
    -- Month --
    -----------
 
-   function Month (Self : in out DateTime_Type) return Month_Number is
+   function Month
+     (Self : in out DateTime_Type)
+      return Month_Number
+   is
    begin
       if not Self.Have_Split then
          Split_Time (Self);
@@ -257,7 +276,10 @@ package body ZanyBlue.Utils.DateTimes is
    -- Quarter --
    -------------
 
-   function Quarter (Self : in out DateTime_Type) return Quarter_Type is
+   function Quarter
+     (Self : in out DateTime_Type)
+      return Quarter_Type
+   is
    begin
       if not Self.Have_Quarter then
          declare
@@ -282,7 +304,10 @@ package body ZanyBlue.Utils.DateTimes is
    -- Second --
    ------------
 
-   function Second (Self : in out DateTime_Type) return Second_Type is
+   function Second
+     (Self : in out DateTime_Type)
+      return Second_Type
+   is
    begin
       if not Self.Have_HMS then
          Make_HMS (Self);
@@ -294,7 +319,10 @@ package body ZanyBlue.Utils.DateTimes is
    -- Seconds --
    -------------
 
-   function Seconds (Self : in out DateTime_Type) return Day_Duration is
+   function Seconds
+     (Self : in out DateTime_Type)
+      return Day_Duration
+   is
    begin
       if not Self.Have_Split then
          Split_Time (Self);
@@ -308,8 +336,9 @@ package body ZanyBlue.Utils.DateTimes is
 
    procedure Split_Time (Self : in out DateTime_Type) is
    begin
-      Split (Self.Time_Value, Self.Year_Value, Self.Month_Value,
-             Self.Day_Value, Self.Seconds_Value);
+      Split
+        (Self.Time_Value, Self.Year_Value, Self.Month_Value, Self.Day_Value,
+         Self.Seconds_Value);
       Self.Have_Split := True;
    end Split_Time;
 
@@ -320,7 +349,8 @@ package body ZanyBlue.Utils.DateTimes is
    --  TODO: Calculate the week number!
    --
 
-   function Week_In_Month (Self : in out DateTime_Type)
+   function Week_In_Month
+     (Self : in out DateTime_Type)
       return Week_In_Month_Type
    is
       pragma Unreferenced (Self);
@@ -335,7 +365,8 @@ package body ZanyBlue.Utils.DateTimes is
    --  TODO: Calculate the week number!
    --
 
-   function Week_In_Year (Self : in out DateTime_Type)
+   function Week_In_Year
+     (Self : in out DateTime_Type)
       return Week_In_Year_Type
    is
       pragma Unreferenced (Self);
@@ -347,7 +378,10 @@ package body ZanyBlue.Utils.DateTimes is
    -- Year --
    ----------
 
-   function Year (Self : in out DateTime_Type) return Year_Number is
+   function Year
+     (Self : in out DateTime_Type)
+      return Year_Number
+   is
    begin
       if not Self.Have_Split then
          Split_Time (Self);

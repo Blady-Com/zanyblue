@@ -33,67 +33,70 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Wide_Characters.Unicode;
+with Ada.Wide_Wide_Characters.Unicode;
 
 package body ZBTest.Input_Parser is
 
-   use Ada.Wide_Characters.Unicode;
+   use Ada.Wide_Wide_Characters.Unicode;
 
    -----------------
    -- Parse_Words --
    -----------------
 
-   function Parse_Words (Line : Wide_String) return List_Type is
+   function Parse_Words
+     (Line : String)
+      return List_Type
+   is
       type State_Type is (Space, Word, String, Comment);
       Result    : List_Type;
-      State     : State_Type := Space;
-      End_Quote : Wide_Character := '"';
-      First     : Positive := Line'First;
+      State     : State_Type        := Space;
+      End_Quote : Unicode_Character := '"';
+      First     : Positive          := Line.First;
    begin
-      for I in Line'Range loop
+      for I in Line.First .. Line.Last loop
          case State is
-         when Space =>
-            if Line (I) = '"' or else Line (I) = ''' then
-               First := I + 1;
-               State := String;
-               End_Quote := Line (I);
-            elsif Line (I) = '#' then
-               State := Comment;
-            elsif not Is_Space (Line (I)) then
-               First := I;
-               State := Word;
-            end if;
-         when Word =>
-            if Line (I) = '"' or else Line (I) = ''' then
-               Append (Result, Line (First .. I - 1));
-               First := I + 1;
-               State := String;
-               End_Quote := Line (I);
-            elsif Is_Space (Line (I)) or else Line (I) = '#' then
-               Append (Result, Line (First .. I - 1));
-               if Line (I) = '#' then
+            when Space =>
+               if Line (I) = '"' or else Line (I) = ''' then
+                  First     := I + 1;
+                  State     := String;
+                  End_Quote := Line (I);
+               elsif Line (I) = '#' then
                   State := Comment;
-               else
+               elsif not Is_Space (Line (I)) then
+                  First := I;
+                  State := Word;
+               end if;
+            when Word =>
+               if Line (I) = '"' or else Line (I) = ''' then
+                  Append (Result, Line.Slice (First, I - 1));
+                  First     := I + 1;
+                  State     := String;
+                  End_Quote := Line (I);
+               elsif Is_Space (Line (I)) or else Line (I) = '#' then
+                  Append (Result, Line.Slice (First, I - 1));
+                  if Line (I) = '#' then
+                     State := Comment;
+                  else
+                     State := Space;
+                  end if;
+               end if;
+            when String =>
+               if Line (I) = End_Quote then
+                  Append (Result, Line.Slice (First, I - 1));
+                  First := I + 1;
                   State := Space;
                end if;
-            end if;
-         when String =>
-            if Line (I) = End_Quote then
-               Append (Result, Line (First .. I - 1));
-               First := I + 1;
-               State := Space;
-            end if;
-         when Comment =>
+            when Comment =>
                null;
          end case;
       end loop;
       case State is
-      when Space | Comment =>
-         null;
-      when Word =>
-         Append (Result, Line (First .. Line'Last));
-      when String =>
-         raise Unterminated_String;
+         when Space | Comment =>
+            null;
+         when Word =>
+            Append (Result, Line.Slice (First, Line.Last));
+         when String =>
+            raise Unterminated_String;
       end case;
       return Result;
    end Parse_Words;

@@ -34,6 +34,7 @@
 --
 
 with ZanyBlue.Text.Format_Parser;
+with UXStrings.Conversions;
 
 package body ZanyBlue.Text.Generic_Enumerations is
 
@@ -43,8 +44,10 @@ package body ZanyBlue.Text.Generic_Enumerations is
    -- Create --
    ------------
 
-   function Create (Enumeration_Value : Enumeration_Type)
-      return Enumeration_Argument_Type is
+   function Create
+     (Enumeration_Value : Enumeration_Type)
+      return Enumeration_Argument_Type
+   is
    begin
       return Enumeration_Argument_Type'(Data => Enumeration_Value);
    end Create;
@@ -53,16 +56,22 @@ package body ZanyBlue.Text.Generic_Enumerations is
    -- Format --
    ------------
 
-   overriding
-   function Format (Value     : Enumeration_Argument_Type;
-                    Type_Name : Wide_String;
-                    Template  : Wide_String;
-                    Locale    : Locale_Type) return Wide_String is
+   overriding function Format
+     (Value     : Enumeration_Argument_Type;
+      Type_Name : String;
+      Template  : String;
+      Locale    : Locale_Type)
+      return String
+   is
       pragma Unreferenced (Type_Name);
       Formatting : constant Format_Type := Parse (Template, Locale);
+      function Image is new UXStrings.Conversions.Scalar_Image
+        (Enumeration_Type);
    begin
-      return Align (Enumeration_Type'Wide_Image (Value.Data),
-                    Formatting.Fill, Formatting.Width, Formatting.Align);
+      return
+        Align
+          (Image (Value.Data), Formatting.Fill, Formatting.Width,
+           Formatting.Align);
    end Format;
 
 end ZanyBlue.Text.Generic_Enumerations;

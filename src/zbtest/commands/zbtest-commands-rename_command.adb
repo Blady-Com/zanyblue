@@ -48,32 +48,37 @@
 --      ZBTest> rename generate.dat $(nextlog)
 --
 
-with ZanyBlue.Wide_Directories;
+with ZanyBlue.Directories;
 
 separate (ZBTest.Commands)
-procedure Rename_Command (State : in out State_Type;
-                          Args  : List_Type) is
+procedure Rename_Command
+  (State : in out State_Type;
+   Args  :        List_Type)
+is
 
    pragma Unreferenced (State);
 
-   use ZanyBlue.Wide_Directories;
+   use ZanyBlue.Directories;
 
-   procedure Rename_File (Old_Name : Wide_String;
-                          New_Name : Wide_String);
+   procedure Rename_File
+     (Old_Name : String;
+      New_Name : String);
    --  Rename the file.
 
    -----------------
    -- Rename_File --
    -----------------
 
-   procedure Rename_File (Old_Name : Wide_String;
-                          New_Name : Wide_String) is
+   procedure Rename_File
+     (Old_Name : String;
+      New_Name : String)
+   is
    begin
-      Wide_Rename (Old_Name, New_Name);
+      Rename (Old_Name, New_Name);
       Print_00012 (+Old_Name, +New_Name);
    exception
-   when E : Ada.Text_IO.Name_Error | Ada.Text_IO.Use_Error =>
-      Print_10034 (+Old_Name, +New_Name, +E);
+      when E : UXStrings.Text_IO.Name_Error | UXStrings.Text_IO.Use_Error =>
+         Print_10034 (+Old_Name, +New_Name, +E);
    end Rename_File;
 
 begin
@@ -83,6 +88,6 @@ begin
       raise Command_Usage_Error;
    end if;
 exception
-when E : ZanyBlue.Wide_Directories.Use_Error =>
-   Print_10019 (+Value (Args, 2), +Value (Args, 3), +E);
+   when E : ZanyBlue.Directories.Use_Error =>
+      Print_10019 (+Value (Args, 2), +Value (Args, 3), +E);
 end Rename_Command;

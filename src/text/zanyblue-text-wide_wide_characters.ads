@@ -33,27 +33,40 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
---
---  This is a simple wrapper package around the GNAT GNAT.Regexp
---  package with Wide_String arguments and functions.  The underlying
---  Strings to/from GNAT.Regexp are simply interpreted as UTF-8 encoded
---  strings.
---
+with ZanyBlue.Text.Locales;
+with ZanyBlue.Text.Arguments;
 
-with GNAT.Regexp;
+package ZanyBlue.Text.Wide_Wide_Characters is
 
-package ZanyBlue.Wide_Regexp is
+   use ZanyBlue.Text.Locales;
+   use ZanyBlue.Text.Arguments;
 
-   subtype Regexp is GNAT.Regexp.Regexp;
+   type Wide_Wide_Character_Argument_Type is
+     new Character_Category_Type with private;
 
-   function Compile (Pattern        : Wide_String;
-                     Glob           : Boolean := False;
-                     Case_Sensitive : Boolean := True) return Regexp;
-   --  Compiles a regular expression S.
+   function Create
+     (Wide_Wide_Character_Value : Wide_Wide_Character)
+      return Wide_Wide_Character_Argument_Type;
+   --  Create a "boxed" instance of a string type.
 
-   function Match (S : Wide_String; R : Regexp) return Boolean;
-   --  True if S matches R, otherwise False.
+   function "+"
+     (Wide_Wide_Character_Value : Wide_Wide_Character)
+      return Wide_Wide_Character_Argument_Type renames Create;
+   --  Utility renaming of the Create function.
 
-   Error_In_Regexp : exception renames GNAT.Regexp.Error_In_Regexp;
+   overriding function Format
+     (Value     : Wide_Wide_Character_Argument_Type;
+      Type_Name : String;
+      Template  : String;
+      Locale    : Locale_Type)
+      return String;
+   --  Format a string for printing.
 
-end ZanyBlue.Wide_Regexp;
+private
+
+   type Wide_Wide_Character_Argument_Type is
+   new Character_Category_Type with record
+      Data : Wide_Wide_Character;
+   end record;
+
+end ZanyBlue.Text.Wide_Wide_Characters;

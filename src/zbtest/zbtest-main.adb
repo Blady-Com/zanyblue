@@ -34,22 +34,21 @@
 --
 
 with Ada.Calendar;
-with Ada.Text_IO;
 with Ada.Command_Line;
-with Ada.Strings.Wide_Fixed;
 with ZanyBlue.Text.Formatting;
-with ZanyBlue.Wide_Command_Line;
+with ZanyBlue.Command_Line;
 with ZBTest.States;
 with ZBTest_Messages.ZBTest_Exceptions;
 with ZBTest_Messages.ZBTest_Prints;
+with UXStrings.Text_IO;
 
 procedure ZBTest.Main is
 
    use Ada.Calendar;
-   use Ada.Text_IO;
+   use UXStrings.Text_IO;
    use ZanyBlue.Text;
    use ZanyBlue.Text.Formatting;
-   use ZanyBlue.Wide_Command_Line;
+   use ZanyBlue.Command_Line;
    use ZBTest.States;
    use ZBTest_Messages.ZBTest_Exceptions;
    use ZBTest_Messages.ZBTest_Prints;
@@ -58,7 +57,9 @@ procedure ZBTest.Main is
 
    function Banner return Time;
    procedure Process_Command_Line (State : in out State_Type);
-   procedure Trailer (Start_Time : Time; Failure : Boolean := False);
+   procedure Trailer
+     (Start_Time : Time;
+      Failure    : Boolean := False);
 
    ------------
    -- Banner --
@@ -67,8 +68,9 @@ procedure ZBTest.Main is
    function Banner return Time is
       Start_Time : constant Time := Clock;
    begin
-      Print_00001 (+ZanyBlue.Version_Major, +ZanyBlue.Version_Minor,
-                   +ZanyBlue.Version_Patch, +ZanyBlue.Revision, +Start_Time);
+      Print_00001
+        (+ZanyBlue.Version_Major, +ZanyBlue.Version_Minor,
+         +ZanyBlue.Version_Patch, +ZanyBlue.Revision, +Start_Time);
       Print_00002 (+ZanyBlue.Copyright_Year);
       return Start_Time;
    end Banner;
@@ -79,21 +81,24 @@ procedure ZBTest.Main is
 
    procedure Process_Command_Line (State : in out State_Type) is
 
-      procedure Handle_Argument (Value : Wide_String;
-                                 Index : in out Positive);
+      procedure Handle_Argument
+        (Value :        String;
+         Index : in out Positive);
 
-      procedure Set_Option_Value (Parameter : Wide_String;
-                                  Index     : in out Positive);
+      procedure Set_Option_Value
+        (Parameter :        String;
+         Index     : in out Positive);
 
-      procedure Set_Parameter_Value (Index     : in out Positive);
+      procedure Set_Parameter_Value (Index : in out Positive);
 
       ---------------------
       -- Handle_Argument --
       ---------------------
 
-      procedure Handle_Argument (Value : Wide_String;
-                                 Index : in out Positive) is
-         use Ada.Strings.Wide_Fixed;
+      procedure Handle_Argument
+        (Value :        String;
+         Index : in out Positive)
+      is
       begin
          if Value = "-h" then
             Print_00010;
@@ -111,11 +116,11 @@ procedure ZBTest.Main is
             Set_Option_Value ("_xml_file", Index);
             Print_10043;
          elsif Head (Value, 1) = "-" then
-            Raise_10016 (Usage_Error'Identity, +Wide_Argument (Index));
+            Raise_10016 (Usage_Error'Identity, +Argument (Index));
          elsif not State.Is_Defined ("_testscript") then
             State.Set_String ("_testscript", Value);
          else
-            Raise_10016 (Usage_Error'Identity, +Wide_Argument (Index));
+            Raise_10016 (Usage_Error'Identity, +Argument (Index));
          end if;
          Index := Index + 1;
       end Handle_Argument;
@@ -124,14 +129,16 @@ procedure ZBTest.Main is
       -- Set_Option_Value --
       ----------------------
 
-      procedure Set_Option_Value (Parameter : Wide_String;
-                                  Index     : in out Positive) is
+      procedure Set_Option_Value
+        (Parameter :        String;
+         Index     : in out Positive)
+      is
       begin
-         if Index < Wide_Argument_Count then
+         if Index < Argument_Count then
             Index := Index + 1;
-            State.Set_String (Parameter, Wide_Argument (Index));
+            State.Set_String (Parameter, Argument (Index));
          else
-            Raise_10015 (Usage_Error'Identity, +Wide_Argument (Index));
+            Raise_10015 (Usage_Error'Identity, +Argument (Index));
          end if;
       end Set_Option_Value;
 
@@ -141,22 +148,20 @@ procedure ZBTest.Main is
 
       procedure Set_Parameter_Value (Index : in out Positive) is
       begin
-         if Index + 1 < Wide_Argument_Count then
-            Print_00031 (+Wide_Argument (Index + 1),
-                         +Wide_Argument (Index + 2));
-            State.Set_String (Wide_Argument (Index + 1),
-                              Wide_Argument (Index + 2));
+         if Index + 1 < Argument_Count then
+            Print_00031 (+Argument (Index + 1), +Argument (Index + 2));
+            State.Set_String (Argument (Index + 1), Argument (Index + 2));
             Index := Index + 2;
          else
-            Raise_10035 (Usage_Error'Identity, +Wide_Argument (Index));
+            Raise_10035 (Usage_Error'Identity, +Argument (Index));
          end if;
       end Set_Parameter_Value;
 
       Index : Positive := 1;
 
    begin
-      while Index <= Wide_Argument_Count loop
-         Handle_Argument (Wide_Argument (Index), Index);
+      while Index <= Argument_Count loop
+         Handle_Argument (Argument (Index), Index);
       end loop;
    end Process_Command_Line;
 
@@ -164,8 +169,11 @@ procedure ZBTest.Main is
    -- Trailer --
    -------------
 
-   procedure Trailer (Start_Time : Time; Failure : Boolean := False) is
-      Now : constant Time := Clock;
+   procedure Trailer
+     (Start_Time : Time;
+      Failure    : Boolean := False)
+   is
+      Now     : constant Time     := Clock;
       Elapsed : constant Duration := Now - Start_Time;
    begin
       Print_00003 (+Now, +Elapsed);
@@ -175,7 +183,8 @@ procedure ZBTest.Main is
    end Trailer;
 
    Start_Time : constant Time := Banner;
-   State : State_Type;
+   State      : State_Type;
+   Input      : File_Type     := Standard_Input;
 
 begin
    State.Define_Initial_Parameters;
@@ -185,18 +194,18 @@ begin
       if State.Is_Defined ("_testscript") then
          State.Execute_Line ("run " & State.Get_String ("_testscript"), True);
       else
-         State.Read_Eval_Loop (Standard_Input, True);
+         State.Read_Eval_Loop (Input, True);
       end if;
    end if;
    State.Write_XML_Report;
    Trailer (Start_Time);
 exception
-when E : Usage_Error =>
-   Print_10017 (+E);
-   Trailer (Start_Time, True);
-when Invalid_Environment =>
-   Trailer (Start_Time, True);
-when E : others =>
-   Print_10033 (+E);
-   Trailer (Start_Time, True);
+   when E : Usage_Error =>
+      Print_10017 (+E);
+      Trailer (Start_Time, True);
+   when Invalid_Environment =>
+      Trailer (Start_Time, True);
+   when E : others =>
+      Print_10033 (+E);
+      Trailer (Start_Time, True);
 end ZBTest.Main;

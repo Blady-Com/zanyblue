@@ -39,36 +39,38 @@ package body ZanyBlue.Text.Generic_Buffer is
    -- Accumulate --
    ----------------
 
-   procedure Accumulate (Buffer     : in out Buffer_Type;
-                         Value      : Integer_Type;
-                         Locale     : Locale_Type;
-                         Width      : Natural := 1;
-                         Fill       : Wide_String := "";
-                         Base       : Positive := 10;
-                         Lowercase  : Boolean := True) is
+   procedure Accumulate
+     (Buffer    : in out Buffer_Type;
+      Value     :        Integer_Type;
+      Locale    :        Locale_Type;
+      Width     :        Natural  := 1;
+      Fill      :        String   := "";
+      Base      :        Positive := 10;
+      Lowercase :        Boolean  := True)
+   is
 
-      Digit_Map : constant Wide_String := Locale_Digits (Locale, Lowercase);
-      Base_Value  : constant Integer_Type'Base := Integer_Type'Base (Base);
+      Digit_Map  : constant String := Locale_Digits (Locale, Lowercase);
+      Base_Value : constant Integer_Type'Base := Integer_Type'Base (Base);
 
       function Number_Width return Positive;
 
-      function Fill_Ch return Wide_Character;
+      function Fill_Ch return Unicode_Character;
 
-      function Fill_Ch return Wide_Character is
+      function Fill_Ch return Unicode_Character is
       begin
-         if Fill'Length > 0 then
-            return Fill (Fill'First);
+         if Fill.Length > 0 then
+            return Fill (Fill.First);
          else
-            return Digit_Map (Digit_Map'First);
+            return Digit_Map (Digit_Map.First);
          end if;
       end Fill_Ch;
 
       function Number_Width return Positive is
-         Result : Natural := 0;
+         Result : Natural           := 0;
          X      : Integer_Type'Base := Value;
       begin
          while X /= 0 loop
-            X := X / Base_Value;
+            X      := X / Base_Value;
             Result := Result + 1;
          end loop;
          return Positive'Max (Result, 1);
@@ -76,12 +78,13 @@ package body ZanyBlue.Text.Generic_Buffer is
 
       Num_Size    : constant Positive := Number_Width;
       Buffer_Size : constant Positive := Positive'Max (Num_Size, Width);
-      Formatted   : Wide_String (1 .. Buffer_Size) := (others => Fill_Ch);
+      Formatted   : String            := Buffer_Size * Fill_Ch;
       X           : Integer_Type'Base := Value;
 
    begin
       for I in reverse Buffer_Size - Num_Size + 1 .. Buffer_Size loop
-         Formatted (I) := Digit_Map (Positive (abs (X rem Base_Value) + 1));
+         Formatted.Replace_Unicode
+           (I, Digit_Map (Positive (abs (X rem Base_Value) + 1)));
          X := X / Base_Value;
       end loop;
       Add (Buffer, Formatted);
@@ -91,9 +94,11 @@ package body ZanyBlue.Text.Generic_Buffer is
    -- Add --
    ---------
 
-   procedure Add (Buffer : in out Buffer_Type;
-                  Data : Wide_Character;
-                  Count : Positive := 1) is
+   procedure Add
+     (Buffer : in out Buffer_Type;
+      Data   :        Unicode_Character;
+      Count  :        Positive := 1)
+   is
    begin
       for I in 1 .. Count loop
          Append (Buffer.Data, Data);
@@ -104,10 +109,13 @@ package body ZanyBlue.Text.Generic_Buffer is
    -- Add --
    ---------
 
-   procedure Add (Buffer : in out Buffer_Type; Data : Wide_String) is
+   procedure Add
+     (Buffer : in out Buffer_Type;
+      Data   :        String)
+   is
    begin
-      for I in Data'Range loop
-         Add (Buffer, Data (I));
+      for C of Data loop
+         Add (Buffer, C);
       end loop;
    end Add;
 
@@ -115,9 +123,12 @@ package body ZanyBlue.Text.Generic_Buffer is
    -- To_String --
    ---------------
 
-   function To_String (Buffer : Buffer_Type) return Wide_String is
+   function To_String
+     (Buffer : Buffer_Type)
+      return String
+   is
    begin
-      return To_Wide_String (Buffer.Data);
+      return Buffer.Data;
    end To_String;
 
 end ZanyBlue.Text.Generic_Buffer;

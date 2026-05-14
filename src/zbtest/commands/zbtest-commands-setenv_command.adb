@@ -68,41 +68,46 @@
 --
 
 with Ada.Environment_Variables;
-with Ada.Strings.Wide_Unbounded;
 
 separate (ZBTest.Commands)
-procedure Setenv_Command (State : in out State_Type;
-                          Args  : List_Type) is
+procedure Setenv_Command
+  (State : in out State_Type;
+   Args  :        List_Type)
+is
 
    use Ada.Environment_Variables;
 
-   procedure Set_Literal_Value (State       : in out State_Type;
-                                Name        : Wide_String;
-                                Definition  : Wide_String);
+   procedure Set_Literal_Value
+     (State      : in out State_Type;
+      Name       :        String;
+      Definition :        String);
    --  Set an environment variable from a literal value.
 
-   procedure Set_List_Value (State     : in out State_Type;
-                             Name      : Wide_String;
-                             Parameter : Wide_String);
+   procedure Set_List_Value
+     (State     : in out State_Type;
+      Name      :        String;
+      Parameter :        String);
    --  Set an environment variable from a list parameter value.
 
-   procedure Set_Scalar_Value (State     : in out State_Type;
-                               Name      : Wide_String;
-                               Parameter : Wide_String);
+   procedure Set_Scalar_Value
+     (State     : in out State_Type;
+      Name      :        String;
+      Parameter :        String);
    --  Set an environment variable from a scalar parameter value.
 
    --------------------
    -- Set_List_Value --
    --------------------
 
-   procedure Set_List_Value (State     : in out State_Type;
-                             Name      : Wide_String;
-                             Parameter : Wide_String) is
-      use Ada.Strings.Wide_Unbounded;
-      List_Value : constant List_Type := State.Get_List (Parameter);
-      PSep       : constant Wide_Character := State.Get_Character ("_pathsep");
-      N_Values   : constant Natural := Length (List_Value);
-      Buffer     : Unbounded_Wide_String;
+   procedure Set_List_Value
+     (State     : in out State_Type;
+      Name      :        String;
+      Parameter :        String)
+   is
+      List_Value : constant List_Type         := State.Get_List (Parameter);
+      PSep : constant Unicode_Character := State.Get_Character ("_pathsep");
+      N_Values   : constant Natural           := Length (List_Value);
+      Buffer     : String;
    begin
       for I in 1 .. N_Values loop
          Append (Buffer, Value (List_Value, I));
@@ -110,34 +115,40 @@ procedure Setenv_Command (State : in out State_Type;
             Append (Buffer, PSep);
          end if;
       end loop;
-      Set_Literal_Value (State, Name, To_Wide_String (Buffer));
+      Set_Literal_Value (State, Name, Buffer);
    end Set_List_Value;
 
    -----------------------
    -- Set_Literal_Value --
    -----------------------
 
-   procedure Set_Literal_Value (State       : in out State_Type;
-                                Name        : Wide_String;
-                                Definition  : Wide_String) is
+   procedure Set_Literal_Value
+     (State      : in out State_Type;
+      Name       :        String;
+      Definition :        String)
+   is
    begin
-      if Exists (To_UTF8 (Name)) then
-         State.Add_Undo_Action (Format ("setenv {0} ""{1}""",
-                                        +Name, +Value (To_UTF8 (Name))));
+      if Exists (To_UTF_8 (Name)) then
+         State.Add_Undo_Action
+           (Format
+              ("setenv {0} ""{1}""", +Name,
+                  +From_UTF_8 (Value (To_UTF_8 (Name)))));
       else
          State.Add_Undo_Action (Format ("delenv {0}", +Name));
       end if;
       Print_00038 (+Name, +Definition);
-      Set (To_UTF8 (Name), To_UTF8 (Definition));
+      Set (To_UTF_8 (Name), To_UTF_8 (Definition));
    end Set_Literal_Value;
 
    ----------------------
    -- Set_Scalar_Value --
    ----------------------
 
-   procedure Set_Scalar_Value (State     : in out State_Type;
-                               Name      : Wide_String;
-                               Parameter : Wide_String) is
+   procedure Set_Scalar_Value
+     (State     : in out State_Type;
+      Name      :        String;
+      Parameter :        String)
+   is
    begin
       Set_Literal_Value (State, Name, State.Get_String (Parameter));
    end Set_Scalar_Value;
@@ -168,13 +179,12 @@ begin
       raise Command_Usage_Error;
    end if;
    if Set_From_List then
-      Set_List_Value (State, Value (Args, Name_Idx),
-                             Value (Args, Value_Idx));
+      Set_List_Value (State, Value (Args, Name_Idx), Value (Args, Value_Idx));
    elsif Set_From_Parameter then
-      Set_Scalar_Value (State, Value (Args, Name_Idx),
-                               Value (Args, Value_Idx));
+      Set_Scalar_Value
+        (State, Value (Args, Name_Idx), Value (Args, Value_Idx));
    else
-      Set_Literal_Value (State, Value (Args, Name_Idx),
-                                Value (Args, Value_Idx));
+      Set_Literal_Value
+        (State, Value (Args, Name_Idx), Value (Args, Value_Idx));
    end if;
 end Setenv_Command;

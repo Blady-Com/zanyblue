@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2017, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,15 +33,40 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-package body ZanyBlue.Text.Unbounded_Strings is
+--
+--  This is a simple wrapper package around the GNAT GNAT.Regexp
+--  package with String arguments and functions.  The underlying
+--  Strings to/from GNAT.Regexp are simply interpreted as UTF-8 encoded
+--  strings.
+--
 
-   ------------
-   -- Create --
-   ------------
+package body ZanyBlue.Regexp is
 
-   function Create (Value : Unbounded_String) return String_Argument_Type is
+   -------------
+   -- Compile --
+   -------------
+
+   function Compile
+     (Pattern        : String;
+      Glob           : Boolean := False;
+      Case_Sensitive : Boolean := True)
+      return Regexp
+   is
    begin
-      return Create (To_String (Value));
-   end Create;
+      return GNAT.Regexp.Compile (To_UTF_8 (Pattern), Glob, Case_Sensitive);
+   end Compile;
 
-end ZanyBlue.Text.Unbounded_Strings;
+   -----------
+   -- Match --
+   -----------
+
+   function Match
+     (S : String;
+      R : Regexp)
+      return Boolean
+   is
+   begin
+      return GNAT.Regexp.Match (To_UTF_8 (S), R);
+   end Match;
+
+end ZanyBlue.Regexp;

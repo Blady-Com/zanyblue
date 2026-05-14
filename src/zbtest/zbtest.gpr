@@ -39,9 +39,21 @@ with "../zbcom";
 
 project zbtest is
 
+   type Alire_Type is ("True", "False");
+   Alire : Alire_Type := External ("ALIRE", "False");
+
+   for Languages   use ("Ada");
+
+   case Alire is
+      when "True" =>
+         for Object_Dir  use "obj";
+         for Exec_Dir    use "bin";
+      when "False" =>
+         for Object_Dir  use "../obj";
+         for Exec_Dir    use "../../bin";
+   end case;
+
    for Source_Dirs use (".", "commands", "functions", "mesg");
-   for Object_Dir use "../obj";
-   for Exec_Dir use "../../bin";
    for Main use ("zbtest-main.adb");
 
    package Compiler is
@@ -55,5 +67,7 @@ project zbtest is
    package Builder is
       for Executable ("zbtest-main.adb") use "zbtest";
    end Builder;
+
+   package Pretty_Printer renames zbcom.Pretty_Printer;
 
 end zbtest;

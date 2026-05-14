@@ -66,43 +66,46 @@
 --
 
 with Ada.Directories;
-with Ada.Strings.Wide_Fixed;
-with ZanyBlue.Wide_Directories;
+with ZanyBlue.Directories;
 with ZBTest.Commands.File_Size_Arguments;
 with ZBTest.Commands.File_Type_Arguments;
 
 separate (ZBTest.Commands)
-procedure Filestat_Command (State : in out State_Type;
-                            Args  : List_Type) is
+procedure Filestat_Command
+  (State : in out State_Type;
+   Args  :        List_Type)
+is
 
-   use Ada.Strings.Wide_Fixed;
-   use ZanyBlue.Wide_Directories;
+   use ZanyBlue.Directories;
    use ZBTest.Commands.File_Size_Arguments;
    use ZBTest.Commands.File_Type_Arguments;
 
-   procedure File_Stat (State     : in out State_Type;
-                        File_Name : Wide_String;
-                        Log_Name  : Wide_String);
+   procedure File_Stat
+     (State     : in out State_Type;
+      File_Name :        String;
+      Log_Name  :        String);
    --  Generate the status report on a file.
 
    ---------------
    -- File_Stat --
    ---------------
 
-   procedure File_Stat (State     : in out State_Type;
-                        File_Name : Wide_String;
-                        Log_Name  : Wide_String) is
+   procedure File_Stat
+     (State     : in out State_Type;
+      File_Name :        String;
+      Log_Name  :        String)
+   is
       pragma Unreferenced (State);
-      use type Ada.Directories.File_Kind;
+      use type ZanyBlue.Directories.File_Kind;
       Log_File : File_Type;
    begin
-      Wide_Create (Log_File, Log_Name);
-      if Wide_Exists (File_Name) then
+      Create (Log_File, Name => Log_Name);
+      if Exists (File_Name) then
          Print_00025 (+File_Name, Log_File);
-         Print_00026 (+Wide_Kind (File_Name), Log_File);
-         if Wide_Kind (File_Name) = Ada.Directories.Ordinary_File then
-            Print_00027 (+Wide_Size (File_Name), Log_File);
-            Print_00028 (+Wide_Modification_Time (File_Name), Log_File);
+         Print_00026 (+Kind (File_Name), Log_File);
+         if Kind (File_Name) = Ada.Directories.Ordinary_File then
+            Print_00027 (+Size (File_Name), Log_File);
+            Print_00028 (+Modification_Time (File_Name), Log_File);
          end if;
          Print_00022 (+File_Name, +Log_Name);
       else

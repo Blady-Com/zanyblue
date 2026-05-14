@@ -33,60 +33,72 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Wide_Text_IO;
+with UXStrings.Text_IO;
+with UXStrings.Conversions;
 
 ----------
 -- Dump --
 ----------
 separate (ZanyBlue.Text.Catalogs)
-procedure Dump (Catalog   : Catalog_Type;
-                File_Name : Wide_String := "") is
+procedure Dump
+  (Catalog   : Catalog_Type;
+   File_Name : String := "")
+is
 
-   use Ada.Wide_Text_IO;
+   use UXStrings.Text_IO;
+   function Image is new UXStrings.Conversions.Integer_Image (Natural);
 
-   procedure Dump_Pool (File    : File_Type;
-                        Catalog : Catalog_Type);
+   procedure Dump_Pool
+     (File    : File_Type;
+      Catalog : Catalog_Type);
    --  Dump the contents of the dynamic pool.
-   procedure Dump_To_File (Catalog : Catalog_Type;
-                           File    : File_Type);
+   procedure Dump_To_File
+     (Catalog : Catalog_Type;
+      File    : File_Type);
    --  Dump the catalog to an opened file handle.
 
-   procedure Hdr (File  : File_Type;
-                  Title : Wide_String;
-                  N     : Natural);
-   procedure Hdr (File  : File_Type;
-                  Title : Wide_String;
-                  N     : Natural;
-                  M     : Natural);
+   procedure Hdr
+     (File  : File_Type;
+      Title : String;
+      N     : Natural);
+   procedure Hdr
+     (File  : File_Type;
+      Title : String;
+      N     : Natural;
+      M     : Natural);
    --  Write the header data about the catalog.
 
-   procedure Dump_Message (File : File_Type;
-                           N    : in out Positive;
-                           F    : Facility_Index_Type;
-                           K    : Key_Index_Type;
-                           L    : Locale_Index_Type);
+   procedure Dump_Message
+     (File :        File_Type;
+      N    : in out Positive;
+      F    :        Facility_Index_Type;
+      K    :        Key_Index_Type;
+      L    :        Locale_Index_Type);
    --  Dump a message given the message indexes.
 
-   procedure Dump_Message (File     : File_Type;
-                           N        : in out Positive;
-                           Facility : Wide_String;
-                           Key      : Wide_String;
-                           Locale   : Locale_Type;
-                           Message  : Wide_String);
+   procedure Dump_Message
+     (File     :        File_Type;
+      N        : in out Positive;
+      Facility :        String;
+      Key      :        String;
+      Locale   :        Locale_Type;
+      Message  :        String);
    --  Dump a message given the text.
 
    ------------------
    -- Dump_Message --
    ------------------
 
-   procedure Dump_Message (File     : File_Type;
-                           N        : in out Positive;
-                           Facility : Wide_String;
-                           Key      : Wide_String;
-                           Locale   : Locale_Type;
-                           Message  : Wide_String) is
+   procedure Dump_Message
+     (File     :        File_Type;
+      N        : in out Positive;
+      Facility :        String;
+      Key      :        String;
+      Locale   :        Locale_Type;
+      Message  :        String)
+   is
    begin
-      Put (File, Positive'Wide_Image (N));
+      Put (File, Image (N));
       Put (File, ": """);
       Put (File, Facility);
       Put (File, """, """);
@@ -104,37 +116,37 @@ procedure Dump (Catalog   : Catalog_Type;
    -- Dump_Message --
    ------------------
 
-   procedure Dump_Message (File : File_Type;
-                           N    : in out Positive;
-                           F    : Facility_Index_Type;
-                           K    : Key_Index_Type;
-                           L    : Locale_Index_Type) is
+   procedure Dump_Message
+     (File :        File_Type;
+      N    : in out Positive;
+      F    :        Facility_Index_Type;
+      K    :        Key_Index_Type;
+      L    :        Locale_Index_Type)
+   is
    begin
-      Dump_Message (File, N,
-                    Get_Facility (Catalog, F),
-                    Get_Key (Catalog, K),
-                    Get_Locale (Catalog, L),
-                    Get_Text (Catalog, F, K, L));
+      Dump_Message
+        (File, N, Get_Facility (Catalog, F), Get_Key (Catalog, K),
+         Get_Locale (Catalog, L), Get_Text (Catalog, F, K, L));
    exception
-   when No_Such_Facility_Error |
-        No_Such_Key_Error |
-        No_Such_Locale_Error |
+      when No_Such_Facility_Error | No_Such_Key_Error | No_Such_Locale_Error |
         No_Such_Message_Error =>
-      null;
+         null;
    end Dump_Message;
 
-   procedure Dump_Pool (File    : File_Type;
-                        Catalog : Catalog_Type) is
-      Pool  : constant Wide_String := Catalog.C.Messages.Get_Pool;
-      Limit : constant Natural := Pool_Size (Catalog);
+   procedure Dump_Pool
+     (File    : File_Type;
+      Catalog : Catalog_Type)
+   is
+      Pool  : constant String   := Catalog.C.Messages.Get_Pool;
+      Limit : constant Natural  := Pool_Size (Catalog);
       Span  : constant Positive := 75;
-      Start : Positive := 1;
+      Start : Positive          := 1;
    begin
-      Hdr (File, "Dynmaic Pool",
-           Limit, Logical_Pool_Size (Catalog));
+      Hdr (File, "Dynmaic Pool", Limit, Logical_Pool_Size (Catalog));
       Put_Line (File, "---START OF STRING POOL---");
-      while Start < Pool'Length loop
-         Put_Line (File, Pool (Start .. Natural'Min (Start + Span, Limit)));
+      while Start < Pool.Length loop
+         Put_Line
+           (File, Pool.Slice (Start, Natural'Min (Start + Span, Limit)));
          Start := Start + Span + 1;
       end loop;
       Put_Line (File, "---END OF STRING POOL---");
@@ -144,8 +156,10 @@ procedure Dump (Catalog   : Catalog_Type;
    -- Dump_To_File --
    ------------------
 
-   procedure Dump_To_File (Catalog : Catalog_Type;
-                           File    : File_Type) is
+   procedure Dump_To_File
+     (Catalog : Catalog_Type;
+      File    : File_Type)
+   is
       N : Positive := 1;
 
    begin
@@ -161,15 +175,17 @@ procedure Dump (Catalog   : Catalog_Type;
       end loop;
       Hdr (File, "Number_Of_Locales", Number_Of_Locales (Catalog));
       for L in 1 .. Number_Of_Locales (Catalog) loop
-         Put_Line (File, "    """
-                & Locale_Name (Get_Locale (Catalog, L))
-                & """");
+         Put_Line
+           (File, "    """ & Locale_Name (Get_Locale (Catalog, L)) & """");
       end loop;
       Hdr (File, "Number_Of_Messages", Number_Of_Messages (Catalog));
       --  Note: This needs to be reimplemented in terms of "Iterate".
-      Locales : for L in 1 .. Number_Of_Locales (Catalog) loop
-         Facilities : for F in 1 .. Number_Of_Facilities (Catalog) loop
-            Keys : for K in 1 .. Number_Of_Keys (Catalog) loop
+      Locales :
+      for L in 1 .. Number_Of_Locales (Catalog) loop
+         Facilities :
+         for F in 1 .. Number_Of_Facilities (Catalog) loop
+            Keys :
+            for K in 1 .. Number_Of_Keys (Catalog) loop
                Dump_Message (File, N, F, K, L);
             end loop Keys;
          end loop Facilities;
@@ -181,14 +197,16 @@ procedure Dump (Catalog   : Catalog_Type;
    -- Hdr --
    ---------
 
-   procedure Hdr (File  : File_Type;
-                  Title : Wide_String;
-                  N     : Natural) is
+   procedure Hdr
+     (File  : File_Type;
+      Title : String;
+      N     : Natural)
+   is
    begin
       Put (File, Title);
       Set_Col (File, 25);
       Put (File, ": ");
-      Put (File, Natural'Wide_Image (N));
+      Put (File, Image (N));
       New_Line (File);
    end Hdr;
 
@@ -196,25 +214,27 @@ procedure Dump (Catalog   : Catalog_Type;
    -- Hdr --
    ---------
 
-   procedure Hdr (File  : File_Type;
-                  Title : Wide_String;
-                  N     : Natural;
-                  M     : Natural) is
+   procedure Hdr
+     (File  : File_Type;
+      Title : String;
+      N     : Natural;
+      M     : Natural)
+   is
    begin
       Put (File, Title);
       Set_Col (File, 25);
       Put (File, ": ");
-      Put (File, Natural'Wide_Image (N));
+      Put (File, Image (N));
       Set_Col (File, 40);
-      Put (File, Natural'Wide_Image (M));
+      Put (File, Image (M));
       New_Line (File);
    end Hdr;
 
    File : File_Type;
 
 begin
-   if File_Name'Length /= 0 then
-      Wide_Create (File, File_Name);
+   if File_Name.Length /= 0 then
+      Create (File, Name => File_Name, Scheme => UTF_8, Ending => LF_Ending);
       Dump_To_File (Catalog, File);
       Close (File);
    else

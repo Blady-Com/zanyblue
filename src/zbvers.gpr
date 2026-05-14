@@ -39,8 +39,8 @@
 
 abstract project zbvers is
 
-   V_Major := "1";
-   V_Minor := "5";
+   V_Major := "2";
+   V_Minor := "0";
    V_Patch := "0";
 
 end zbvers;

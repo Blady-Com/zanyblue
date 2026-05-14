@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2017, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,16 +33,24 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-package body ZanyBlue.Text.Unbounded_Wide_Strings is
+--
+--  This is a simple wrapper package around the standard Ada.Command_Line
+--  package with String arguments and functions.  The underlying
+--  Strings from Ada.Command_Line are simply interpreted as UTF-8 encoded
+--  strings and are decoded to UXStrings.
+--
 
-   ------------
-   -- Create --
-   ------------
+package ZanyBlue.Command_Line is
 
-   function Create (Value : Unbounded_Wide_String)
-      return Wide_String_Argument_Type is
-   begin
-      return Create (To_Wide_String (Value));
-   end Create;
+   function Argument_Count return Natural;
+   --  Number of command line arguments.
 
-end ZanyBlue.Text.Unbounded_Wide_Strings;
+   function Argument
+     (Number : Positive)
+      return String;
+   --  Return the Number'th command line argument as a String
+
+   function Command_Name return String;
+   --  Return the command name as a String.
+
+end ZanyBlue.Command_Line;

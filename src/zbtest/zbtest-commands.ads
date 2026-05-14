@@ -44,7 +44,7 @@ package ZBTest.Commands is
    Unknown_Command_Error : exception;
    --  Exception raised if an unknown command is entered.
 
-   Command_Usage_Error   : exception;
+   Command_Usage_Error : exception;
    --  Exception raised by command implementations if the arguments are
    --  invalid.
 
@@ -53,8 +53,9 @@ package ZBTest.Commands is
    --  to be sorted.  If the table is not sorted, i.e., a coding error, then
    --  this exception is raised with the command name as an argument.
 
-   type Command_Type is access procedure (State   : in out State_Type;
-                                          Args    : List_Type);
+   type Command_Type is access procedure
+       (State : in out State_Type;
+        Args  :        List_Type);
    --  Command are implementated via routines that accept a state and the
    --  list of arguments.  A dispatch table is maintained mapping command
    --  names to implementations (this access type).
@@ -63,23 +64,28 @@ package ZBTest.Commands is
    --  Return the number of known commands.  This routine is primarily used
    --  by the "help" command to iterate over available commands.
 
-   function Command_Name (Index : Natural) return Wide_String;
+   function Command_Name
+     (Index : Natural)
+      return String;
    --  Given a command index, return the corresponding command name.  This
    --  routine is primarily used by the "help" command to iterate over
    --  available commands.
 
-   function Find (Name : Wide_String) return Command_Type;
+   function Find
+     (Name : String)
+      return Command_Type;
    --  Given a command name, return the implementation.  Unknown commands
    --  return an implementation that simply raises Unknown_Command_Error.
 
-   procedure Print_Command_Help (Name : Wide_String);
+   procedure Print_Command_Help (Name : String);
    --  Print the help information for a command.
 
-   procedure Print_Command_Usage (Name : Wide_String);
+   procedure Print_Command_Usage (Name : String);
    --  Print the usage message for a command.
 
-   procedure Print_Command_Summary (Name  : Wide_String;
-                                    Index : Positive);
+   procedure Print_Command_Summary
+     (Name  : String;
+      Index : Positive);
    --  Print the message for the one line summary description associated
    --  with the named command.  The message returned includes a argument
    --  for the command number: the help command lists the summary lines with

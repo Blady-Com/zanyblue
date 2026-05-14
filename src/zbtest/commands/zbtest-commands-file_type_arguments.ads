@@ -33,11 +33,11 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with ZanyBlue.Wide_Directories;
+with ZanyBlue.Directories;
 with ZanyBlue.Text.Generic_Enumerations;
 
 pragma Elaborate_All (ZanyBlue.Text.Generic_Enumerations);
 
-package ZBTest.Commands.File_Type_Arguments is
-   new ZanyBlue.Text.Generic_Enumerations (
-         Enumeration_Type => ZanyBlue.Wide_Directories.Wide_File_Kind);
+package ZBTest.Commands.File_Type_Arguments is new ZanyBlue.Text
+  .Generic_Enumerations
+  (Enumeration_Type => ZanyBlue.Directories.File_Kind);

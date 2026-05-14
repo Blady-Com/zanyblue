@@ -33,21 +33,44 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with Ada.Strings.Wide_Unbounded;
-with ZanyBlue.Text.Wide_Strings;
+with ZanyBlue.Text.Format_Parser;
 
-package ZanyBlue.Text.Unbounded_Wide_Strings is
+package body ZanyBlue.Text.Wide_Wide_Characters is
 
-   use Ada.Strings.Wide_Unbounded;
-   use ZanyBlue.Text.Wide_Strings;
+   use ZanyBlue.Text.Format_Parser;
 
-   function Create (Value : Unbounded_Wide_String)
-      return Wide_String_Argument_Type;
-   --  Create a "boxed" instance of a string type.
+   ------------
+   -- Create --
+   ------------
 
-   function "+" (Value : Unbounded_Wide_String)
-      return Wide_String_Argument_Type
-      renames Create;
-   --  Utility renaming of the "Create" function.
+   function Create
+     (Wide_Wide_Character_Value : Wide_Wide_Character)
+      return Wide_Wide_Character_Argument_Type
+   is
+   begin
+      return
+        Wide_Wide_Character_Argument_Type'(Data => Wide_Wide_Character_Value);
+   end Create;
 
-end ZanyBlue.Text.Unbounded_Wide_Strings;
+   ------------
+   -- Format --
+   ------------
+
+   overriding function Format
+     (Value     : Wide_Wide_Character_Argument_Type;
+      Type_Name : String;
+      Template  : String;
+      Locale    : Locale_Type)
+      return String
+   is
+      pragma Unreferenced (Type_Name);
+
+      Formatting : constant Format_Type := Parse (Template, Locale);
+      Buffer     : constant String      := From_Unicode (Value.Data);
+
+   begin
+      return
+        Align (Buffer, Formatting.Fill, Formatting.Width, Formatting.Align);
+   end Format;
+
+end ZanyBlue.Text.Wide_Wide_Characters;

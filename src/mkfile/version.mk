@@ -36,6 +36,6 @@
 # Macro covers for the current ZanyBlue version.  The V_STATUS macro can
 # only have the values "Alpha", "Beta" or "Production" (see the Status
 # type in the root package).
-V_MAJOR=1
-V_MINOR=5
+V_MAJOR=2
+V_MINOR=0
 V_PATCH=0

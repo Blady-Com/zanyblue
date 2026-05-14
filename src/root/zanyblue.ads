@@ -38,14 +38,18 @@
 --  function definitions giving version information.
 --
 
+with UXStrings;
+
 package ZanyBlue is
 
-   pragma Pure;
+   use UXStrings;
 
-   Version_Major : constant Natural := 1;
+   subtype String is UXString;
+
+   Version_Major : constant Natural := 2;
    --  The major version number associated with the ZanyBlue release.
 
-   Version_Minor : constant Natural := 5;
+   Version_Minor : constant Natural := 0;
    --  The minor version number associated with the ZanyBlue release.
 
    Version_Patch : constant Natural := 0;
@@ -53,13 +57,13 @@ package ZanyBlue is
    --  This should normally be 0 unless a serious issue was encountered
    --  with a release.
 
-   Revision : constant Wide_String := "";
+   Revision : constant String := "3199";
    --  The Subversion revision number for the build.
 
-   Copyright_Year : constant Positive := 2026;
+   Copyright_Year : constant Positive := 2_026;
    --  The copyright year for the build.
 
-   Max_Float_Precision : constant := 5000;
+   Max_Float_Precision : constant := 5_000;
    --  Maximum precision supported for floating point formatting (number of
    --  digits printed after the decimal point.  Requests to format floating
    --  point numbers with a precision greater than this will be truncated to

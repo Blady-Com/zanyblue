@@ -2,7 +2,7 @@
 --
 --  ZanyBlue, an Ada library and framework for finite element analysis.
 --
---  Copyright (c) 2012, 2016, Michael Rohan <mrohan@zanyblue.com>
+--  Copyright (c) 2017, Michael Rohan <mrohan@zanyblue.com>
 --  All rights reserved.
 --
 --  Redistribution and use in source and binary forms, with or without
@@ -33,40 +33,47 @@
 --  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --
 
-with ZanyBlue.Text.Locales;
-with ZanyBlue.Text.Arguments;
+--
+--  This is a simple wrapper package around the standard Ada.Command_Line
+--  package with String arguments and functions.  The underlying
+--  Strings from Ada.Command_Line are simply interpreted as UTF-8 encoded
+--  strings and are decoded to UXStrings.
+--
 
-package ZanyBlue.Text.Wide_Strings is
+with Ada.Command_Line;
 
-   use ZanyBlue.Text.Locales;
-   use ZanyBlue.Text.Arguments;
+package body ZanyBlue.Command_Line is
 
-   type Wide_String_Argument_Type (<>) is
-      new String_Category_Type with private;
+   use Ada.Command_Line;
 
-   function Create (Wide_String_Value : Wide_String)
-      return Wide_String_Argument_Type;
-   --  Create a "boxed" instance of a Wide String.
+   --------------
+   -- Argument --
+   --------------
 
-   function "+" (Wide_String_Value : Wide_String)
-      return Wide_String_Argument_Type
-      renames Create;
-   --  Utility renaming of the "Create" function.
+   function Argument
+     (Number : Positive)
+      return String
+   is
+   begin
+      return From_UTF_8 (Argument (Number));
+   end Argument;
 
-   overriding
-   function Format (Value     : Wide_String_Argument_Type;
-                    Type_Name : Wide_String;
-                    Template  : Wide_String;
-                    Locale    : Locale_Type) return Wide_String;
-   --  Format an individual argument using the Template to direct the
-   --  conversion.
+   --------------------
+   -- Argument_Count --
+   --------------------
 
-private
+   function Argument_Count return Natural is
+   begin
+      return Ada.Command_Line.Argument_Count;
+   end Argument_Count;
 
-   type Wide_String_Argument_Type (Length : Natural) is
-      new String_Category_Type with
-   record
-      Data : Wide_String (1 .. Length);
-   end record;
+   ------------------
+   -- Command_Name --
+   ------------------
 
-end ZanyBlue.Text.Wide_Strings;
+   function Command_Name return String is
+   begin
+      return From_UTF_8 (Command_Name);
+   end Command_Name;
+
+end ZanyBlue.Command_Line;
