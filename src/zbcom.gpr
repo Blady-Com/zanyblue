@@ -64,7 +64,7 @@ project zbcom is
                                                  "-gnatW8",
                                                  "-gnatU",
                                                  "-gnato",
-                                                 "-gnatwal",
+                                                 "-gnatwalJ",
                                                  "-gnatygO",
                                                  "-gnatyo",
                                                  "-fstack-check");
