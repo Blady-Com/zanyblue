@@ -184,9 +184,15 @@ procedure ZBTest.Main is
 
    Start_Time : constant Time := Banner;
    State      : State_Type;
-   Input      : File_Type     := Standard_Input;
 
 begin
+   --  Change the default to LF and UTF-8
+   Ending (Standard_Output, LF_Ending);
+   Line_Mark (LF_Ending);
+   Scheme (Standard_Output, UTF_8);
+   Ending (Standard_Input, LF_Ending);
+   Scheme (Standard_Input, UTF_8);
+
    State.Define_Initial_Parameters;
    Process_Command_Line (State);
    if not State.Get_Boolean ("_terminate") then
@@ -194,7 +200,7 @@ begin
       if State.Is_Defined ("_testscript") then
          State.Execute_Line ("run " & State.Get_String ("_testscript"), True);
       else
-         State.Read_Eval_Loop (Input, True);
+         State.Read_Eval_Loop (Standard_Input, True);
       end if;
    end if;
    State.Write_XML_Report;

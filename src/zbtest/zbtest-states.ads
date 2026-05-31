@@ -65,7 +65,7 @@ package ZBTest.States is
 
    procedure Read_Eval_Loop
      (State       : in out State_Type;
-      Input       : in out UXStrings.Text_IO.File_Type;
+      Input       :        UXStrings.Text_IO.File_Type;
       Interactive :        Boolean);
    --  Enter the read-evaluate loop for the tester.  If Interactive, then
    --  a prompt is printed before reading lines.

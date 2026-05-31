@@ -104,7 +104,7 @@ is
       State.Set_Integer ("_lineno", 0);
       State.Set_String ("_testname", Base_Name (Script));
       State.Set_String ("_fulltestname", Full_Test_Name (State));
-      Open (File, In_File, Script);
+      Open (File, In_File, Script, Scheme => UTF_8, Ending => LF_Ending);
       State.Read_Eval_Loop (File, False);
       Close (File);
    exception

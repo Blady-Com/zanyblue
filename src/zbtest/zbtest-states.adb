@@ -709,7 +709,7 @@ package body ZBTest.States is
 
    procedure Read_Eval_Loop
      (State       : in out State_Type;
-      Input       : in out UXStrings.Text_IO.File_Type;
+      Input       :        UXStrings.Text_IO.File_Type;
       Interactive :        Boolean)
    is
    begin
@@ -738,7 +738,7 @@ package body ZBTest.States is
       Input  : File_Type;
       Result : UXStrings.Lists.UXString_List;
    begin
-      Open (Input, In_File, File_Name);
+      Open (Input, In_File, File_Name, Scheme => UTF_8, Ending => LF_Ending);
       Get_Text (Input, Result);
       Close (Input);
       return Result.Join (Line_Mark);

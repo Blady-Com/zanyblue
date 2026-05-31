@@ -123,7 +123,9 @@ is
          Name   :        String)
       is
       begin
-         Open (File, UXStrings.Text_IO.In_File, Name);
+         Open
+           (File, UXStrings.Text_IO.In_File, Name, Scheme => UTF_8,
+            Ending                                        => LF_Ending);
       exception
          when others =>
             ZBTest_Messages.ZBTest_Prints.Print_10022 (+Name, Status);

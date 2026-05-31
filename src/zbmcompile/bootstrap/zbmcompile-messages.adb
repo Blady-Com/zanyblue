@@ -69,7 +69,7 @@ package body ZBMCompile.Messages is
    ----------
 
    procedure Load (Name : String) is
-      Filename : constant String := "mesg/" & Name & ".properties";
+      Filename : constant String      := "mesg/" & Name & ".properties";
       Locale   : constant Locale_Type := Make_Locale ("");
       Count    : Natural;
    begin

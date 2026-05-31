@@ -41,6 +41,7 @@ with ZBInfo.Dump_Encoding;
 with ZBInfo.List_Encodings;
 with ZBInfo_Messages.ZBInfo_Exceptions;
 with ZBInfo_Messages.ZBInfo_Prints;
+with UXStrings.Text_IO;
 
 procedure ZBInfo.Main is
 
@@ -49,6 +50,7 @@ procedure ZBInfo.Main is
    use ZanyBlue.Text.Formatting;
    use ZBInfo_Messages.ZBInfo_Exceptions;
    use ZBInfo_Messages.ZBInfo_Prints;
+   use UXStrings.Text_IO;
 
    type Mode_Type is (None, Help, Locale_Info, Encoding_Info, Encoding_List);
 
@@ -173,6 +175,13 @@ procedure ZBInfo.Main is
    Mode            : Mode_Type;
 
 begin
+   --  Change the default to LF and UTF-8
+   Ending (Standard_Output, LF_Ending);
+   Line_Mark (LF_Ending);
+   Scheme (Standard_Output, UTF_8);
+   Ending (Standard_Input, LF_Ending);
+   Scheme (Standard_Input, UTF_8);
+
    Process_Command_Line
      (Mode, Locale_Name, Locale, Encoding_Name, Reverse_Mapping);
    case Mode is

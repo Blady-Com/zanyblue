@@ -41,6 +41,7 @@ with ZanyBlue.Text.Formatting;
 with ZBMCompile.Messages;
 with ZBMCompile.Message_Filter;
 with UXStrings.Conversions;
+with UXStrings.Text_IO;
 
 procedure ZBMCompile.Main is
 
@@ -50,6 +51,7 @@ procedure ZBMCompile.Main is
    use ZanyBlue.Text;
    use ZanyBlue.Text.Formatting;
    use ZBMCompile.Message_Filter;
+   use UXStrings.Text_IO;
 
    Usage : exception;
 
@@ -343,6 +345,13 @@ procedure ZBMCompile.Main is
    use Ada.Command_Line;
 
 begin
+   --  Change the default to LF and UTF-8
+   Ending (Standard_Output, LF_Ending);
+   Line_Mark (LF_Ending);
+   Scheme (Standard_Output, UTF_8);
+   Ending (Standard_Input, LF_Ending);
+   Scheme (Standard_Input, UTF_8);
+
    ZBMCompile.Messages.Initialize;
    Set_Filter (Filters'Access);
    Options.Set_Name ("OPTIONS");
