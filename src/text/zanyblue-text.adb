@@ -56,14 +56,16 @@ package body ZanyBlue.Text is
       Real_Name : constant String  := Head (File_Name, File_Name.Length - Len);
    begin
       Close (File);
-      Updated := Files_Differ (File_Name, Real_Name);
-      if Updated then
-         if Exists (Real_Name) then
+      if Exists (Real_Name) then
+         Updated := Files_Differ (File_Name, Real_Name);
+         if Updated then
             Delete_File (Real_Name);
+            Rename (File_Name, Real_Name);
+         else
+            Delete_File (File_Name);
          end if;
-         Rename (File_Name, Real_Name);
       else
-         Delete_File (File_Name);
+         Rename (File_Name, Real_Name);
       end if;
    end Close_And_Update;
 
