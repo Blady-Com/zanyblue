@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>ZanyBlue Library and Tools &#8212; ZanyBlue 2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=51b770b3"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ZanyBlue License" href="license.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="zanyblue-library-and-tools">
+<h1>ZanyBlue Library and Tools<a class="headerlink" href="#zanyblue-library-and-tools" title="Link to this heading">¶</a></h1>
+<p>This documentation covers version 2.0 of the ZanyBlue library and
+applications.  For download information see <a class="reference internal" href="download.html#zb-download"><span class="std std-ref">Downloads</span></a>.  If
+you encounter bugs in this software, please file reports in the
+<a class="reference external" href="http://sourceforge.net/tracker/?group_id=225351">Source Forge Bug Tracker</a>.
+You can also visit the <a class="reference external" href="http://sourceforge.net/projects/zanyblue/">Source Forge ZanyBlue Project Page</a>.</p>
+<p>This documentation is also available as a <a class="reference external" href="ZanyBlue.pdf">single PDF file</a>.</p>
+<section id="globalization-support">
+<h2>Globalization Support<a class="headerlink" href="#globalization-support" title="Link to this heading">¶</a></h2>
+<p>The initial functionality covers globalization support for Ada.  Globalization,
+(normally abbreviated to simply g11n) covers support within the source code
+for multiple languages (this is termed internationalization or i18n) and the
+ability to supply translations for strings used in an application
+(localization or l10n).  Globalization is supported by the ZanyBlue
+text library by providing routines to access and format messages in Ada
+sources (the i18n aspect of g11n) and localization via the externalization
+of messages strings to properties files.  For example, the following properties
+file defines a simple message refered to in the source code via the key
+<code class="docutils literal notranslate"><span class="pre">Hello</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Hello</span><span class="o">=</span><span class="n">Hello</span> <span class="n">World</span><span class="p">,</span> <span class="n">I</span> <span class="n">am</span> <span class="p">{</span><span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>An Ada application code could print this message using the accessor routine</p>
+<div class="highlight-ada notranslate"><div class="highlight"><pre><span></span><span class="no">Name</span> <span class="p">:</span> <span class="kr">constant</span> <span class="kt">String</span> <span class="p">:=</span> <span class="s">&quot;Michael&quot;</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="n">Print_Hello</span> <span class="p">(</span><span class="o">+</span><span class="n">Name</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="text/index.html#zb-text"><span class="std std-ref">The Text Package</span></a> documentation and <a class="reference internal" href="text/zbmcompile.html#zb-text-zbmcompile"><span class="std std-ref">The zbmcompile Utility</span></a> application.</p>
+</section>
+<section id="parameter-handling">
+<h2>Parameter Handling<a class="headerlink" href="#parameter-handling" title="Link to this heading">¶</a></h2>
+<p>To support command line handling and user defined parameters and scopes
+in the <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> application, the <code class="docutils literal notranslate"><span class="pre">Parameters</span></code> packages are
+available, e.g.,</p>
+<div class="highlight-ada notranslate"><div class="highlight"><pre><span></span><span class="n">Parameters</span> <span class="p">:</span> <span class="n">Parameter_Set_Type</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="n">Parameters</span><span class="p">.</span><span class="n">Set_Boolean</span> <span class="p">(</span><span class="s">&quot;verbose&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">);</span>
+<span class="kr">if</span> <span class="n">Parameters</span><span class="p">.</span><span class="n">Get_Boolean</span> <span class="p">(</span><span class="s">&quot;verbose&quot;</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="n">Print_Debug_Banner</span><span class="p">;</span>
+<span class="kr">end</span> <span class="kr">if</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="testing-application">
+<h2>Testing Application<a class="headerlink" href="#testing-application" title="Link to this heading">¶</a></h2>
+<p>The stability of the code based is improved via a large set of tests.  These
+tests are split between AUnit based unit-tests and a set of tests designed to
+exercise the ZanyBlue utilities, more black-box style testing.  These tests
+use the <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> utility.  There is no formal documentation on this
+at this time other than the built-in help and the example test scripts in
+the <code class="docutils literal notranslate"><span class="pre">tests</span></code> directory.</p>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h2>
+<p>ZanyBlue is distributed under the terms of a BSD-style license.  See
+<a class="reference internal" href="license.html#zb-license"><span class="std std-ref">ZanyBlue License</span></a> for details.</p>
+</section>
+</section>
+<section id="zanyblue-documentation">
+<h1>ZanyBlue Documentation<a class="headerlink" href="#zanyblue-documentation" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">ZanyBlue License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download.html">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#building-the-library-and-applications">Building the Library and Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#windows-issues">Windows Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ahven.html">The Ahven Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releases.html">Releases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="releases.html#version-1-4-0-aug-13th-2018">Version 1.4.0, Aug 13th, 2018</a></li>
+<li class="toctree-l2"><a class="reference internal" href="releases.html#version-1-3-0b-aug-6th-2016">Version 1.3.0b, Aug 6th, 2016</a></li>
+<li class="toctree-l2"><a class="reference internal" href="releases.html#version-1-2-1b-sep-13th-2015">Version 1.2.1b, Sep 13th, 2015</a></li>
+<li class="toctree-l2"><a class="reference internal" href="releases.html#version-1-2-0b-mar-10th-2014">Version 1.2.0b, Mar 10th, 2014</a></li>
+<li class="toctree-l2"><a class="reference internal" href="releases.html#version-1-1-0b-jul-2nd-2012">Version 1.1.0b, Jul 2nd, 2012</a></li>
+<li class="toctree-l2"><a class="reference internal" href="releases.html#version-1-0-0b-apr-30th-2012">Version 1.0.0b, Apr 30th, 2012</a></li>
+<li class="toctree-l2"><a class="reference internal" href="releases.html#version-0-1-0b-nov-26th-2010">Version 0.1.0b, Nov 26th, 2010</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="root.html">The Root Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text/index.html">The Text Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="text/messages.html">Messages and Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/lowlevel.html">Example Using Low Level Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/accessor-xmpl.html">Example Using Accessor Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/msg-format.html">Message Formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/format-syntax.html">Formatting Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/argtypes.html">Argument Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/filtering.html">Message Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/stubs.html">Stub Implementations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/format-impl.html">ZanyBlue Formatting Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/locale-type.html">Locale Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/encodings.html">Encodings and The Codecs Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/builtin-cldr.html">Built-in Localizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/cldr-data.html">Unicode CLDR Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/pseudo.html">Pseudo Translations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/metrics.html">Message ‘Metrics’</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/zbmcompile.html">The zbmcompile Utility</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="zbtest/index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="zbtest/index.html#zbtest-documentation">ZBTest Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utilities/index.html">Command Line Utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utilities/index.html#the-zbinfo-utility">The <code class="docutils literal notranslate"><span class="pre">zbinfo</span></code> Utility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities/index.html#the-zbmcompile-utility">The <code class="docutils literal notranslate"><span class="pre">zbmcompile</span></code> Utility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities/index.html#the-zbtest-utility">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docs.html">Additional Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribs.html">Contributions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contribs.html#pascal-pignard">Pascal Pignard</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notices.html">Notices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notices.html#ahven-2-6">Ahven, 2.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notices.html#apache-tomcat-9-0-0-m8">Apache Tomcat, 9.0.0.M8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notices.html#cldr-release-26-0-1">CLDR, release-26-0-1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notices.html#jenkins-ci-jenkins-2-9">Jenkins CI, jenkins-2.9</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/zb-logo.png" alt="Logo of ZanyBlue"/>
+            </a></p>
+<h1 class="logo"><a href="#">ZanyBlue</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">ZanyBlue License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download.html">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ahven.html">The Ahven Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="root.html">The Root Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text/index.html">The Text Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zbtest/index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities/index.html">Command Line Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs.html">Additional Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribs.html">Contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notices.html">Notices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="license.html" title="next chapter">ZanyBlue License</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Michael Rohan <mrohan@zanyblue.com>.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

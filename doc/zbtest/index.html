@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>The zbtest Utility &#8212; ZanyBlue 2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <script src="../_static/documentation_options.js?v=51b770b3"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ZBTest Commands" href="command/index.html" />
+    <link rel="prev" title="The zbmcompile Utility" href="../text/zbmcompile.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="the-zbtest-utility">
+<span id="zb-zbtest"></span><h1>The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility<a class="headerlink" href="#the-zbtest-utility" title="Link to this heading">¶</a></h1>
+<p>The ZanyBlue project uses both unit testing (via the <a class="reference internal" href="../notices.html#zb-notice-ahven-2-6"><span class="std std-ref">Ahven, 2.6</span></a>
+library) and system testing using the ZanyBlue testing utility <code class="docutils literal notranslate"><span class="pre">zbtest</span></code>
+utility.  This utility exercises the command line ZanyBlue utilities
+by executing them with different command line options and inputs and comparing
+the generated output and files.  The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> utility uses the directory
+tree to organize the tests into areas to test with tests deeper in the
+directory tree being more specific.</p>
+<p>A simple example will make this clearer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+-</span> <span class="n">myapp</span>
+    <span class="o">+-</span> <span class="n">myapp</span><span class="o">.</span><span class="n">zbt</span>
+    <span class="o">+-</span> <span class="n">area1</span>
+        <span class="o">+-</span> <span class="n">area1</span><span class="o">.</span><span class="n">zbt</span>
+        <span class="o">+-</span> <span class="n">area1</span><span class="o">.</span><span class="ow">in</span>
+        <span class="o">+-</span> <span class="n">area1</span><span class="o">-</span><span class="mf">01.</span><span class="n">log</span>
+        <span class="o">+-</span> <span class="n">area1</span><span class="o">-</span><span class="mf">02.</span><span class="n">log</span>
+    <span class="o">+-</span> <span class="n">area2</span>
+        <span class="o">+-</span> <span class="n">area2</span><span class="o">.</span><span class="n">zbt</span>
+        <span class="o">+-</span> <span class="n">area2</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">bz2</span>
+        <span class="o">+-</span> <span class="n">area2</span><span class="o">-</span><span class="mf">01.</span><span class="n">log</span>
+        <span class="o">+-</span> <span class="n">area2</span><span class="o">-</span><span class="mf">02.</span><span class="n">log</span>
+        <span class="o">+-</span> <span class="n">area2</span><span class="o">-</span><span class="mf">03.</span><span class="n">log</span>
+</pre></div>
+</div>
+<p>Here, the tests for the application <code class="docutils literal notranslate"><span class="pre">myapp</span></code> are contained in the directory
+named for the application.  This contains the <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> driver script, with
+the same name as the directory, <code class="docutils literal notranslate"><span class="pre">myapp.zbt</span></code> along with two sub-directories
+containing tests specific to the two areas of the application: <code class="docutils literal notranslate"><span class="pre">area1</span></code> and
+<code class="docutils literal notranslate"><span class="pre">area2</span></code>.</p>
+<section id="zbtest-documentation">
+<h2>ZBTest Documentation<a class="headerlink" href="#zbtest-documentation" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="command/index.html">ZBTest Commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="command/append.html">The <code class="docutils literal notranslate"><span class="pre">append</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/begin.html">The <code class="docutils literal notranslate"><span class="pre">begin</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/compare.html">The <code class="docutils literal notranslate"><span class="pre">compare</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/copy.html">The <code class="docutils literal notranslate"><span class="pre">copy</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/delenv.html">The <code class="docutils literal notranslate"><span class="pre">delenv</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/delete.html">The <code class="docutils literal notranslate"><span class="pre">delete</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/desc.html">The <code class="docutils literal notranslate"><span class="pre">desc</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/dump.html">The <code class="docutils literal notranslate"><span class="pre">dump</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/echo.html">The <code class="docutils literal notranslate"><span class="pre">echo</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/end.html">The <code class="docutils literal notranslate"><span class="pre">end</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/execute.html">The <code class="docutils literal notranslate"><span class="pre">execute</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/exit.html">The <code class="docutils literal notranslate"><span class="pre">exit</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/filestat.html">The <code class="docutils literal notranslate"><span class="pre">filestat</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/getenv.html">The <code class="docutils literal notranslate"><span class="pre">getenv</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/help.html">The <code class="docutils literal notranslate"><span class="pre">help</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/incr.html">The <code class="docutils literal notranslate"><span class="pre">incr</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/mkdir.html">The <code class="docutils literal notranslate"><span class="pre">mkdir</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/noop.html">The <code class="docutils literal notranslate"><span class="pre">noop</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/prepend.html">The <code class="docutils literal notranslate"><span class="pre">prepend</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/print.html">The <code class="docutils literal notranslate"><span class="pre">print</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/rename.html">The <code class="docutils literal notranslate"><span class="pre">rename</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/run.html">The <code class="docutils literal notranslate"><span class="pre">run</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/set.html">The <code class="docutils literal notranslate"><span class="pre">set</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/setenv.html">The <code class="docutils literal notranslate"><span class="pre">setenv</span></code> Command</a></li>
+<li class="toctree-l2"><a class="reference internal" href="command/which.html">The <code class="docutils literal notranslate"><span class="pre">which</span></code> Command</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="function/index.html">ZBTest Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function/dirname.html">The <code class="docutils literal notranslate"><span class="pre">dirname</span></code> Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="function/joinpaths.html">The <code class="docutils literal notranslate"><span class="pre">joinpaths</span></code> Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="function/nextlog.html">The <code class="docutils literal notranslate"><span class="pre">nextlog</span></code> Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="function/which.html">The <code class="docutils literal notranslate"><span class="pre">which</span></code> Function</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/zb-logo.png" alt="Logo of ZanyBlue"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">ZanyBlue</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../license.html">ZanyBlue License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ahven.html">The Ahven Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../root.html">The Root Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../text/index.html">The Text Package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#zbtest-documentation">ZBTest Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities/index.html">Command Line Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs.html">Additional Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribs.html">Contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../notices.html">Notices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../text/zbmcompile.html" title="previous chapter">The zbmcompile Utility</a></li>
+      <li>Next: <a href="command/index.html" title="next chapter">ZBTest Commands</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Michael Rohan <mrohan@zanyblue.com>.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../_sources/zbtest/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Example Using Low Level Functions &#8212; ZanyBlue 2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <script src="../_static/documentation_options.js?v=51b770b3"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Example Using Accessor Functions" href="accessor-xmpl.html" />
+    <link rel="prev" title="Messages and Arguments" href="messages.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="example-using-low-level-functions">
+<h1>Example Using Low Level Functions<a class="headerlink" href="#example-using-low-level-functions" title="Link to this heading">¶</a></h1>
+<p>As an introduction to the <code class="docutils literal notranslate"><span class="pre">Text</span></code> package, a simple example, which
+continues the example based on the number of moons orbiting the various
+planets, is developed here.</p>
+<p><strong>Note</strong>, the preferred way to access messages is using accessor
+packages described in the next section.   The example here uses direct
+calls using strings to identify facilities and key to demonstrate the
+concepts involved.</p>
+<p>The task is to ask the user for a planet name and print the number of currently
+known moons for the planet.  The source for this simple example
+is available in the directory <code class="docutils literal notranslate"><span class="pre">examples/text/moons</span></code> and is listed here:</p>
+<div class="highlight-ada notranslate"><div class="highlight"><pre><span></span><span class="kn">with</span> <span class="n">Ada.Wide_Text_IO</span><span class="p">;</span>
+<span class="kn">with</span> <span class="n">Moons_Messages</span><span class="p">;</span>
+<span class="kn">with</span> <span class="n">ZanyBlue.Text.Formatting</span><span class="p">;</span>
+
+<span class="kd">procedure</span> <span class="nf">Moons</span> <span class="kr">is</span>
+
+   <span class="kd">type</span> <span class="kt">Planet_Names</span> <span class="kr">is</span> <span class="p">(</span><span class="nv">Mercury</span><span class="p">,</span> <span class="nv">Venus</span><span class="p">,</span> <span class="nv">Earth</span><span class="p">,</span> <span class="nv">Mars</span><span class="p">,</span>
+                         <span class="nv">Jupiter</span><span class="p">,</span> <span class="nv">Saturn</span><span class="p">,</span> <span class="nv">Uranus</span><span class="p">,</span> <span class="nv">Neptune</span><span class="p">);</span>
+   <span class="kd">package</span> <span class="nc">Planet_Name_IO</span> <span class="kr">is</span>
+<span class="kr">      new</span> <span class="nc">Ada.Wide_Text_IO.Enumeration_IO</span> <span class="p">(</span>Planet_Names<span class="p">);</span>
+
+   <span class="kn">use</span> <span class="n">Ada.Wide_Text_IO</span><span class="p">;</span>
+   <span class="kn">use</span> <span class="n">Planet_Name_Formatting</span><span class="p">;</span>
+   <span class="kn">use</span> <span class="n">ZanyBlue.Text.Formatting</span><span class="p">;</span>
+
+   <span class="n">Moons</span>  <span class="p">:</span> <span class="kr">array</span> <span class="p">(</span><span class="n">Planet_Names</span><span class="p">)</span> <span class="kr">of</span> <span class="kt">Natural</span> <span class="p">:=</span> <span class="p">(</span>
+                   <span class="n">Earth</span> <span class="p">=&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">Mars</span> <span class="p">=&gt;</span> <span class="mi">2</span><span class="p">,</span> <span class="n">Jupiter</span> <span class="p">=&gt;</span> <span class="mi">63</span><span class="p">,</span>
+                   <span class="n">Saturn</span> <span class="p">=&gt;</span> <span class="mi">62</span><span class="p">,</span> <span class="n">Uranus</span> <span class="p">=&gt;</span> <span class="mi">27</span><span class="p">,</span> <span class="n">Neptune</span> <span class="p">=&gt;</span> <span class="mi">13</span><span class="p">,</span>
+                   <span class="kr">others</span> <span class="p">=&gt;</span> <span class="mi">0</span><span class="p">);</span>
+   <span class="n">Planet</span> <span class="p">:</span> <span class="n">Planet_Names</span><span class="p">;</span>
+
+<span class="kr">begin</span>
+   <span class="kr">loop</span>
+      <span class="n">Print</span> <span class="p">(</span><span class="s">&quot;moons&quot;</span><span class="p">,</span> <span class="s">&quot;0001&quot;</span><span class="p">);</span>
+      <span class="n">Planet_Name_IO</span><span class="p">.</span><span class="n">Get</span> <span class="p">(</span><span class="n">Planet</span><span class="p">);</span>
+      <span class="kr">if</span> <span class="n">Moons</span> <span class="p">(</span><span class="n">Planet</span><span class="p">)</span> <span class="o">/=</span> <span class="mi">1</span> <span class="kr">then</span>
+         <span class="n">Print_Line</span> <span class="p">(</span><span class="s">&quot;moons&quot;</span><span class="p">,</span> <span class="s">&quot;0002&quot;</span><span class="p">,</span> <span class="o">+</span><span class="n">Moons</span> <span class="p">(</span><span class="n">Planet</span><span class="p">),</span>
+                                      <span class="o">+</span><span class="n">Planet_Names</span><span class="p">&#39;</span><span class="na">Image</span> <span class="p">(</span><span class="n">Planet</span><span class="p">));</span>
+      <span class="kr">else</span>
+         <span class="n">Print_Line</span> <span class="p">(</span><span class="s">&quot;moons&quot;</span><span class="p">,</span> <span class="s">&quot;0003&quot;</span><span class="p">,</span> <span class="o">+</span><span class="n">Planet_Names</span><span class="p">&#39;</span><span class="na">Image</span> <span class="p">(</span><span class="n">Planet</span><span class="p">));</span>
+      <span class="kr">end</span> <span class="kr">if</span><span class="p">;</span>
+   <span class="kr">end</span> <span class="kr">loop</span><span class="p">;</span>
+<span class="kr">exception</span>
+<span class="kr">when</span> <span class="n">End_Error</span> <span class="p">|</span> <span class="n">Data_Error</span> <span class="p">=&gt;</span>
+    <span class="n">New_Line</span><span class="p">;</span>
+    <span class="n">Print_Line</span> <span class="p">(</span><span class="s">&quot;moons&quot;</span><span class="p">,</span> <span class="s">&quot;0004&quot;</span><span class="p">);</span>
+<span class="kr">end</span> <span class="nf">Moons</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The example source code uses the <code class="docutils literal notranslate"><span class="pre">Generic_Enumerations</span></code> ZanyBlue
+package for planet name arguments.  Generic ZanyBlue packages should
+be instanciated at the library level.</p>
+<p>Here the messages for the application are referred to by message id or
+key, i.e., numeric strings, e.g., <code class="docutils literal notranslate"><span class="pre">0001</span></code> for the facility
+<code class="docutils literal notranslate"><span class="pre">moons</span></code>.</p>
+<p>The text associated with these message keys are externalized to a
+<code class="docutils literal notranslate"><span class="pre">.properties</span></code> file.  For this example, the root properties file,
+<code class="docutils literal notranslate"><span class="pre">moons.properties</span></code>, containing English, is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0001</span><span class="o">=</span><span class="n">Please</span> <span class="n">enter</span> <span class="n">a</span> <span class="n">planet</span><span class="p">:</span>
+<span class="mi">0002</span><span class="o">=</span><span class="n">There</span> <span class="n">are</span> <span class="p">{</span><span class="mi">0</span><span class="p">}</span> <span class="n">known</span> <span class="n">moons</span> <span class="n">orbiting</span> <span class="s2">&quot;</span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span>
+<span class="mi">0003</span><span class="o">=</span><span class="n">There</span> <span class="ow">is</span> <span class="mi">1</span> <span class="n">known</span> <span class="n">moon</span> <span class="n">orbiting</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span>
+<span class="mi">0004</span><span class="o">=</span><span class="n">OK</span><span class="p">,</span> <span class="n">goodbye</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>A German translation of this properties, <code class="docutils literal notranslate"><span class="pre">moons_de.properties</span></code>,
+file would be (via Google Translate):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0001</span><span class="o">=</span><span class="n">Bitte</span> <span class="n">geben</span> <span class="n">Sie</span> <span class="n">einen</span> <span class="n">Planeten</span><span class="p">:</span>
+<span class="mi">0002</span><span class="o">=</span><span class="n">Es</span> <span class="n">gibt</span> <span class="p">{</span><span class="mi">0</span><span class="p">}</span> <span class="n">bekannte</span> <span class="n">Monde</span> <span class="n">umkreisen</span> <span class="s2">&quot;</span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span>
+<span class="mi">0003</span><span class="o">=</span><span class="n">Es</span> <span class="n">gibt</span> <span class="mi">1</span> <span class="n">bekannt</span> <span class="n">Mond</span> <span class="n">umkreisen</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span>
+<span class="mi">0004</span><span class="o">=</span><span class="n">OK</span><span class="p">,</span> <span class="n">auf</span> <span class="n">Wiedersehen</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>French and Spanish Google translated version of this file in the examples
+directory.</p>
+<p>The properties and application are tied together by “compiling” the
+properties files into an Ada package and simply <strong>with</strong>’ing the
+compiled package in the application (normally in the unit containing
+the main procedure).  In this example, the generated package referenced
+in the source above is <code class="docutils literal notranslate"><span class="pre">Moons_Messages</span></code> which is created using
+the <code class="docutils literal notranslate"><span class="pre">zbmcompile</span></code> ZanyBlue message compiler utility:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>$ zbmcompile -i -v Moons_Messages moons
+This is ZBMCompile, Version 2.0.0 (r3199) on 11/06/2026 at 20:44
+Copyright (c) 2009-2026, Michael Rohan.  All rights reserved
+Loaded 20 messages for the facility &quot;moons&quot; (4 locales)
+Performing consistency checks for the facility &quot;moons&quot;
+Loaded 1 facilities, 5 keys, 4 locales and 20 messages
+Loaded total 653 characters, stored 653 unique characters, 0% saving
+Retained the spec &quot;Moons_Messages&quot; in the file &quot;./moons_messages.ads&quot;
+Wrote the body &quot;Moons_Messages&quot; to the file &quot;./moons_messages.adb&quot;
+ZBMCompile completed on 11/06/2026 at 20:44, elapsed time 0:00:00.205
+</pre></div>
+</div>
+<p>This generates an Ada specification containing the name of the facility,
+<code class="docutils literal notranslate"><span class="pre">moons</span></code> in this case, and the definition of a single initialization routine.
+The body file contains the message text data, the initialization routine which
+adds the message data to a shared message pool.  Since the <code class="docutils literal notranslate"><span class="pre">-i</span></code>
+command line option was used, the generated package body includes a call
+to the initialization routine allowing the message data to be included
+in the application via a simple <strong>with</strong> of the package, i.e., no
+explicit call to the initialization routine is needed.</p>
+<p>The execution of the generated application will now display messages selected
+for the run-time locale, e.g., in an English locale:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ make run
+../../../bin/x_moons
+This is MOONS, Version 1.3.0 - BETA
+Please enter a planet: mars
+There are 2 known moons orbiting &quot;MARS&quot;.
+Please enter a planet: earth
+There is 1 known moon orbiting &quot;EARTH&quot;.
+Please enter a planet: mercury
+There are 0 known moons orbiting &quot;MERCURY&quot;.
+Please enter a planet: ^D
+OK, goodbye.
+</pre></div>
+</div>
+<p>And running the application selecting a German locale displays the German
+messages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ make run_de
+../../../bin/x_moons de
+Dies ist MOONS, Version 1.3.0 - BETA
+Bitte geben Sie einen Planeten: mars
+Es gibt 2 bekannte Monde umkreisen &quot;MARS&quot;.
+Bitte geben Sie einen Planeten: earth
+Es gibt 1 bekannt Mond umkreisen &quot;EARTH&quot;.
+Bitte geben Sie einen Planeten: mercury
+Es gibt 0 bekannte Monde umkreisen &quot;MERCURY&quot;.
+Bitte geben Sie einen Planeten:
+OK, auf Wiedersehen.
+</pre></div>
+</div>
+<p>The locale is selected via a command line argument here, however, the
+environment variables can be used instead, see section
+<a class="reference internal" href="locale-type.html#zb-text-changelocale"><span class="std std-ref">Changing Default Locale</span></a> for more details on selecting locales.</p>
+<p>This example application did not attempt to localize the planet names.  A
+more involved example would add another facility for the planet names with
+message keys matching the <code class="docutils literal notranslate"><span class="pre">Image</span></code> of the enumeration values.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/zb-logo.png" alt="Logo of ZanyBlue"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">ZanyBlue</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../license.html">ZanyBlue License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ahven.html">The Ahven Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../root.html">The Root Package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">The Text Package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="messages.html">Messages and Arguments</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Example Using Low Level Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="accessor-xmpl.html">Example Using Accessor Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg-format.html">Message Formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format-syntax.html">Formatting Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="argtypes.html">Argument Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filtering.html">Message Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stubs.html">Stub Implementations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format-impl.html">ZanyBlue Formatting Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="locale-type.html">Locale Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="encodings.html">Encodings and The Codecs Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="builtin-cldr.html">Built-in Localizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cldr-data.html">Unicode CLDR Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pseudo.html">Pseudo Translations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html">Message ‘Metrics’</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zbmcompile.html">The zbmcompile Utility</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../zbtest/index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities/index.html">Command Line Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs.html">Additional Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">The Text Package</a><ul>
+      <li>Previous: <a href="messages.html" title="previous chapter">Messages and Arguments</a></li>
+      <li>Next: <a href="accessor-xmpl.html" title="next chapter">Example Using Accessor Functions</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Michael Rohan <mrohan@zanyblue.com>.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../_sources/text/lowlevel.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

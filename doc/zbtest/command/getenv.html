@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>The getenv Command &#8212; ZanyBlue 2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=12dfc556" />
+    <script src="../../_static/documentation_options.js?v=51b770b3"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="The help Command" href="help.html" />
+    <link rel="prev" title="The filestat Command" href="filestat.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="the-getenv-command">
+<span id="zb-zbtest-commands-getenv"></span><h1>The <code class="docutils literal notranslate"><span class="pre">getenv</span></code> Command<a class="headerlink" href="#the-getenv-command" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">getenv</span></code>, define a parameter based on an environment variable:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">getenv</span> <span class="p">[</span> <span class="o">-</span><span class="n">l</span> <span class="o">|</span> <span class="o">-</span><span class="n">s</span> <span class="o">|</span> <span class="o">-</span><span class="n">p</span> <span class="o">|</span> <span class="o">-</span><span class="n">a</span> <span class="p">]</span> <span class="n">name</span> <span class="p">[</span> <span class="n">parameter</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>Define an internal parameter based on the value of an environment
+variable.  For example,:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ZBTest</span><span class="o">&gt;</span> <span class="nb">print</span> <span class="n">HOME</span>
+<span class="n">The</span> <span class="n">parameter</span> <span class="s2">&quot;HOME&quot;</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">defined</span>
+<span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">getenv</span> <span class="n">HOME</span>
+<span class="n">ZBTest</span><span class="o">&gt;</span> <span class="nb">print</span> <span class="n">HOME</span>
+<span class="o">/</span><span class="n">u</span><span class="o">/</span><span class="n">mrohan</span>
+</pre></div>
+</div>
+<p>The options available are</p>
+<dl class="option-list">
+<dt><kbd><span class="option">-l</span></kbd></dt>
+<dd><p>Define an internal list parameter by splitting on the pathsep</p>
+</dd>
+<dt><kbd><span class="option">-s</span></kbd></dt>
+<dd><p>Define a simple scalar (string) parameter (default)</p>
+</dd>
+<dt><kbd><span class="option">-a</span></kbd></dt>
+<dd><p>Append the values (implies the -l option)</p>
+</dd>
+<dt><kbd><span class="option">-p</span></kbd></dt>
+<dd><p>Prepend the values (implies the -l option)</p>
+</dd>
+</dl>
+<p>If the target is not given then import to name.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/zb-logo.png" alt="Logo of ZanyBlue"/>
+            </a></p>
+<h1 class="logo"><a href="../../index.html">ZanyBlue</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">ZanyBlue License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ahven.html">The Ahven Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../root.html">The Root Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../text/index.html">The Text Package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#zbtest-documentation">ZBTest Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities/index.html">Command Line Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs.html">Additional Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribs.html">Contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notices.html">Notices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">References</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a><ul>
+  <li><a href="index.html">ZBTest Commands</a><ul>
+      <li>Previous: <a href="filestat.html" title="previous chapter">The <code class="docutils literal notranslate"><span class="pre">filestat</span></code> Command</a></li>
+      <li>Next: <a href="help.html" title="next chapter">The <code class="docutils literal notranslate"><span class="pre">help</span></code> Command</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Michael Rohan <mrohan@zanyblue.com>.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../../_sources/zbtest/command/getenv.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,26 @@
+Contributions
+=============
+
+This software includes contributions from the following open source developers:
+
+* Pascal Pignard <blady-com@users.sf.net>
+
+
+Contributions to ZanyBlue are contributed under the same BSD style license that
+covers the ZanyBlue project.
+
+The contributions made to the ZanyBlue project are:
+
+
+
+Pascal Pignard
+--------------
+
+Contact: blady-com@users.sf.net
+
+
+** Feb, 2016
+    The initial ISO8859-2 implementation of the Encoding/Decoding support
+    was implemented and contributed by Pascal.
+    
+

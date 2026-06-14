@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>The help Command &#8212; ZanyBlue 2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=12dfc556" />
+    <script src="../../_static/documentation_options.js?v=51b770b3"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="The incr Command" href="incr.html" />
+    <link rel="prev" title="The getenv Command" href="getenv.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="the-help-command">
+<span id="zb-zbtest-commands-help"></span><h1>The <code class="docutils literal notranslate"><span class="pre">help</span></code> Command<a class="headerlink" href="#the-help-command" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">help</span></code>, print help information on commands and functions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">help</span> <span class="p">[</span> <span class="o">-</span><span class="n">c</span> <span class="o">|</span> <span class="o">-</span><span class="n">f</span> <span class="p">]</span> <span class="p">[</span> <span class="n">item</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>Print help information on commands and functions.  The options “-c” and
+“-f” select either command or function information.  Without an item
+argument, a summary of available commands (“-c”) or functions (“-f”) is
+printed.</p>
+<p>Examples:</p>
+<ol class="arabic">
+<li><p>Print help information on the “help” command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">help</span>
+</pre></div>
+</div>
+</li>
+<li><p>Print help information on the “help” command, equivalent to “help”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">help</span> <span class="o">-</span><span class="n">c</span> <span class="n">help</span>
+</pre></div>
+</div>
+</li>
+<li><p>Print a summary of available commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">help</span> <span class="o">-</span><span class="n">c</span>
+</pre></div>
+</div>
+</li>
+<li><p>Print help information on the “execute” command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">help</span> <span class="n">execute</span>
+</pre></div>
+</div>
+</li>
+<li><p>Print a summary of available functions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">help</span> <span class="o">-</span><span class="n">f</span>
+</pre></div>
+</div>
+</li>
+<li><p>Print help information on the “dirname” function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">help</span> <span class="o">-</span><span class="n">f</span> <span class="n">dirname</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/zb-logo.png" alt="Logo of ZanyBlue"/>
+            </a></p>
+<h1 class="logo"><a href="../../index.html">ZanyBlue</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">ZanyBlue License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ahven.html">The Ahven Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../root.html">The Root Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../text/index.html">The Text Package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#zbtest-documentation">ZBTest Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities/index.html">Command Line Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs.html">Additional Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribs.html">Contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notices.html">Notices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">References</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a><ul>
+  <li><a href="index.html">ZBTest Commands</a><ul>
+      <li>Previous: <a href="getenv.html" title="previous chapter">The <code class="docutils literal notranslate"><span class="pre">getenv</span></code> Command</a></li>
+      <li>Next: <a href="incr.html" title="next chapter">The <code class="docutils literal notranslate"><span class="pre">incr</span></code> Command</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Michael Rohan <mrohan@zanyblue.com>.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../../_sources/zbtest/command/help.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

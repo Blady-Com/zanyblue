@@ -3,3 +3,4 @@ config/
 lib/
 obj/
 bin/
+src/doc/build/

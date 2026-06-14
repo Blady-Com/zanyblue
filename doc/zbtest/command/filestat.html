@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>The filestat Command &#8212; ZanyBlue 2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=12dfc556" />
+    <script src="../../_static/documentation_options.js?v=51b770b3"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="The getenv Command" href="getenv.html" />
+    <link rel="prev" title="The exit Command" href="exit.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="the-filestat-command">
+<span id="zb-zbtest-commands-filestat"></span><h1>The <code class="docutils literal notranslate"><span class="pre">filestat</span></code> Command<a class="headerlink" href="#the-filestat-command" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">filestat</span></code>, write status of a test area file to a log file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">filestat</span> <span class="n">name</span> <span class="n">log</span><span class="o">-</span><span class="n">file</span>
+</pre></div>
+</div>
+<p>Write status of a test area file to a log file.  This is frequently
+used to verify the existence/non-existence of a file or directory in the
+test area.  The information written to the file stat log file, for ordinary
+files is:</p>
+<ul class="simple">
+<li><p>The file name</p></li>
+<li><p>The file type (“ORDINARY_FILE”)</p></li>
+<li><p>The file size in bytes</p></li>
+<li><p>The time stamp associated with the file</p></li>
+</ul>
+<p>For directories and other non-ordinary files only the file name and type is
+writeen to the log file.</p>
+<p>If the target file for the filestat command does not exist in the test area
+the generated log file contains message:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">file</span> <span class="s2">&quot;NAME&quot;</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">exist</span>
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">filestat</span> <span class="n">a</span>
+<span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">filestat</span> <span class="n">expected</span><span class="o">.</span><span class="n">txt</span> <span class="n">expected01</span><span class="o">.</span><span class="n">log</span>
+<span class="n">Generated</span> <span class="n">status</span> <span class="n">report</span> <span class="n">on</span> <span class="n">the</span> <span class="n">file</span> <span class="s2">&quot;expected.txt&quot;</span> <span class="p">(</span><span class="n">non</span><span class="o">-</span><span class="n">existent</span><span class="p">)</span>
+    <span class="n">to</span> <span class="s2">&quot;expected01.log&quot;</span>
+<span class="o">...</span>
+<span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">filestat</span> <span class="n">expected</span><span class="o">.</span><span class="n">txt</span> <span class="n">expected02</span><span class="o">.</span><span class="n">log</span>
+<span class="n">Generated</span> <span class="n">status</span> <span class="n">report</span> <span class="n">on</span> <span class="n">the</span> <span class="n">file</span> <span class="s2">&quot;expected.txt&quot;</span> <span class="n">to</span> <span class="s2">&quot;expected02.log&quot;</span>
+</pre></div>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/zb-logo.png" alt="Logo of ZanyBlue"/>
+            </a></p>
+<h1 class="logo"><a href="../../index.html">ZanyBlue</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">ZanyBlue License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ahven.html">The Ahven Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../root.html">The Root Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../text/index.html">The Text Package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#zbtest-documentation">ZBTest Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities/index.html">Command Line Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs.html">Additional Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribs.html">Contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notices.html">Notices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">References</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a><ul>
+  <li><a href="index.html">ZBTest Commands</a><ul>
+      <li>Previous: <a href="exit.html" title="previous chapter">The <code class="docutils literal notranslate"><span class="pre">exit</span></code> Command</a></li>
+      <li>Next: <a href="getenv.html" title="next chapter">The <code class="docutils literal notranslate"><span class="pre">getenv</span></code> Command</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Michael Rohan <mrohan@zanyblue.com>.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../../_sources/zbtest/command/filestat.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

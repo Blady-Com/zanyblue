@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Introduction &#8212; ZanyBlue 2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <script src="_static/documentation_options.js?v=51b770b3"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The Ahven Package" href="ahven.html" />
+    <link rel="prev" title="Downloads" href="download.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="introduction">
+<span id="zb-intro"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h1>
+<p>This manual describes the use of the ZanyBlue libraries, an Ada framework for
+finite element analysis with supporting libraries which might be of general
+use in other projects.  The initial implementation contains the <code class="docutils literal notranslate"><span class="pre">Text</span></code>
+package (and supporting packages and utilities) supplying functionality
+mirroring the Java <code class="docutils literal notranslate"><span class="pre">MessageFormat</span></code> package.  The <code class="docutils literal notranslate"><span class="pre">Text</span></code>
+functionality allows the application messages to be externalized in
+<code class="docutils literal notranslate"><span class="pre">.properties</span></code> files and localized into additional languages.  As a
+major side effect the formatting of arguments within messages is needed and
+implemented.</p>
+<p>This, naturally, led to a need for a testing framework.  Ahven is used for
+unit testing of the libraries, however, testing of the command line utilities
+proved more difficult.  While DejaGNU was available, it seemed a little more
+involved than was needed for this project.  A new testing application was
+written, <code class="docutils literal notranslate"><span class="pre">zbtest</span></code>, which is a hierarchical testing framework supporting
+definition scopes.</p>
+<section id="building-the-library-and-applications">
+<span id="zb-intro-build"></span><h2>Building the Library and Applications<a class="headerlink" href="#building-the-library-and-applications" title="Link to this heading">¶</a></h2>
+<p>Building the ZanyBlue library and applications does not require a configure
+step (at this time).  The build requirements are similar on Unix (Linux)
+and Windows (the Makefiles use the environment variable <code class="docutils literal notranslate"><span class="pre">OS</span></code> to determine
+whether the build is Linux (the variable is not defined) or Windows (where it
+is defined with the value <code class="docutils literal notranslate"><span class="pre">Windows_NT</span></code>).</p>
+<section id="requirements">
+<span id="zb-intro-build-reqs"></span><h3>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">¶</a></h3>
+<p>The build requires</p>
+<ul class="simple">
+<li><p>A recent version of GNAT (e.g., GPL 2010, 2011) from AdaCore.</p></li>
+<li><p>GNU make.</p></li>
+<li><p>The XMLAda package needs to be installed to build the ZanyBlue
+testing application, <code class="docutils literal notranslate"><span class="pre">zbtest</span></code>.</p></li>
+<li><p>The unit tests require the <a class="reference internal" href="ahven.html#zb-ahven"><span class="std std-ref">The Ahven Package</span></a> package.</p></li>
+</ul>
+</section>
+<section id="building">
+<span id="zb-intro-build-building"></span><h3>Building<a class="headerlink" href="#building" title="Link to this heading">¶</a></h3>
+<p>Once the required environment is in place, building is simply a matter of
+issuing <code class="docutils literal notranslate"><span class="pre">make</span></code> in the <code class="docutils literal notranslate"><span class="pre">src</span></code> directory, e.g.,:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ make -C src
+</pre></div>
+</div>
+<p>This produces the library in the <code class="docutils literal notranslate"><span class="pre">lib/zanyblue</span></code> directory,
+and the two executables <code class="docutils literal notranslate"><span class="pre">zbmcompile</span></code>, the message compiler,
+<code class="docutils literal notranslate"><span class="pre">zbtest</span></code> the ZanyBlue testing application and <code class="docutils literal notranslate"><span class="pre">zbinfo</span></code> a utility
+to query built-in library configuration.  The ZanyBlue
+package spec files and generic bodies are copied to the
+<code class="docutils literal notranslate"><span class="pre">include/zanyblue</span></code> directory.</p>
+<p>For example, to examine the built-in locale data, e.g., to see the date, time,
+numeric, etc data for Swedish, use the <code class="docutils literal notranslate"><span class="pre">zbinfo</span></code> command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ zbinfo --dump-locale sv
+</pre></div>
+</div>
+</section>
+<section id="using-with-gnat">
+<span id="zb-intro-build-gnat"></span><span id="zb-intro-gnat"></span><h3>Using with GNAT<a class="headerlink" href="#using-with-gnat" title="Link to this heading">¶</a></h3>
+<p>A ZanyBlue GNAT <code class="docutils literal notranslate"><span class="pre">gprbuild</span></code> project file is available in the
+directory <code class="docutils literal notranslate"><span class="pre">lib/gnat</span></code> directory.  Adding this directory to
+your <code class="docutils literal notranslate"><span class="pre">ADA_PROJECT_PATH</span></code> should allow the use of the ZanyBlue
+library with <code class="docutils literal notranslate"><span class="pre">gprbuild</span></code> projects.  See the text examples and
+the GPS build instructions.</p>
+</section>
+<section id="installing">
+<h3>Installing<a class="headerlink" href="#installing" title="Link to this heading">¶</a></h3>
+<p>To install, using <code class="docutils literal notranslate"><span class="pre">gprinstall</span></code>, the <code class="docutils literal notranslate"><span class="pre">install</span></code> target can be
+used.  The target requires an installation directory be defined
+on the command line via the <code class="docutils literal notranslate"><span class="pre">INSTALL_DIR</span></code> macro, e.g.,:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ make INSTALL_DIR=/opt/adatools install
+</pre></div>
+</div>
+</section>
+</section>
+<section id="testing">
+<span id="zb-intro-testing"></span><h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h2>
+<p>Testing is via the <code class="docutils literal notranslate"><span class="pre">check</span></code> target.  From the <code class="docutils literal notranslate"><span class="pre">src</span></code>
+directory this will run both the unit and system tests.  If experimenting,
+running these tests independently is probably more useful (the combined
+testing is normally only run from under Jenkins where the summary XML files
+are loaded as the test results for the build):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ make -C src/test/unittest check
+$ make -C src/test/system check
+</pre></div>
+</div>
+</section>
+<section id="examples">
+<span id="zb-intro-examples"></span><h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
+<p>The examples include a Gtk example.  If Gtk is not installed, this example
+will fail to build (but the other should be OK).  The <code class="docutils literal notranslate"><span class="pre">dumplocale</span></code> from
+previous releases has been replaced by the <code class="docutils literal notranslate"><span class="pre">zbinfo</span></code> utility.</p>
+</section>
+<section id="windows-issues">
+<span id="zb-intro-windows"></span><h2>Windows Issues<a class="headerlink" href="#windows-issues" title="Link to this heading">¶</a></h2>
+<p>The installation of the Windows <a class="reference external" href="http://gnuwin32.sourceforge.net/packages/make.htm">GNU Win32 version of make</a>, does not update
+the Path environment. This should be done manually after installing
+via the Control Panel -&gt; System -&gt; Advanced
+-&gt; Environment Variables -&gt; Path and adding the
+path <code class="docutils literal notranslate"><span class="pre">C:\Program</span> <span class="pre">Files\GnuWin32\bin</span></code>.</p>
+<p>The majority of the example application are text based. This is
+problematic on Windows systems as the standard Windows command console
+does not understand Unicode output. This makes the Gtk example application
+the only fully functional example application on Windows systems. To
+build this application, the GtkAda package should be installed, again from
+AdaCore and, as for AUnit, the gprbuild project path environment variable
+will need to be set if GtkAda is not installed in the default location.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/zb-logo.png" alt="Logo of ZanyBlue"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">ZanyBlue</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="license.html">ZanyBlue License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="download.html">Downloads</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#building-the-library-and-applications">Building the Library and Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#windows-issues">Windows Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ahven.html">The Ahven Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="root.html">The Root Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text/index.html">The Text Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zbtest/index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities/index.html">Command Line Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs.html">Additional Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="download.html" title="previous chapter">Downloads</a></li>
+      <li>Next: <a href="ahven.html" title="next chapter">The Ahven Package</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Michael Rohan <mrohan@zanyblue.com>.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/intro.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

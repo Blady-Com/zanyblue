@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Message Filtering &#8212; ZanyBlue 2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <script src="../_static/documentation_options.js?v=51b770b3"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Stub Implementations" href="stubs.html" />
+    <link rel="prev" title="Argument Types" href="argtypes.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="message-filtering">
+<h1>Message Filtering<a class="headerlink" href="#message-filtering" title="Link to this heading">¶</a></h1>
+<p>Frequently an application has different output modes, e.g., debug, verbose,
+normal, quiet, etc.  If the various <code class="docutils literal notranslate"><span class="pre">Print</span></code> routines are used to
+generate messages for the application, these messages can be filtered using
+the tagged type <code class="docutils literal notranslate"><span class="pre">Message_Filter_Type</span></code> which is used by the ZanyBlue
+library to determine if a message should be really be printed.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Message_Filter_Type</span></code> defines the method</p>
+<div class="highlight-ada notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nf">Is_Filtered</span> <span class="p">(</span><span class="nv">Filter</span>   <span class="p">: </span><span class="nv">Message_Filter_Type</span><span class="p">;</span>
+                      <span class="nv">Facility</span> <span class="p">: </span><span class="nv">Wide_String</span><span class="p">;</span>
+                      <span class="nv">Key</span> <span class="p">: </span><span class="nv">Wide_String</span><span class="p">)</span> <span class="kr">return</span> <span class="kt">Boolean</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>An application convention can be used on the message keys to define, e.g.,
+verbose message filtering.  The example application
+<code class="docutils literal notranslate"><span class="pre">examples/text/filtering</span></code> uses the convention:</p>
+<ul class="simple">
+<li><p>Verbose messages begin with the letter <code class="docutils literal notranslate"><span class="pre">V</span></code></p></li>
+<li><p>Informational messages begin with the letter <code class="docutils literal notranslate"><span class="pre">I</span></code></p></li>
+<li><p>Warning messages begin with the letter <code class="docutils literal notranslate"><span class="pre">W</span></code></p></li>
+<li><p>Error messages begin with the letter <code class="docutils literal notranslate"><span class="pre">E</span></code></p></li>
+</ul>
+<p>The declaration of a filtering type for this configuration would be</p>
+<div class="highlight-ada notranslate"><div class="highlight"><pre><span></span><span class="kd">type</span> <span class="kt">My_Filter_Type</span> <span class="kr">is</span> <span class="kr">new</span> <span class="n">Message_Filter_Type</span> <span class="kr">with</span>
+   <span class="kr">record</span>
+      <span class="n">Verbose</span> <span class="p">:</span> <span class="kt">Boolean</span> <span class="p">:=</span> <span class="kc">False</span><span class="p">;</span>
+   <span class="kr">end record</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nf">Is_Filtered</span> <span class="p">(</span><span class="nv">Filter</span>   <span class="p">: </span><span class="nv">My_Filter_Type</span><span class="p">;</span>
+                      <span class="nv">Facility</span> <span class="p">: </span><span class="nv">Wide_String</span><span class="p">;</span>
+                      <span class="nv">Key</span> <span class="p">: </span><span class="nv">Wide_String</span><span class="p">)</span> <span class="kr">return</span> <span class="kt">Boolean</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>with the simple implementation for this example being</p>
+<div class="highlight-ada notranslate"><div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nf">Is_Filtered</span> <span class="p">(</span><span class="nv">Filter</span>   <span class="p">: </span><span class="nv">My_Filter_Type</span><span class="p">;</span>
+                      <span class="nv">Facility</span> <span class="p">: </span><span class="nv">Wide_String</span><span class="p">;</span>
+                      <span class="nv">Key</span> <span class="p">: </span><span class="nv">Wide_String</span><span class="p">)</span> <span class="kr">return</span> <span class="kt">Boolean</span> <span class="kr">is</span>
+<span class="kr">begin</span>
+   <span class="kr">return</span> <span class="n">Key</span> <span class="p">(</span><span class="n">Key</span><span class="p">&#39;</span><span class="na">First</span><span class="p">)</span> <span class="o">=</span> <span class="p">&#39;</span><span class="na">V</span><span class="p">&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Filter</span><span class="p">.</span><span class="n">Verbose</span><span class="p">;</span>
+<span class="kr">end</span> <span class="nf">Is_Filtered</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>To enable the filtering, the filter must be registered with the ZanyBlue
+library via the <code class="docutils literal notranslate"><span class="pre">Set_Filter</span></code> routine.  This routine takes an access to
+<code class="docutils literal notranslate"><span class="pre">Message_Filter_Type'Class</span></code> object.  E.g., for the example filtering
+application, the filter is installed using:</p>
+<div class="highlight-ada notranslate"><div class="highlight"><pre><span></span><span class="kn">use</span> <span class="n">ZanyBlue.Text.Formatting</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="n">App_Filter</span> <span class="p">:</span> <span class="kr">aliased</span> <span class="n">My_Filter_Type</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="n">Set_Filter</span> <span class="p">(</span><span class="n">App_Filter</span><span class="p">&#39;</span><span class="na">Access</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>There is a cost associated with filtered messages:</p>
+<ul class="simple">
+<li><p>The various ZanyBlue routines are called.</p></li>
+<li><p>Any arguments will be “boxed” and appended to an argument list.</p></li>
+<li><p>The filtering code is called for all messages.</p></li>
+</ul>
+<p>This cost, however, does not included the cost associated with formatting
+the message as the filtering occurs before any message formatting happens.
+Normally, it is this formatting cost that is the highest for general
+messages.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/zb-logo.png" alt="Logo of ZanyBlue"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">ZanyBlue</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../license.html">ZanyBlue License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../download.html">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ahven.html">The Ahven Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../root.html">The Root Package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">The Text Package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="messages.html">Messages and Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lowlevel.html">Example Using Low Level Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="accessor-xmpl.html">Example Using Accessor Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg-format.html">Message Formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format-syntax.html">Formatting Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="argtypes.html">Argument Types</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Message Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stubs.html">Stub Implementations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="format-impl.html">ZanyBlue Formatting Implementation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="locale-type.html">Locale Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="encodings.html">Encodings and The Codecs Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="builtin-cldr.html">Built-in Localizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cldr-data.html">Unicode CLDR Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pseudo.html">Pseudo Translations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics.html">Message ‘Metrics’</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zbmcompile.html">The zbmcompile Utility</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../zbtest/index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities/index.html">Command Line Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs.html">Additional Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">The Text Package</a><ul>
+      <li>Previous: <a href="argtypes.html" title="previous chapter">Argument Types</a></li>
+      <li>Next: <a href="stubs.html" title="next chapter">Stub Implementations</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Michael Rohan <mrohan@zanyblue.com>.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../_sources/text/filtering.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

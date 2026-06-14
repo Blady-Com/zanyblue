@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>The append Command &#8212; ZanyBlue 2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=12dfc556" />
+    <script src="../../_static/documentation_options.js?v=51b770b3"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="The begin Command" href="begin.html" />
+    <link rel="prev" title="ZBTest Commands" href="index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="the-append-command">
+<span id="zb-zbtest-commands-append"></span><h1>The <code class="docutils literal notranslate"><span class="pre">append</span></code> Command<a class="headerlink" href="#the-append-command" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">append</span></code>, append values to a list parameter:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">append</span> <span class="n">parameter</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>The append command adds a value to the end of a list parameter within
+current scope.  If the parameter does not exist, it is created as a list
+value with a single element.  If the parameter exists but is not a list,
+the value is first converted to a string and then converted to a list with
+a single value.  The argument value is then append to this list.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ZBTest</span><span class="o">&gt;</span> <span class="nb">print</span> <span class="n">l1</span>
+<span class="n">The</span> <span class="n">parameter</span> <span class="s2">&quot;l1&quot;</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">defined</span>
+<span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">append</span> <span class="n">l1</span> <span class="n">a</span>
+<span class="n">ZBTest</span><span class="o">&gt;</span> <span class="nb">print</span> <span class="n">l1</span>
+<span class="p">[</span><span class="n">a</span><span class="p">]</span>
+<span class="n">ZBTest</span><span class="o">&gt;</span> <span class="nb">print</span> <span class="o">-</span><span class="n">l</span> <span class="n">l1</span>
+<span class="mi">1</span><span class="p">)</span> <span class="s2">&quot;a&quot;</span>
+<span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">append</span> <span class="n">l1</span> <span class="n">b</span>
+<span class="n">ZBTest</span><span class="o">&gt;</span> <span class="nb">print</span> <span class="n">l1</span>
+<span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>
+<span class="n">ZBTest</span><span class="o">&gt;</span> <span class="nb">print</span> <span class="o">-</span><span class="n">l</span> <span class="n">l1</span>
+<span class="mi">1</span><span class="p">)</span> <span class="s2">&quot;a&quot;</span>
+<span class="mi">2</span><span class="p">)</span> <span class="s2">&quot;b&quot;</span>
+</pre></div>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/zb-logo.png" alt="Logo of ZanyBlue"/>
+            </a></p>
+<h1 class="logo"><a href="../../index.html">ZanyBlue</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">ZanyBlue License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ahven.html">The Ahven Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../root.html">The Root Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../text/index.html">The Text Package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#zbtest-documentation">ZBTest Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities/index.html">Command Line Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs.html">Additional Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribs.html">Contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notices.html">Notices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">References</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a><ul>
+  <li><a href="index.html">ZBTest Commands</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">ZBTest Commands</a></li>
+      <li>Next: <a href="begin.html" title="next chapter">The <code class="docutils literal notranslate"><span class="pre">begin</span></code> Command</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Michael Rohan <mrohan@zanyblue.com>.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../../_sources/zbtest/command/append.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

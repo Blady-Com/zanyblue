@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>The execute Command &#8212; ZanyBlue 2.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=12dfc556" />
+    <script src="../../_static/documentation_options.js?v=51b770b3"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="The exit Command" href="exit.html" />
+    <link rel="prev" title="The end Command" href="end.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="the-execute-command">
+<span id="zb-zbtest-commands-execute"></span><h1>The <code class="docutils literal notranslate"><span class="pre">execute</span></code> Command<a class="headerlink" href="#the-execute-command" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">execute</span></code>, execute a system command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">execute</span> <span class="p">[</span> <span class="o">-</span><span class="n">f</span> <span class="o">|</span> <span class="o">-</span><span class="n">s</span> <span class="o">|</span> <span class="o">-</span><span class="n">o</span> <span class="n">output</span> <span class="p">]</span> <span class="n">command</span> <span class="p">[</span> <span class="n">command</span><span class="o">-</span><span class="n">arg</span> <span class="o">...</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>Execute a command given the command name and an optional list
+of command arguments.  The command to execute is located by</p>
+<ol class="arabic simple">
+<li><p>Searching from the current test directory up the directory tree
+for an executable with the command name in a bin directory, i.e.,
+if executing a command built in the current source tree.</p></li>
+<li><p>Or, searching the value of the “path” list parameter (initialized to
+the value of the “PATH” environment variable).</p></li>
+</ol>
+<p>The search attempts to find the first file with an extension defined by
+the “exes” list parameter that matches the command name.  For example,
+on Windows, the directories listed on the “path” parameter are searched
+for files with extensions “bat”, “cmd”, “com” or “exe”.</p>
+<p>Once an executable is found, a new process is spawned to execute it.
+If the “-o” option is given, then the command output (standard output
+and standard error) is sent to the named file.</p>
+<p>The “-s” option defines a command that is expected to execute successfully.
+This is the default and the “-s” option is normally not given.</p>
+<p>The “-f” option defines a command that is expected fail (non-zero exit
+status).</p>
+<p>An execute failure file is generated if a command does not exit with the
+expected status.</p>
+<p>Examples</p>
+<ol class="arabic">
+<li><p>Execute the “ls” command, the output is sent to the “screen”:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">execute</span> <span class="n">ls</span>
+</pre></div>
+</div>
+</li>
+<li><p>Execute the “ls” command, the output is sent to the the file “ls.out”
+in the test area:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">execute</span> <span class="o">-</span><span class="n">o</span> <span class="n">ls</span><span class="o">.</span><span class="n">out</span> <span class="n">ls</span>
+</pre></div>
+</div>
+</li>
+<li><p>Execute the “ls” command, the output is sent to the the file “ls.out”
+in the test area.  The command is expected to exit with a failure
+status in this case, i.e., the file “nosuchfile” is not expected to
+exist:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ZBTest</span><span class="o">&gt;</span> <span class="n">execute</span> <span class="o">-</span><span class="n">f</span> <span class="o">-</span><span class="n">o</span> <span class="n">ls</span><span class="o">.</span><span class="n">out</span> <span class="n">ls</span> <span class="n">nosuchfile</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>The “execute” command is normally used with the “-o” option generating
+a log file for comparision with a reference log file via the ZBTest
+function “nextlog”.</p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/zb-logo.png" alt="Logo of ZanyBlue"/>
+            </a></p>
+<h1 class="logo"><a href="../../index.html">ZanyBlue</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">ZanyBlue License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../download.html">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ahven.html">The Ahven Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases.html">Releases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../root.html">The Root Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../text/index.html">The Text Package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#zbtest-documentation">ZBTest Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../utilities/index.html">Command Line Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs.html">Additional Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribs.html">Contributions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notices.html">Notices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">References</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">The <code class="docutils literal notranslate"><span class="pre">zbtest</span></code> Utility</a><ul>
+  <li><a href="index.html">ZBTest Commands</a><ul>
+      <li>Previous: <a href="end.html" title="previous chapter">The <code class="docutils literal notranslate"><span class="pre">end</span></code> Command</a></li>
+      <li>Next: <a href="exit.html" title="next chapter">The <code class="docutils literal notranslate"><span class="pre">exit</span></code> Command</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2026, Michael Rohan <mrohan@zanyblue.com>.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="../../_sources/zbtest/command/execute.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
