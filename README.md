@@ -128,9 +128,9 @@ For additional information contact Michael Rohan <mrohan@zanyblue.com>
 
 ## Documentation
 
-ZanyBlue online [HTML](https://github.com/Blady-Com/zanyblue/blob/main/doc/index.html) or [PDF](https://github.com/Blady-Com/zanyblue/blob/main/doc/ZanyBlue.pdf) documentation.
+ZanyBlue online [HTML](https://github.com/Blady-Com/zanyblue/blob/dev_2.0/doc/index.html) or [PDF](https://github.com/Blady-Com/zanyblue/blob/dev_2.0/doc/ZanyBlue.pdf) documentation.
 
-ZanyBlue online [HTML](https://github.com/Blady-Com/zanyblue/blob/main/doc/zanyblue_rm/index.html) reference manual.
+ZanyBlue online [HTML](https://github.com/Blady-Com/zanyblue/blob/dev_2.0/doc/zanyblue_rm/index.html) reference manual.
 
 # New feature of version 2
 
@@ -138,7 +138,7 @@ This version bring Unicode strings with [UXStrings](https://github.com/Blady-Com
 
 The ZanyBlue library was adapted to UXStrings.
 
-The ZBMCompile utility was adapted to UXStrings and produces UXStrings based Ada files.
+The ZBMCompile utility was adapted to UXStrings and produces UXStrings based Ada files  .
 
 ## Building
 
