@@ -128,7 +128,7 @@ For additional information contact Michael Rohan <mrohan@zanyblue.com>
 
 ## Documentation
 
-ZanyBlue online [HTML](https://github.com/Blady-Com/zanyblue/blob/dev_2.0/doc/index.html) or [PDF](https://github.com/Blady-Com/zanyblue/blob/dev_2.0/doc/ZanyBlue.pdf) documentation.
+ZanyBlue online [HTML](https://htmlpreview.github.io/?https://github.com/Blady-Com/zanyblue/blob/dev_2.0/doc/index.html) or [PDF](https://github.com/Blady-Com/zanyblue/blob/dev_2.0/doc/ZanyBlue.pdf) documentation.
 
 ZanyBlue online [HTML](https://github.com/Blady-Com/zanyblue/blob/dev_2.0/doc/zanyblue_rm/index.html) reference manual.
 
