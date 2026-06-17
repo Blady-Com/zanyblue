@@ -1,5 +1,5 @@
-name = "zbinfo"
-description = "Display localization information for ZanyBlue Ada Localization"
+name = "zbtest"
+description = "Testing utility for ZanyBlue Ada Localization"
 version = "2.0.0"
 
 authors = ["Michael Rohan"]
@@ -9,8 +9,8 @@ licenses = "custom-zanyblue"
 website = "https://sourceforge.net/projects/zanyblue"
 tags = ["localization", "l10n", "international", "i18n"]
 
-project-files = ["zbinfo.gpr"]
-executables = ["zbinfo"]
+project-files = ["zbtest.gpr"]
+executables = ["zbtest"]
 
 [[depends-on]]
 zblib = "2.0.0"

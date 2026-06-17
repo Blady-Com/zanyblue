@@ -1,14 +1,17 @@
-The ZanyBlue.Text Package
--------------------------
+[![Alire](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/zanyblue.json)](https://alire.ada.dev/crates/zanyblue.html)
 
-ZanyBlue.Text is an Ada 2012 package supporting localization support in Ada
+# The ZanyBlue.Text Package
+
+## Introduction
+
+ZanyBlue.Text is an Ada package supporting localization support in Ada
 by allowing the externalization of application messages into a properties
 file which can be localized into additional languages, similar to Java.
 The localized files include the locale string in the file name, e.g., the
 file "zbmcompile.properties" is localized to "zbmcompile_fr.properties" in
 French.
 
-The locale string is 
+## Locale string
 
 * A language abbreviation (2 or 3 alpha-numeric characters), e.g., "en" for
   English, "zh" for Chinese, "cop" for Coptic, etc.
@@ -21,7 +24,9 @@ All components are optional, giving locale strings "" for the base locale,
 "en" for English, "zh_Hant" for Traditional Chinese, "zh_TW" for Chinese
 in Taiwan (also Traditional Chinese), and "zh_Hant_TW".
 
-The externalized .properties files are compiled to an Ada 2005 package
+## Properties
+
+The externalized .properties files are compiled to an Ada package
 containing the application strings (including localized strings) to be
 compiled into an application.  The selection of locale by ZanyBlue.Text
 is based on a locale argument which defaults to the locale string value
@@ -32,20 +37,26 @@ E.g., the example application "moons" defaults to displaying English
 but can be changed to using German, French or Spanish, e.g.,  to display
 is German:
 
+```
     $ export ZB_LANG=de
     $ moons
+```
 
 The externalization of messages into a .properties files allows the embedding
 of parameters references via index (also similar to Java), e.g., the message
 to print the value of a number, the message could be defined as
 
+```
     00001=The value of the counter is {0} ticks.
+```
 
 The ZanyBlue.Text package supports the "passing" of argument values by
 "boxing" the values into ZanyBlue.Text objects.  This particular message
 could be printed, with an argument of 1904 as,
 
+```
     Print_Line ("myapp", "00001", +1904);
+```
 
 The unitary "+" operator is overloaded by the ZanyBlue.Text package to create
 the "boxed" object.  See the ZanyBlue documentation for details on the types
@@ -54,27 +65,28 @@ supported by the package.
 If accessors are used, the generated Ada package will contain a routine
 for each key defined, e.g.,
 
+```
     Print_00001 (+1904);
+```
 
 Argument numbers and, if type information is included in the messages,
 argument types can be checked by the compiler.
 
-Website
--------
+## Website
 
 For full documentation and up-to-date information, visit the web site:
 
+```
    http://zanyblue.sourceforge.net
+```
 
-Downloading
------------
+## Downloading
 
 The download area contains the bundle:
 
-1) "zanyblue-VERSION-REVISION.tar.gz", the core ZanyBlue source bundle.
+"zanyblue-VERSION-REVISION.tar.gz", the core ZanyBlue source bundle.
 
-Building
---------
+## Building
 
 The ZanyBlue packages have been build primarily on Unix systems using
 GNAT GPL 2016 (or on Windows using GNAT GPL 2016).  To build the library
@@ -83,29 +95,61 @@ and message compiler (zbmcompile) only the compiler is needed.
 The build is GNU make based.  To build on Unix, assuming your PATH is
 setup correctly:
 
-   $ zanyblue-VERSION
+```
+   $ cd zanyblue-VERSION
    $ make
+```
 
 To run the regression tests, Ahven is needed and is expected to be be installed
 on the build system, use the "check" build target in the src directory:
 
+```
     $ make check
+```
 
 All the examples, except the "gtk" example, do not require additional packages
 beyond the ZanyBlue library.  The "gtk" example requires the GtkAda package
 from AdaCore.
 
-Installing
-----------
+## Installing
 
 The "install" target can be used to install the utilities, library and
 supporting Ada code to an installation directory, e.g., /opt/Ada.  The
 installation directory should be defined via the INSTALL_DIR on the
 make command line, e.g.,:
 
+```
     $ make INSTALL_DIR install
+```
 
-Contact
--------
+## Contact
 
 For additional information contact Michael Rohan <mrohan@zanyblue.com>
+
+## Documentation
+
+ZanyBlue online [HTML](https://github.com/Blady-Com/zanyblue/blob/main/doc/index.html) or [PDF](https://github.com/Blady-Com/zanyblue/blob/main/doc/ZanyBlue.pdf) documentation.
+
+ZanyBlue online [HTML](https://github.com/Blady-Com/zanyblue/blob/main/doc/zanyblue_rm/index.html) reference manual.
+
+# New feature of version 2
+
+This version bring Unicode strings with [UXStrings](https://github.com/Blady-Com/UXStrings).
+
+The ZanyBlue library was adapted to UXStrings.
+
+The ZBMCompile utility was adapted to UXStrings and produces UXStrings based Ada files.
+
+## Building
+
+Before running `make`, set your `GPR_PROJECT_PATH` to UXStrings folder.
+
+UXStrings needs an Ada 2022 compiler.
+
+## Using Alire
+
+In your own [Alire](https://alire.ada.dev) project, add ZanyBlue dependency:
+
+`% alr with zanyblue`
+
+Note: Alire will take care of dependencies.
