@@ -1,6 +1,6 @@
 name = "zblib"
 description = "Library for ZanyBlue Ada Localization"
-version = "2.0.0"
+version = "2.0.1"
 
 authors = ["Michael Rohan"]
 maintainers = ["Pascal Pignard <blady.net@orange.fr>"]
@@ -12,4 +12,4 @@ tags = ["localization", "l10n", "international", "i18n"]
 project-files = ["src/zanyblue.gpr"]
 
 [[depends-on]]
-uxstrings = "0.9.2"
+uxstrings = ">=0.9.4"
