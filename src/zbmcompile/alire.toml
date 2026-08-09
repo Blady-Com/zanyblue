@@ -1,6 +1,6 @@
 name = "zbmcompile"
 description = "Message compiler for ZanyBlue Ada Localization"
-version = "2.0.0"
+version = "2.0.1"
 
 authors = ["Michael Rohan"]
 maintainers = ["Pascal Pignard <blady.net@orange.fr>"]
@@ -9,12 +9,11 @@ licenses = "custom-zanyblue"
 website = "https://sourceforge.net/projects/zanyblue"
 tags = ["localization", "l10n", "international", "i18n"]
 
-project-files = ["zbmcompile.gpr"]
 executables = ["zbmcompile"]
 
 [[depends-on]]
-zblib = "2.0.0"
+zblib = "^2.0.1"
+uxstrings = ">= 0.9.4"
 
 [[pins]]
 zblib = { path = ".." }
-uxstrings = "0.9.2"
