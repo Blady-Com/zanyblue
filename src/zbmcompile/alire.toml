@@ -13,7 +13,7 @@ executables = ["zbmcompile"]
 
 [[depends-on]]
 zblib = "^2.0.1"
-uxstrings = ">= 0.9.4"
+uxstrings = ">=0.9.4"
 
 [[pins]]
 zblib = { path = ".." }
