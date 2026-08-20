@@ -1,4 +1,4 @@
-[![Alire](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/zanyblue.json)](https://alire.ada.dev/crates/zanyblue.html)
+[![Alire](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/zblib.json)](https://alire.ada.dev/crates/zblib.html)
 
 # The ZanyBlue.Text Package
 
